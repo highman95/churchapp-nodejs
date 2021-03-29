@@ -1,0 +1,43 @@
+{
+  "name": "churchapp-nodejs",
+  "version": "1.0.0",
+  "description": "churchapp built on nodejs",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node --trace-warnings src/index.js",
+    "start-dev": "nodemon src/index.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/highman95/churchapp-nodejs.git"
+  },
+  "keywords": [
+    "churchapp",
+    "church-records",
+    "church-attendance"
+  ],
+  "author": "Emma Nwamaife",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/highman95/churchapp-nodejs/issues"
+  },
+  "homepage": "https://github.com/highman95/churchapp-nodejs#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "hbs": "^4.1.1",
+    "helmet": "^4.4.1",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.2",
+    "mysql": "^2.18.1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.7"
+  }
+}
