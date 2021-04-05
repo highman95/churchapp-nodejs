@@ -1,0 +1,21 @@
+{{! This is the locations-list page}}
+<table class="table table-bordered table-sm table-hoverx table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">sno</th>
+      <th scope="col">name</th>
+      <th scope="col">action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#if locations}}
+      {{#each locations as |location index|}}
+        <tr>
+          <td scope="row">{{index}}</td>
+          <td>{{location.name}}</td>
+          <td>---</td>
+        </tr>
+      {{/each}}
+    {{/if}}
+  </tbody>
+</table>
