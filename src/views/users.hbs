@@ -1,0 +1,28 @@
+<table class="table table-bordered table-sm table-hoverx table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">s-no</th>
+      <th scope="col">first-name</th>
+      <th scope="col">last-name</th>
+      <th scope="col">status</th>
+      <th scope="col">action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#if users}}
+      {{#each users as |user index|}}
+        <tr>
+          <td scope="row">{{index}}</td>
+          <td>
+            {{user.last_name}}
+            <span class="text-info d-block">{{user.email}}</span>
+            <span class="text-muted d-block">{{user.phone}}</span>
+          </td>
+          <td>{{user.first_name}}</td>
+          <td>{{user.active}}</td>
+          <td>---</td>
+        </tr>
+      {{/each}}
+    {{/if}}
+  </tbody>
+</table>
