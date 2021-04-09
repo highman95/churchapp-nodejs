@@ -8,7 +8,7 @@ module.exports = {
     }
 
     db.query(
-      "SELECT id, first_name, last_name, phone, email, active FROM users ORDER BY last_name",
+      "SELECT hex(id) as id, first_name, last_name, phone, email, active FROM users ORDER BY last_name",
       (err, result) => {
         return err ? callBack(err, null) : callBack(null, result);
       }
@@ -86,7 +86,7 @@ module.exports = {
 
     db.query(
       `SELECT first_name, last_name, phone, email, active ${
-        isAuth ? ", password" : ""
+        isAuth ? ", password, hex(id) as id" : ""
       } FROM users WHERE email = ? LIMIT 1`,
       [email],
       (err, result, fields) => {
@@ -101,7 +101,7 @@ module.exports = {
     }
 
     db.query(
-      "SELECT first_name, last_name, phone, email, active FROM users WHERE id = ?",
+      "SELECT first_name, last_name, phone, email, active FROM users WHERE hex(id) = ?",
       [id],
       (err, result) => {
         return err ? callBack(err, null) : callBack(null, result[0]);
