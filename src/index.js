@@ -9,9 +9,7 @@ const hbs = require("hbs");
 
 const { routeType, errorHandler } = require("./utils/middlewares");
 const routes = require("./routes");
-
-const connection = require("./utils/db");
-global.db = connection;
+global.db = require("./utils/db");
 
 const app = express();
 

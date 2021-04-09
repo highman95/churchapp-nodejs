@@ -12,7 +12,7 @@ module.exports = {
   show: (req, res) => {
     try {
       //
-      res.render("", { meetings: {} });
+      res.render("meetings", { title: "Meetings", meetings: {} });
     } catch (e) {}
   },
 

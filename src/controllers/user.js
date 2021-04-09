@@ -30,18 +30,35 @@ module.exports = {
   },
 
   create: (req, res, next) => {
-    const { name } = req.body;
     try {
-      //
-      res.status(201).json({
-        status: true,
-        data: { name },
-        message: "User successfully created",
+      const newUser = req.body;
+
+      userService.create(newUser, (err, result) => {
+        if (err) {
+          res.status(400).json({
+            status: false,
+            message: err.message,
+          });
+          return;
+        }
+
+        // may never occur
+        if (result && !(result.insertId || result.affectedRows)) {
+          res.status(500).json({
+            status: false,
+            message: "Unknown error occurred",
+          });
+          return;
+        }
+
+        res.status(201).json({
+          status: true,
+          data: newUser,
+          message: "User successfully created",
+        });
       });
     } catch (e) {
       next(e);
     }
   },
-
-  createPage: (req, res) => {},
 };
