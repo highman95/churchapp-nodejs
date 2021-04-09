@@ -28,7 +28,7 @@ module.exports = {
 
         // generate JWT-token
         const token = jwt.sign({ data: username }, process.env.JWT_SECRET, {
-          expiresIn: "24h",
+          expiresIn: process.env.JWT_EXPIRY,
           issuer: process.env.JWT_ISSUER,
         });
 
