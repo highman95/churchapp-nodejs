@@ -21,9 +21,10 @@ module.exports = {
     }
 
     if (!user || typeof user !== "object") {
-      return callBack(new Error("User-details are required"), null);
+      return callBack(new Error("User-profile is required"), null, 406);
     }
 
+    // extract parameters
     const { title, first_name, last_name, phone, email, password } = user;
 
     if (!title || !title.trim()) {
@@ -52,11 +53,11 @@ module.exports = {
 
     this.findByEmail(email, false, (err0, emailUser) => {
       if (err0) {
-        return callBack(err0, null);
+        return callBack(err0, null, 500);
       }
 
       if (emailUser) {
-        return callBack(new Error("E-mail already used"), null);
+        return callBack(new Error("E-mail already used"), null, 409);
       }
 
       bcrypt.hash(password, 10, (err1, passwordHash) => {
@@ -64,11 +65,17 @@ module.exports = {
           return callBack(new Error("Password cannot be hashed"), null);
         }
 
+        // re-format values
+        const id = uuidv4(); // new-user-id
+        const email_lc = email.trim().toLowerCase();
+
         db.query(
           "INSERT INTO users (id, title, first_name, last_name, phone, email, password) VALUES (UNHEX(REPLACE(?,'-','')), ?, ?, ?, ?, ?, ?)",
-          [uuidv4(), title, first_name, last_name, phone, email, passwordHash],
+          [id, title, first_name, last_name, phone, email_lc, passwordHash],
           (err2, result) => {
-            return err2 ? callBack(err2, null) : callBack(null, result);
+            return err2
+              ? callBack(err2, null, 500)
+              : callBack(null, { id: id.replace("-", ""), ...user }, 201);
           }
         );
       });
@@ -81,14 +88,14 @@ module.exports = {
     }
 
     if (!email || !email.trim()) {
-      return callBack(new Error("E-mail is required"));
+      return callBack(new Error("E-mail is required"), null);
     }
 
     db.query(
       `SELECT first_name, last_name, phone, email, active ${
         isAuth ? ", password, hex(id) as id" : ""
       } FROM users WHERE email = ? LIMIT 1`,
-      [email],
+      [email.trim().toLowerCase()],
       (err, result, fields) => {
         return err ? callBack(err, null) : callBack(null, result[0]);
       }
@@ -98,6 +105,10 @@ module.exports = {
   find: (id, callBack) => {
     if (typeof callBack !== "function") {
       throw new Error("Callback is not defined");
+    }
+
+    if (!id || !id.trim()) {
+      return callBack(new Error("Id is required"), null);
     }
 
     db.query(

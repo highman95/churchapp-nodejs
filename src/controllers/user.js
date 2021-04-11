@@ -31,29 +31,18 @@ module.exports = {
 
   create: (req, res, next) => {
     try {
-      const newUser = req.body;
-
-      userService.create(newUser, (err, result) => {
+      userService.create(req.body, (err, user, code = 400) => {
         if (err) {
-          res.status(400).json({
+          res.status(code).json({
             status: false,
             message: err.message,
           });
           return;
         }
 
-        // may never occur
-        if (result && !(result.insertId || result.affectedRows)) {
-          res.status(500).json({
-            status: false,
-            message: "Unknown error occurred",
-          });
-          return;
-        }
-
-        res.status(201).json({
+        res.status(code).json({
           status: true,
-          data: newUser,
+          data: user,
           message: "User successfully created",
         });
       });

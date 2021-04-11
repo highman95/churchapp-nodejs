@@ -3,7 +3,7 @@ const locationService = require("../services/location");
 module.exports = {
   get: (req, res, next) => {
     try {
-      locationService.get((err, result) => {
+      locationService.get((err, locations) => {
         if (err) {
           res.status(400).json({
             status: false,
@@ -14,7 +14,7 @@ module.exports = {
 
         res.json({
           status: true,
-          data: result,
+          data: locations,
           message: "Location successfully fetched",
         });
       });
@@ -30,7 +30,7 @@ module.exports = {
    * @param {object} res
    */
   view: (req, res) => {
-    const locations = locationService.get((err, locations) => {
+    locationService.get((err, locations) => {
       res.render("locations", {
         title: "Locations",
         locations: err ? [] : locations,
@@ -39,21 +39,19 @@ module.exports = {
   },
 
   create: (req, res, next) => {
-    const { name } = req.body;
-
     try {
-      locationService.create(name, (err, result) => {
+      locationService.create(req.body, (err, location, code = 400) => {
         if (err) {
-          res.status(400).json({
+          res.status(code).json({
             status: false,
             message: err.message,
           });
           return;
         }
 
-        res.status(201).json({
+        res.status(code).json({
           status: true,
-          data: { name },
+          data: location,
           message: "Location successfully created",
         });
       });
