@@ -1,5 +1,4 @@
 const meetingService = require("../services/meeting");
-const statisticService = require("../services/statistic");
 
 module.exports = {
   get: (req, res, next) => {
@@ -40,30 +39,6 @@ module.exports = {
           status: true,
           data: meeting,
           message: "Meeting successfully saved",
-        });
-      });
-    } catch (e) {
-      next(e);
-    }
-  },
-
-  addStat: (req, res, next) => {
-    try {
-      const {
-        params: { id },
-        body: statistic,
-      } = req;
-
-      statisticService.create(id, statistic, (err, stat, code = 400) => {
-        if (err) {
-          res.status(code).json({ status: false, message: err.message });
-          return;
-        }
-
-        res.status(code).json({
-          status: true,
-          data: meeting,
-          message: "Statistics successfully saved",
         });
       });
     } catch (e) {
