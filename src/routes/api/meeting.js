@@ -5,4 +5,5 @@ module.exports = (router) => {
   router.post("/api/v1/meetings", meetingController.create);
 
   router.get("/api/v1/meetings/:id", meetingController.find);
+  router.post("/api/v1/meetings/:id", meetingController.addStat);
 };
