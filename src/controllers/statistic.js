@@ -24,4 +24,23 @@ module.exports = {
       next(e);
     }
   },
+
+  update: (req, res, next) => {
+    try {
+      const {
+        params: { id, sid },
+        body: statistic,
+      } = req;
+
+      statisticService.update(id, sid, statistic, (err, stat, code = 400) => {
+        return res.status(code).json({
+          status: !!err,
+          stat,
+          message: err ? err.message : "Statistics successfully updated",
+        });
+      });
+    } catch (e) {
+      next(e);
+    }
+  },
 };

@@ -103,6 +103,71 @@ module.exports = {
     );
   },
 
+  update(meeting_id, id, statistic, callBack) {
+    if (typeof callBack !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    if (!statistic || typeof statistic !== "object") {
+      return callBack(new Error("Statistics are required"), null);
+    }
+
+    this.find(id, meeting_id, (err0, stat) => {
+      if (err0) {
+        return callBack(err0, null, 500);
+      }
+
+      if (!stat) {
+        return callBack(new Error("Statistics not found"), null, 404);
+      }
+
+      if (stat.mno !== mno) {
+        return callBack(new Error("Meeting-number must be similar"), null, 409);
+      }
+
+      // extract parameters
+      const {
+        male,
+        female,
+        children,
+        converts,
+        first_timers,
+        testimonies,
+        tithe,
+        worship,
+        project,
+        shiloh_sac,
+        vow,
+      } = statistic;
+
+      db.query(
+        `UPDATE statistics SET male = ?, female = ?, children = ?, converts = ?,
+        first_timers = ?, testimonies = ?, tithe = ?, worship = ?, project = ?,
+        shiloh_sac = ?, vow = ? WHERE id = ? AND meeting_id = ?`,
+        [
+          male,
+          female,
+          children,
+          converts,
+          first_timers,
+          testimonies,
+          tithe,
+          worship,
+          project,
+          shiloh_sac,
+          vow,
+          id,
+          meeting_id,
+        ],
+        (err, result) => {
+          return err
+            ? callBack(err, null, 500)
+            : callBack(null, statistic, result.changedRows ? 204 : 304);
+        }
+      );
+    });
+  },
+
   find: (id, meeting_id, callBack) => {
     if (typeof callBack !== "function") {
       throw new Error("Callback is not defined");
