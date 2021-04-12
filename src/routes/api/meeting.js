@@ -1,6 +1,8 @@
-const meetingController = require('../../controllers/meeting');
+const meetingController = require("../../controllers/meeting");
 
 module.exports = (router) => {
-  router.get('/meetings', meetingController.get);
-  router.post('/meetings/:id', meetingController.create);
+  router.get("/api/v1/meetings", meetingController.get);
+  router.post("/api/v1/meetings", meetingController.create);
+
+  router.get("/api/v1/meetings/:id", meetingController.find);
 };

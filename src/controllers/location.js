@@ -5,10 +5,7 @@ module.exports = {
     try {
       locationService.get((err, locations) => {
         if (err) {
-          res.status(400).json({
-            status: false,
-            message: err.message,
-          });
+          res.status(400).json({ status: false, message: err.message });
           return;
         }
 
@@ -42,10 +39,7 @@ module.exports = {
     try {
       locationService.create(req.body, (err, location, code = 400) => {
         if (err) {
-          res.status(code).json({
-            status: false,
-            message: err.message,
-          });
+          res.status(code).json({ status: false, message: err.message });
           return;
         }
 

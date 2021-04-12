@@ -5,10 +5,7 @@ module.exports = {
     try {
       userService.get((err, users) => {
         if (err) {
-          res.status(400).json({
-            status: false,
-            message: err.message,
-          });
+          res.status(400).json({ status: false, message: err.message });
           return;
         }
 
@@ -33,10 +30,7 @@ module.exports = {
     try {
       userService.create(req.body, (err, user, code = 400) => {
         if (err) {
-          res.status(code).json({
-            status: false,
-            message: err.message,
-          });
+          res.status(code).json({ status: false, message: err.message });
           return;
         }
 
