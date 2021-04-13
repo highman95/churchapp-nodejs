@@ -112,7 +112,7 @@ module.exports = {
       return callBack(new Error("Statistics are required"), null);
     }
 
-    this.find(id, meeting_id, (err0, stat) => {
+    this.find(meeting_id, id, (err0, stat) => {
       if (err0) {
         return callBack(err0, null, 500);
       }
@@ -168,17 +168,17 @@ module.exports = {
     });
   },
 
-  find: (id, meeting_id, callBack) => {
+  find: (meeting_id, id, callBack) => {
     if (typeof callBack !== "function") {
       throw new Error("Callback is not defined");
     }
 
-    if (!id || isNaN(id)) {
-      return callBack(new Error("Resource-id is required"), null);
-    }
-
     if (!meeting_id || isNaN(meeting_id)) {
       return callBack(new Error("Meeting-id is required"), null);
+    }
+
+    if (!id || isNaN(id)) {
+      return callBack(new Error("Resource-id is required"), null);
     }
 
     db.query(
