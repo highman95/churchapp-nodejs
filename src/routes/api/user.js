@@ -6,5 +6,5 @@ module.exports = (router) => {
   router.post("/api/v1/users", userController.create);
 
   router.get("/api/v1/users/:id/assignments", assignmentController.get);
-  router.post("/api/v1/users/assignments", assignmentController.create);
+  router.post("/api/v1/users/:id/assignments", assignmentController.create);
 };
