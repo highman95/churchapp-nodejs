@@ -12,7 +12,7 @@ module.exports = {
         res.json({
           status: true,
           data: locations,
-          message: "Location successfully fetched",
+          message: "Locations successfully fetched",
         });
       });
     } catch (e) {

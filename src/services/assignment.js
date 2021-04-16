@@ -32,6 +32,24 @@ module.exports = {
     });
   },
 
+  get: (user_id, callBack) => {
+    if (typeof callBack !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    if (!user_id) {
+      return callBack(new Error("User-id is required"), null);
+    }
+
+    db.query(
+      `SELECT location_id, serving FROM assignments WHERE hex(user_id) = ?`,
+      [user_id],
+      (err, result) => {
+        return err ? callBack(err, null, 500) : callBack(null, result, 200);
+      }
+    );
+  },
+
   find: (user_id, location_id, callBack) => {
     if (typeof callBack !== "function") {
       throw new Error("Callback is not defined");

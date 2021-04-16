@@ -14,4 +14,18 @@ module.exports = {
       next(e);
     }
   },
+
+  get: (req, res, next) => {
+    try {
+      assignmentService.get(req.params.id, (err, assignments, code = 400) => {
+        res.status(code).json({
+          status: !!err,
+          data: assignments,
+          message: err ? err.message : "Assigments successfully fetched",
+        });
+      });
+    } catch (e) {
+      next(e);
+    }
+  },
 };
