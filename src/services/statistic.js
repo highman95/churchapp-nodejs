@@ -9,7 +9,7 @@ module.exports = {
     }
 
     db.query(
-      "SELECT * FROM statistics WHERE meeting_id = ? ORDER BY held_at",
+      "SELECT * FROM statistics WHERE meeting_id = ? ORDER BY mno, held_at",
       [meeting_id],
       (err, result) => {
         return err ? callBack(err, null) : callBack(null, result);
@@ -28,7 +28,7 @@ module.exports = {
 
     // extract parameters
     const {
-      mno,
+      mno = 1,
       male,
       female,
       children,

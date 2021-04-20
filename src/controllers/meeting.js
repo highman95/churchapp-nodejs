@@ -1,4 +1,6 @@
 const meetingService = require("../services/meeting");
+const locationService = require("../services/location");
+const meetingTypeService = require("../services/meeting-type");
 
 module.exports = {
   get: (req, res, next) => {
@@ -22,8 +24,9 @@ module.exports = {
 
   show: (req, res) => {
     try {
-      //
-      res.render("meetings", { title: "Meetings", meetings: {} });
+      meetingService.get((err, meetings) => {
+        res.render("meetings", { title: "Meetings", meetings });
+      });
     } catch (e) {}
   },
 
@@ -31,22 +34,41 @@ module.exports = {
     try {
       meetingService.create(req.body, (err, meeting, code = 400) => {
         if (err) {
-          res.status(code).json({ status: false, message: err.message });
-          return;
+          return req.isWR
+            ? res.redirect(`/meetings?err=${err.message}`)
+            : res.status(code).json({ status: false, message: err.message });
         }
 
-        res.status(code).json({
-          status: true,
-          data: meeting,
-          message: "Meeting successfully saved",
-        });
+        return req.isWR
+          ? res.redirect(`/meetings/${meeting.id}`)
+          : res.status(code).json({
+              status: true,
+              data: meeting,
+              message: "Meeting successfully saved",
+            });
       });
     } catch (e) {
       next(e);
     }
   },
 
-  createPage: (req, res) => {},
+  createPage: (req, res) => {
+    try {
+      locationService.get((err0, locations) => {
+        meetingTypeService.get((err1, meetingTypes) => {
+          var now = new Date();
+          now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // local-datetime
+
+          res.render("meetings/add", {
+            title: "Meetings",
+            locations,
+            meetingTypes,
+            currentDateTime: now.toISOString().slice(0, 16),
+          });
+        });
+      });
+    } catch (e) {}
+  },
 
   find: (req, res, next) => {
     try {
@@ -69,8 +91,19 @@ module.exports = {
 
   describe: (req, res) => {
     try {
-      //
-      res.render("", { meeting: {} });
+      meetingService.find(req.params.id, (err, meeting) => {
+        if (meeting) {
+          var held_on = new Date(meeting.held_on);
+          held_on.setMinutes(
+            held_on.getMinutes() - held_on.getTimezoneOffset()
+          ); // local-datetime
+          meeting = { ...meeting, held_on };
+        }
+
+        return !!meeting
+          ? res.render("meetings/view", { title: "Meetings", meeting })
+          : res.redirect("/meetings");
+      });
     } catch (e) {}
   },
 };

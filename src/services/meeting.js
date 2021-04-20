@@ -7,7 +7,7 @@ module.exports = {
     }
 
     db.query(
-      `SELECT id, tag, held_on, mt.name meeting_type, l.name location FROM meetings m
+      `SELECT m.id, tag, held_on, mt.name meeting_type, l.name location FROM meetings m
       LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
       LEFT JOIN locations l ON l.id = m.location_id ORDER BY held_on`,
       (err, result) => {
@@ -52,7 +52,7 @@ module.exports = {
         }
 
         // begin transaction here
-        db.beginTransaction(function (err1) {
+        db.beginTransaction((err1) => {
           if (err1) {
             return callBack(err1, null, 500);
           }
@@ -62,7 +62,10 @@ module.exports = {
             [meeting_type_id, location_id, tag, held_on],
             (err, result) => {
               if (err) {
-                return db.rollback(() => callBack(err, null, 500));
+                // console.log(`[meeting-error]: ${JSON.stringify(err, null, 2)}`);
+                return db.rollback(() =>
+                  callBack(new Error("Meeting cannot be created"), null, 500)
+                );
               }
 
               // set the meeting-id
@@ -128,7 +131,7 @@ module.exports = {
       `SELECT tag, held_on, mt.name meeting_type, l.name location FROM meetings m
       LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
       LEFT JOIN locations l ON l.id = m.location_id
-      WHERE location_id = ? AND meeting_type_id = ? AND held_on = ?`,
+      WHERE location_id = ? AND meeting_type_id = ? AND DATE(held_on) = ?`,
       [location_id, meeting_type_id, held_on],
       (err, result) => {
         if (err) {
@@ -161,7 +164,7 @@ module.exports = {
     db.query(
       `SELECT tag, held_on, mt.name meeting_type, l.name location FROM meetings m
       LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
-      LEFT JOIN locations l ON l.id = m.location_id WHERE id = ?`,
+      LEFT JOIN locations l ON l.id = m.location_id WHERE m.id = ?`,
       [id],
       (err, result) => {
         if (err) {
