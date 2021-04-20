@@ -1,8 +1,6 @@
-require("dotenv").config();
-
-// const cors = require("cors");
-// const helmet = require("helmet");
-// const compression = require("compression");
+const cors = require("cors");
+const helmet = require("helmet");
+const compression = require("compression");
 const express = require("express");
 const path = require("path");
 const hbs = require("hbs");
@@ -13,7 +11,17 @@ global.db = require("./utils/db");
 
 const app = express();
 
-// app.use(cors(), helmet());
+// enable cors, compression, helmet on api-routes
+app.use(
+  "/api/v1",
+  (req, res, next) => {
+    next();
+  },
+  cors(),
+  helmet(),
+  compression()
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../public"))); // configure express to use public folder
@@ -25,10 +33,4 @@ hbs.registerPartials(path.join(__dirname, "views/partials"), (err) => {});
 // define all routes and route-type
 app.use(routeType, routes(express.Router()), errorHandler);
 
-const server = app.listen(process.env.PORT || 3000, (err) => {
-  console.log(
-    err
-      ? `Error: ${err}...`
-      : `app started successfully...${server.address().port}`
-  );
-});
+module.exports = app;
