@@ -152,6 +152,57 @@ module.exports = {
     );
   },
 
+  edit(id, meeting, cb) {
+    if (typeof cb !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    if (!meeting || typeof meeting !== "object") {
+      return cb(new Error("Meeting-profile is required"), null);
+    }
+
+    // extract parameters
+    const { location_id, meeting_type_id, tag, held_at: held_on } = meeting;
+
+    if (!tag || !tag.trim()) {
+      return cb(new Error("Tag is required"), null);
+    }
+
+    this.find(id, (err0, lastMeeting) => {
+      if (err0) {
+        return cb(err0, null, 500);
+      }
+
+      if (!lastMeeting) {
+        return cb(new Error("Meeting does not exist"), null, 404);
+      }
+
+      if (location_id != lastMeeting.location_id) {
+        return cb(new Error("Meeting-location/venue cannot be updated"), null);
+      }
+
+      if (
+        held_on != lastMeeting.held_on &&
+        lastMeeting.statistics &&
+        lastMeeting.statistics.length !== 0
+      ) {
+        return cb(new Error("Meeting-date cannot be updated"), null);
+      }
+
+      db.query(
+        "UPDATE meetings SET meeting_type_id = ?, tag = ?, held_on = ? WHERE id = ? AND location_id = ?",
+        [meeting_type_id, tag, held_on, id, location_id],
+        (err, result) => {
+          if (err) {
+            return cb(new Error("Meeting cannot be updated"), null, 500);
+          }
+
+          return cb(null, meeting, 304);
+        }
+      );
+    });
+  },
+
   find: (id, callBack) => {
     if (typeof callBack !== "function") {
       throw new Error("Callback is not defined");

@@ -89,6 +89,38 @@ module.exports = {
     }
   },
 
+  edit: (req, res, next) => {
+    try {
+      meetingService.edit(
+        req.params.id,
+        req.body,
+        (err, meeting, code = 400) => {
+          return req.isWR
+            ? res.redirect(
+                `/meetings/${err ? "edit/" : ""}${meeting.id}?err=${
+                  err ? err.message : ""
+                }`
+              )
+            : res.status(code).json({
+                status: !!err,
+                data: meeting,
+                message: err ? err.message : "Meeting successfully updated",
+              });
+        }
+      );
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  editPage: (req, res) => {
+    try {
+      meetingService.find(req.params.id, (err, meeting) => {
+        res.render("meetings/edit", { title: "Meetings", meeting });
+      });
+    } catch (e) {}
+  },
+
   describe: (req, res) => {
     try {
       meetingService.find(req.params.id, (err, meeting) => {

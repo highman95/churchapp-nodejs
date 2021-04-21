@@ -8,5 +8,10 @@ module.exports = (router) => {
     .post(meetingController.create)
     .get(meetingController.createPage);
 
+  router
+    .route("/meetings/edit/:id")
+    .post(meetingController.edit)
+    .get(meetingController.editPage);
+
   router.get("/meetings/:id", meetingController.describe);
 };

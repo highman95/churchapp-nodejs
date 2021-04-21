@@ -1,0 +1,148 @@
+<h3>Edit Meeting</h3>
+<hr />
+
+<div class="row mt-4">
+  <div class="col-12">
+    <form method="post" enctype="application/x-www-form-urlencoded">
+      <!-- Main meeting details -->
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <h6>Basic Information</h6>
+          <hr />
+        </div>
+        <div class="form-group col-md-4 col-6">
+          <label for="held-at">Date/Time-Held:</label>
+          <input type="datetime-local" class="form-control" id="held-at" name="held_at"/>
+        </div>
+        <div class="form-group col-md-4 col-6">
+          <label for="meeting-type">Meeting-Type:</label>
+          <select id="meeting-type" name="meeting_type_id" class="custom-select form-control" required>
+            <option selected>Choose...</option>
+            {{#if meetingTypes}}
+              {{#each meetingTypes as |meetingType index|}}
+                <option value={{meetingType.id}}>{{meetingType.name}}</option>
+              {{/each}}
+            {{/if}}
+          </select>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="station">Station:</label>
+          <select id="station" name="location_id" class="custom-select form-control" required>
+            <option selected>Choose...</option>
+            {{#if locations}}
+              {{#each locations as |location index|}}
+                <option value={{location.id}}>{{location.name}}</option>
+              {{/each}}
+            {{/if}}
+          </select>
+        </div>
+        <div class="form-group col-md-12">
+          <label for="tag-name">Tag-Name:</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="tag-name" name="tag" maxlength="55" required placeholder="Covenant day of..." />
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-danger font-weight-bold">Submit</button>
+                <button type="button" class="btn btn-dark font-weight-bold" onclick="location.href='/meetings'">
+                  Cancel
+                </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <form action="/meetings/edit/" method="post" enctype="application/x-www-form-urlencoded">
+      <!-- Attendance -->
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <h6 class="pt-5">Attendance / Finances (Offerings)</h6>
+          <hr />
+        </div>
+        <div class="form-group col-4 col-md-4">
+          <label for="male">Male:</label>
+          <input type="text" class="form-control" id="male" name="male" required />
+        </div>
+        <div class="form-group col-4 col-md-4">
+          <label for="female">Female:</label>
+          <input type="text" class="form-control" id="female" name="female" required />
+        </div>
+        <div class="form-group col-4 col-md-4">
+          <label for="children">Children:</label>
+          <input type="text" class="form-control" id="children" name="children" required />
+        </div>
+        <div class="form-group col-4 col-md-4">
+          <label for="converts">Converts:</label>
+          <input type="text" class="form-control" id="converts" name="converts" />
+        </div>
+        <div class="form-group col-4 col-md-4">
+          <label for="first-timers">F/Timers:</label>
+          <input type="text" class="form-control" id="first-timers" name="first_timers" />
+        </div>
+        <div class="form-group col-4 col-md-4">
+          <label for="testimonies">Testimonies:</label>
+          <input type="text" class="form-control" id="testimonies" name="testimonies" />
+        </div>
+      </div>
+
+      <div><hr></div>
+
+      <!-- Finances -->
+      <div class="form-row">
+        <div class="form-group col-6 col-md-4">
+          <label for="tithe">Tithe:</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text font-weight-bold">&#8358;</span>
+            </div>
+            <input type="text" class="form-control" id="tithe" name="tithe" />
+          </div>
+        </div>
+        <div class="form-group col-6 col-md-4">
+          <label for="worship">Worship Offering:</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text font-weight-bold">&#8358;</span>
+            </div>
+            <input type="text" class="form-control" id="worship" name="worship" />
+          </div>
+        </div>
+        <div class="form-group col-6 col-md-4">
+          <label for="project">Project Offering:</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text font-weight-bold">&#8358;</span>
+            </div>
+            <input type="text" class="form-control" id="project" name="project" />
+          </div>
+        </div>
+        <div class="form-group col-6 col-md-4">
+          <label for="shiloh_sac">Shiloh Sacrifice:</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text font-weight-bold">&#8358;</span>
+            </div>
+            <input type="text" class="form-control" id="shiloh_sac" name="shiloh_sac" />
+          </div>
+        </div>
+        <div class="form-group col-6 col-md-4">
+          <label for="vow">Vow:</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text font-weight-bold">&#8358;</span>
+            </div>
+            <input type="text" class="form-control" id="vow" name="vow" />
+          </div>
+        </div>
+        <div class="form-group col-6 col-md-4 text-right">
+          <label for="submit-btn">&nbsp;</label>
+          <div class="btn-group" role="group" aria-label="submit-cancel-btn-group">
+            <button type="submit" id="submit-btn" class="btn btn-danger btn-block font-weight-bold">Submit</button>
+            <button type="button" id="cancel-btn" class="btn btn-dark font-weight-bold" onclick="location.href='/meetings'">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
