@@ -3,7 +3,7 @@
 
 <div class="row mt-4">
   <div class="col-12">
-    <form method="post" enctype="application/x-www-form-urlencoded">
+    <form action="/meetings/edit/{{meeting.id}}" method="post" enctype="application/x-www-form-urlencoded">
       <!-- Main meeting details -->
       <div class="form-row">
         <div class="form-group col-md-12">
@@ -43,7 +43,7 @@
             <div class="input-group-append">
                 <button type="submit" class="btn btn-danger font-weight-bold">Submit</button>
                 <button type="button" class="btn btn-dark font-weight-bold" onclick="location.href='/meetings'">
-                  Cancel
+                  <span title="Cancel">&#10558;</span>
                 </button>
             </div>
           </div>
@@ -71,7 +71,7 @@
           <input type="text" class="form-control" id="children" name="children" required />
         </div>
         <div class="form-group col-4 col-md-4">
-          <label for="converts">Converts:</label>
+          <label for="converts">N/Converts:</label>
           <input type="text" class="form-control" id="converts" name="converts" />
         </div>
         <div class="form-group col-4 col-md-4">
@@ -138,7 +138,7 @@
           <div class="btn-group" role="group" aria-label="submit-cancel-btn-group">
             <button type="submit" id="submit-btn" class="btn btn-danger btn-block font-weight-bold">Submit</button>
             <button type="button" id="cancel-btn" class="btn btn-dark font-weight-bold" onclick="location.href='/meetings'">
-              Cancel
+              <span title="Cancel">&#10558;</span>
             </button>
           </div>
         </div>

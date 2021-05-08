@@ -54,8 +54,8 @@ module.exports = {
 
       db.query(
         `INSERT INTO statistics (male, female, children, converts, first_timers,
-        testimonies, tithe, worship, project, shiloh_sac, vow, held_at, mno)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        testimonies, tithe, worship, project, shiloh_sac, vow, held_at, mno, meeting_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           male,
           female,
@@ -70,6 +70,7 @@ module.exports = {
           vow,
           held_at,
           mno,
+          meeting_id,
         ],
         (err, result) => {
           return err

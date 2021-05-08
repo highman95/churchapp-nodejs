@@ -116,7 +116,10 @@ module.exports = {
   editPage: (req, res) => {
     try {
       meetingService.find(req.params.id, (err, meeting) => {
-        res.render("meetings/edit", { title: "Meetings", meeting });
+        res.render("meetings/edit", {
+          title: "Meetings",
+          meeting: { ...meeting, id: req.params.id },
+        });
       });
     } catch (e) {}
   },
@@ -129,7 +132,7 @@ module.exports = {
           held_on.setMinutes(
             held_on.getMinutes() - held_on.getTimezoneOffset()
           ); // local-datetime
-          meeting = { ...meeting, held_on };
+          meeting = { ...meeting, held_on, id: req.params.id };
         }
 
         return !!meeting

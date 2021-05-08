@@ -14,12 +14,12 @@ const app = express();
 // enable cors, compression, helmet on api-routes
 app.use(
   "/api/v1",
+  cors(),
+  helmet(),
+  compression(),
   (req, res, next) => {
     next();
   },
-  cors(),
-  helmet(),
-  compression()
 );
 
 app.use(express.json());
