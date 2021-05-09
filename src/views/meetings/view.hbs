@@ -94,7 +94,7 @@
         {{/each}}
       {{/if}}
 
-      <form method="post" enctype="application/x-www-form-urlencoded">
+      <form action="/meetings/{{meeting.id}}/stats" method="post" enctype="application/x-www-form-urlencoded">
       <!-- Attendance -->
       <div class="form-row">
         <div class="form-group col-md-12">
@@ -189,7 +189,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="gridCheck">
           <label class="form-check-label" for="gridCheck">
@@ -197,7 +197,7 @@
           </label>
         </div>
       </div>
-      <button type="submit" class="btn btn-danger font-weight-bold">Submit</button>
+      <button type="submit" class="btn btn-danger font-weight-bold">Submit</button> -->
       </form>
     {{/if}}
   </div>

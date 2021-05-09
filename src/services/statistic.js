@@ -40,7 +40,7 @@ module.exports = {
       project,
       shiloh_sac,
       vow,
-      held_at,
+      held_at = new Date().toISOString().slice(0, 19),
     } = statistic;
 
     this.findByMno(meeting_id, mno, (err0, stats) => {
@@ -75,7 +75,7 @@ module.exports = {
         (err, result) => {
           return err
             ? callBack(err, null, 500)
-            : callBack(null, { id: result.insertId, ...location }, 201);
+            : callBack(null, { id: result.insertId }, 201);
         }
       );
     });
