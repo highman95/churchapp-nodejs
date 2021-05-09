@@ -23,9 +23,13 @@ module.exports = {
   },
 
   show: (req, res) => {
+    const {
+      query: { err: error },
+    } = req;
+
     try {
       meetingService.get((err, meetings) => {
-        res.render("meetings", { title: "Meetings", meetings });
+        res.render("meetings", { title: "Meetings", meetings, error });
       });
     } catch (e) {}
   },
@@ -132,7 +136,9 @@ module.exports = {
           held_on.setMinutes(
             held_on.getMinutes() - held_on.getTimezoneOffset()
           ); // local-datetime
-          meeting = { ...meeting, held_on, id: req.params.id };
+
+          const s_cnt = meeting.statistics.length + 1;
+          meeting = { ...meeting, held_on, id: req.params.id, s_cnt };
         }
 
         return !!meeting

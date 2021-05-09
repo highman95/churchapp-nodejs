@@ -6,6 +6,12 @@
     <a href="/meetings/add" class="btn btn-danger font-weight-bold">Add Meeting</a>
   </div>
 
+  {{#if error}}
+    <div class="col-12 bg-warning mb-3 font-weight-bold">
+      {{error}}
+    </div>
+  {{/if}}
+
   {{#if meetings}}
     {{#each meetings as |meeting index|}}
       <div class="col-3 mb-4">

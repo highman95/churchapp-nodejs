@@ -164,6 +164,14 @@ module.exports = {
     // extract parameters
     const { location_id, meeting_type_id, tag, held_at: held_on } = meeting;
 
+    if (!location_id || isNaN(location_id)) {
+      return cb(new Error("Meeting-location is required"), null);
+    }
+
+    if (!meeting_type_id || isNaN(meeting_type_id)) {
+      return cb(new Error("Meeting-type is required"), null);
+    }
+
     if (!tag || !tag.trim()) {
       return cb(new Error("Tag is required"), null);
     }
