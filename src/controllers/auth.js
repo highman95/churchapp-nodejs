@@ -6,12 +6,11 @@ module.exports = {
       const { username, password } = req.body;
 
       authService.login(username, password, (err, payload, code = 200) => {
-        if (err) {
-          res.status(code).json({ status: false, message: err.message });
-          return;
-        }
-
-        res.json({ status: true, ...payload });
+        res.status(code).json({
+          status: !err,
+          ...payload,
+          message: err ? err.message : null,
+        });
       });
     } catch (e) {
       next(e);

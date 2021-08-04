@@ -4,15 +4,10 @@ module.exports = {
   get: (req, res, next) => {
     try {
       stationService.get((err, stations) => {
-        if (err) {
-          res.status(400).json({ status: false, message: err.message });
-          return;
-        }
-
-        res.json({
-          status: true,
+        res.status(err ? 400 : 200).json({
+          status: !err,
           data: stations,
-          message: "Stations successfully fetched",
+          message: err ? err.message : "Stations successfully fetched",
         });
       });
     } catch (e) {
@@ -38,15 +33,10 @@ module.exports = {
   create: (req, res, next) => {
     try {
       stationService.create(req.body, (err, station, code = 400) => {
-        if (err) {
-          res.status(code).json({ status: false, message: err.message });
-          return;
-        }
-
         res.status(code).json({
-          status: true,
+          status: !err,
           data: station,
-          message: "Station successfully created",
+          message: err ? err.message : "Station successfully created",
         });
       });
     } catch (e) {

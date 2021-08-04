@@ -7,7 +7,7 @@ module.exports = {
         { user_id: req.params.id, ...req.body },
         (err, posting, code = 400) => {
           res.status(code).json({
-            status: !!err,
+            status: !err,
             data: posting,
             message: err ? err.message : "Posting successfully saved",
           });
@@ -22,7 +22,7 @@ module.exports = {
     try {
       postingService.get(req.params.id, (err, postings, code = 400) => {
         res.status(code).json({
-          status: !!err,
+          status: !err,
           data: postings,
           message: err ? err.message : "Postings successfully fetched",
         });

@@ -19,9 +19,9 @@ module.exports = {
     }
 
     // extract parameters
-    const { name } = station;
+    const { organization_id, name } = station;
 
-    this.findByName(name, (err0, namedStation) => {
+    this.findByName(organization_id, name, (err0, namedStation) => {
       if (err0) {
         return cb(err0, null);
       }
@@ -31,8 +31,8 @@ module.exports = {
       }
 
       db.query(
-        "INSERT INTO stations (name) VALUES (?)",
-        [name.trim().toLowerCase()],
+        "INSERT INTO stations (organization_id, name) VALUES (?, ?)",
+        [organization_id, name.trim().toLowerCase()],
         (err, result) => {
           return err
             ? cb(err, null, 500)
@@ -42,9 +42,13 @@ module.exports = {
     });
   },
 
-  findByName: (name, cb) => {
+  findByName: (organization_id, name, cb) => {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
+    }
+
+    if (!organization_id || isNaN(organization_id)) {
+      return cb(new Error("Organization-Id is required"), null);
     }
 
     if (!name || !name.trim()) {
@@ -52,8 +56,8 @@ module.exports = {
     }
 
     db.query(
-      "SELECT id FROM stations WHERE name = ?",
-      [name.trim().toLowerCase()],
+      "SELECT id FROM stations WHERE organization_id = ? AND name = ?",
+      [organization_id, name.trim().toLowerCase()],
       (err, result) => {
         return err ? cb(err, null) : cb(null, result[0]);
       }
@@ -69,8 +73,12 @@ module.exports = {
       return cb(new Error("Id is required"), null);
     }
 
-    db.query("SELECT name FROM stations WHERE id = ?", [id], (err, result) => {
-      return err ? cb(err, null) : cb(null, result[0]);
-    });
+    db.query(
+      "SELECT organization_id, name FROM stations WHERE id = ?",
+      [id],
+      (err, result) => {
+        return err ? cb(err, null) : cb(null, result[0]);
+      }
+    );
   },
 };

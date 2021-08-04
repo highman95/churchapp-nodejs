@@ -4,15 +4,10 @@ module.exports = {
   get: (req, res, next) => {
     try {
       statisticService.get(req.params.id, (err, stats) => {
-        if (err) {
-          res.status(400).json({ status: false, message: err.message });
-          return;
-        }
-
-        res.json({
-          status: true,
+        res.status(err ? 400 : 200).json({
+          status: !err,
           data: stats,
-          message: "Statistics successfully fetched",
+          message: err ? err.message : "Statistics successfully fetched",
         });
       });
     } catch (e) {
@@ -56,7 +51,7 @@ module.exports = {
 
       statisticService.update(id, sid, statistic, (err, stat, code = 400) => {
         return res.status(code).json({
-          status: !!err,
+          status: !err,
           stat,
           message: err ? err.message : "Statistics successfully updated",
         });
