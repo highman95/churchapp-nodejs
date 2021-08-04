@@ -23,11 +23,11 @@
         </div>
         <div class="form-group col-md-4">
           <label for="station">Station:</label>
-          <select id="station" name="location_id" class="custom-select form-control" required>
+          <select id="station" name="station_id" class="custom-select form-control" required>
             <option selected>Choose...</option>
-            {{#if locations}}
-              {{#each locations as |location index|}}
-                <option value={{location.id}}>{{location.name}}</option>
+            {{#if stations}}
+              {{#each stations as |station index|}}
+                <option value={{station.id}}>{{station.name}}</option>
               {{/each}}
             {{/if}}
           </select>
@@ -39,7 +39,7 @@
             <div class="input-group-append">
                 <button type="submit" class="btn btn-danger font-weight-bold">Submit</button>
                 <button type="button" class="btn btn-dark font-weight-bold" onclick="location.href='/meetings'">
-                  Cancel
+                  <span title="Cancel">&#10558;</span>
                 </button>
             </div>
           </div>

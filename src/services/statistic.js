@@ -1,29 +1,29 @@
 module.exports = {
-  get: (meeting_id, callBack) => {
-    if (typeof callBack !== "function") {
+  get: (meeting_id, cb) => {
+    if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
 
     if (!meeting_id || isNaN(meeting_id)) {
-      return callBack(new Error("Meeting-id is required"), null);
+      return cb(new Error("Meeting-id is required"), null);
     }
 
     db.query(
       "SELECT * FROM statistics WHERE meeting_id = ? ORDER BY mno, held_at",
       [meeting_id],
       (err, result) => {
-        return err ? callBack(err, null) : callBack(null, result);
+        return err ? cb(err, null) : cb(null, result);
       }
     );
   },
 
-  create(meeting_id, statistic, callBack) {
-    if (typeof callBack !== "function") {
+  create(meeting_id, statistic, cb) {
+    if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
 
     if (!statistic || typeof statistic !== "object") {
-      return callBack(new Error("Statistics are required"), null);
+      return cb(new Error("Statistics are required"), null);
     }
 
     // extract parameters
@@ -45,11 +45,11 @@ module.exports = {
 
     this.findByMno(meeting_id, mno, (err0, stats) => {
       if (err0) {
-        return callBack(err0, null, 500);
+        return cb(err0, null, 500);
       }
 
       if (stats) {
-        return callBack(new Error("Statistics already saved"), null, 409);
+        return cb(new Error("Statistics already saved"), null, 409);
       }
 
       db.query(
@@ -74,56 +74,56 @@ module.exports = {
         ],
         (err, result) => {
           return err
-            ? callBack(err, null, 500)
-            : callBack(null, { id: result.insertId }, 201);
+            ? cb(err, null, 500)
+            : cb(null, { id: result.insertId }, 201);
         }
       );
     });
   },
 
-  findByMno: (meeting_id, mno, callBack) => {
-    if (typeof callBack !== "function") {
+  findByMno: (meeting_id, mno, cb) => {
+    if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
 
     if (!meeting_id || isNaN(meeting_id)) {
-      return callBack(new Error("Meeting-id is required"), null);
+      return cb(new Error("Meeting-id is required"), null);
     }
 
     // i.e. session-1, session-2, e.t.c
     if (!mno || isNaN(mno)) {
-      return callBack(new Error("Meeting-no is required"), null);
+      return cb(new Error("Meeting-no is required"), null);
     }
 
     db.query(
       "SELECT * FROM statistics WHERE meeting_id = ? AND mno = ?",
       [meeting_id, mno],
       (err, result) => {
-        return err ? callBack(err, null) : callBack(null, result[0]);
+        return err ? cb(err, null) : cb(null, result[0]);
       }
     );
   },
 
-  update(meeting_id, id, statistic, callBack) {
-    if (typeof callBack !== "function") {
+  update(meeting_id, id, statistic, cb) {
+    if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
 
     if (!statistic || typeof statistic !== "object") {
-      return callBack(new Error("Statistics are required"), null);
+      return cb(new Error("Statistics are required"), null);
     }
 
     this.find(meeting_id, id, (err0, stat) => {
       if (err0) {
-        return callBack(err0, null, 500);
+        return cb(err0, null, 500);
       }
 
       if (!stat) {
-        return callBack(new Error("Statistics not found"), null, 404);
+        return cb(new Error("Statistics not found"), null, 404);
       }
 
       if (stat.mno !== mno) {
-        return callBack(new Error("Meeting-number must be similar"), null, 409);
+        return cb(new Error("Meeting-number must be similar"), null, 409);
       }
 
       // extract parameters
@@ -162,31 +162,31 @@ module.exports = {
         ],
         (err, result) => {
           return err
-            ? callBack(err, null, 500)
-            : callBack(null, statistic, result.changedRows ? 204 : 304);
+            ? cb(err, null, 500)
+            : cb(null, statistic, result.changedRows ? 204 : 304);
         }
       );
     });
   },
 
-  find: (meeting_id, id, callBack) => {
-    if (typeof callBack !== "function") {
+  find: (meeting_id, id, cb) => {
+    if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
 
     if (!meeting_id || isNaN(meeting_id)) {
-      return callBack(new Error("Meeting-id is required"), null);
+      return cb(new Error("Meeting-id is required"), null);
     }
 
     if (!id || isNaN(id)) {
-      return callBack(new Error("Resource-id is required"), null);
+      return cb(new Error("Resource-id is required"), null);
     }
 
     db.query(
       "SELECT * FROM statistics WHERE id = ? AND meeting_id = ?",
       [id, meeting_id],
       (err, result) => {
-        return err ? callBack(err, null) : callBack(null, result[0]);
+        return err ? cb(err, null) : cb(null, result[0]);
       }
     );
   },

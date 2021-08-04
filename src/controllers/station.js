@@ -1,9 +1,9 @@
-const locationService = require("../services/location");
+const stationService = require("../services/station");
 
 module.exports = {
   get: (req, res, next) => {
     try {
-      locationService.get((err, locations) => {
+      stationService.get((err, stations) => {
         if (err) {
           res.status(400).json({ status: false, message: err.message });
           return;
@@ -11,8 +11,8 @@ module.exports = {
 
         res.json({
           status: true,
-          data: locations,
-          message: "Locations successfully fetched",
+          data: stations,
+          message: "Stations successfully fetched",
         });
       });
     } catch (e) {
@@ -21,23 +21,23 @@ module.exports = {
   },
 
   /**
-   * View-page for all-locations
+   * View-page for all-stations
    *
    * @param {object} req
    * @param {object} res
    */
   view: (req, res) => {
-    locationService.get((err, locations) => {
-      res.render("locations", {
-        title: "Locations",
-        locations: err ? [] : locations,
+    stationService.get((err, stations) => {
+      res.render("stations", {
+        title: "Stations",
+        stations: err ? [] : stations,
       });
     });
   },
 
   create: (req, res, next) => {
     try {
-      locationService.create(req.body, (err, location, code = 400) => {
+      stationService.create(req.body, (err, station, code = 400) => {
         if (err) {
           res.status(code).json({ status: false, message: err.message });
           return;
@@ -45,8 +45,8 @@ module.exports = {
 
         res.status(code).json({
           status: true,
-          data: location,
-          message: "Location successfully created",
+          data: station,
+          message: "Station successfully created",
         });
       });
     } catch (e) {

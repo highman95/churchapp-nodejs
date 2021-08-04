@@ -1,11 +1,11 @@
 const auditsRoutes = require("./audit");
-const locationsRoutes = require("./location");
+const stationsRoutes = require("./station");
 const meetingsRoutes = require("./meeting");
 const usersRoutes = require("./user");
 
 module.exports = (router) => {
   auditsRoutes(router);
-  locationsRoutes(router);
+  stationsRoutes(router);
   meetingsRoutes(router);
   usersRoutes(router);
 

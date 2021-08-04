@@ -1,10 +1,10 @@
 const userController = require("../../controllers/user");
-const assignmentController = require("../../controllers/assignment");
+const postingController = require("../../controllers/posting");
 
 module.exports = (router) => {
   router.get("/api/v1/users", userController.get);
   router.post("/api/v1/users", userController.create);
 
-  router.get("/api/v1/users/:id/assignments", assignmentController.get);
-  router.post("/api/v1/users/:id/assignments", assignmentController.create);
+  router.get("/api/v1/users/:id/postings", postingController.get);
+  router.post("/api/v1/users/:id/postings", postingController.create);
 };

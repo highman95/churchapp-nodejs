@@ -1,7 +1,7 @@
-<h3>Locations</h3>
+<h3>Stations</h3>
 <hr />
 
-{{! This is the locations-list page}}
+{{! This is the stations-list page}}
 <table class="table table-bordered table-sm table-hoverx table-striped">
   <thead class="thead-dark" style="font-variant: small-caps">
     <tr>
@@ -11,11 +11,11 @@
     </tr>
   </thead>
   <tbody>
-    {{#if locations}}
-      {{#each locations as |location index|}}
+    {{#if stations}}
+      {{#each stations as |station index|}}
         <tr>
           <td scope="row">{{index}}</td>
-          <td>{{location.name}}</td>
+          <td>{{station.name}}</td>
           <td>---</td>
         </tr>
       {{/each}}

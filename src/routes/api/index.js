@@ -1,13 +1,13 @@
 const auditsRoutes = require("./audit");
 const authRoutes = require("./auth");
-const locationsRoutes = require("./location");
+const stationsRoutes = require("./station");
 const meetingsRoutes = require("./meeting");
 const usersRoutes = require("./user");
 
 module.exports = (router) => {
   auditsRoutes(router);
   authRoutes(router);
-  locationsRoutes(router);
+  stationsRoutes(router);
   meetingsRoutes(router);
   usersRoutes(router);
 

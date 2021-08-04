@@ -2,67 +2,67 @@ const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
-  get: (callBack) => {
-    if (typeof callBack !== "function") {
+  get: (cb) => {
+    if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
 
     db.query(
       "SELECT hex(id) as id, first_name, last_name, phone, email, active FROM users ORDER BY last_name",
       (err, result) => {
-        return err ? callBack(err, null) : callBack(null, result);
+        return err ? cb(err, null) : cb(null, result);
       }
     );
   },
 
-  create(user, callBack) {
-    if (typeof callBack !== "function") {
+  create(user, cb) {
+    if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
 
     if (!user || typeof user !== "object") {
-      return callBack(new Error("User-profile is required"), null, 406);
+      return cb(new Error("User-profile is required"), null, 406);
     }
 
     // extract parameters
     const { title, first_name, last_name, phone, email, password } = user;
 
     if (!title || !title.trim()) {
-      return callBack(new Error("Title is required"), null);
+      return cb(new Error("Title is required"), null);
     }
 
     if (!first_name || !first_name.trim()) {
-      return callBack(new Error("First-name is required"), null);
+      return cb(new Error("First-name is required"), null);
     }
 
     if (!last_name || !last_name.trim()) {
-      return callBack(new Error("Last-name is required"), null);
+      return cb(new Error("Last-name is required"), null);
     }
 
     if (!phone || !phone.trim()) {
-      return callBack(new Error("Phone is required"), null);
+      return cb(new Error("Phone is required"), null);
     }
 
     if (!email || !email.trim()) {
-      return callBack(new Error("E-mail is required"), null);
+      return cb(new Error("E-mail is required"), null);
     }
 
     if (!password || !password.trim()) {
-      return callBack(new Error("Password is required"), null);
+      return cb(new Error("Password is required"), null);
     }
 
     this.findByEmail(email, false, (err0, emailUser) => {
       if (err0) {
-        return callBack(err0, null, 500);
+        return cb(err0, null, 500);
       }
 
       if (emailUser) {
-        return callBack(new Error("E-mail already used"), null, 409);
+        return cb(new Error("E-mail already used"), null, 409);
       }
 
       bcrypt.hash(password, 10, (err1, passwordHash) => {
         if (err1) {
-          return callBack(new Error("Password cannot be hashed"), null);
+          return cb(new Error("Password cannot be hashed"), null);
         }
 
         // re-format values
@@ -74,21 +74,21 @@ module.exports = {
           [id, title, first_name, last_name, phone, email_lc, passwordHash],
           (err2, result) => {
             return err2
-              ? callBack(err2, null, 500)
-              : callBack(null, { id: id.replace("-", ""), ...user }, 201);
+              ? cb(err2, null, 500)
+              : cb(null, { id: id.replace("-", ""), ...user }, 201);
           }
         );
       });
     });
   },
 
-  findByEmail: (email, isAuth, callBack) => {
-    if (typeof callBack !== "function") {
+  findByEmail: (email, isAuth, cb) => {
+    if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
 
     if (!email || !email.trim()) {
-      return callBack(new Error("E-mail is required"), null);
+      return cb(new Error("E-mail is required"), null);
     }
 
     db.query(
@@ -97,25 +97,25 @@ module.exports = {
       } FROM users WHERE email = ? LIMIT 1`,
       [email.trim().toLowerCase()],
       (err, result, fields) => {
-        return err ? callBack(err, null) : callBack(null, result[0]);
+        return err ? cb(err, null) : cb(null, result[0]);
       }
     );
   },
 
-  find: (id, callBack) => {
-    if (typeof callBack !== "function") {
+  find: (id, cb) => {
+    if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
 
     if (!id || !id.trim()) {
-      return callBack(new Error("Id is required"), null);
+      return cb(new Error("Id is required"), null);
     }
 
     db.query(
       "SELECT first_name, last_name, phone, email, active FROM users WHERE hex(id) = ?",
       [id],
       (err, result) => {
-        return err ? callBack(err, null) : callBack(null, result[0]);
+        return err ? cb(err, null) : cb(null, result[0]);
       }
     );
   },

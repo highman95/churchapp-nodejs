@@ -1,5 +1,5 @@
 const meetingService = require("../services/meeting");
-const locationService = require("../services/location");
+const stationService = require("../services/station");
 const meetingTypeService = require("../services/meeting-type");
 
 module.exports = {
@@ -58,14 +58,14 @@ module.exports = {
 
   createPage: (req, res) => {
     try {
-      locationService.get((err0, locations) => {
+      stationService.get((err0, stations) => {
         meetingTypeService.get((err1, meetingTypes) => {
           var now = new Date();
           now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // local-datetime
 
           res.render("meetings/add", {
             title: "Meetings",
-            locations,
+            stations,
             meetingTypes,
             currentDateTime: now.toISOString().slice(0, 16),
           });
