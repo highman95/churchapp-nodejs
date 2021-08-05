@@ -11,7 +11,7 @@ module.exports = {
       LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
       LEFT JOIN stations s ON s.id = m.station_id ORDER BY held_on`,
       (err, result) => {
-        return err ? cb(err, null) : cb(null, result);
+        return err ? cb(err, null, 500) : cb(null, result, 200);
       }
     );
   },
@@ -42,9 +42,9 @@ module.exports = {
       station_id,
       meeting_type_id,
       held_on,
-      (err0, lastMeeting) => {
-        if (err0) {
-          return cb(err0, null, 500);
+      (err0, lastMeeting, code = 400) => {
+        if (err0 && code !== 404) {
+          return cb(err0, null, code);
         }
 
         if (lastMeeting) {
@@ -140,7 +140,7 @@ module.exports = {
 
         let meeting; // check-case: result[0] is null
         if (!(meeting = result[0])) {
-          return cb(null, meeting);
+          return cb(new Error("Meeting not found"), null, 404);
         }
 
         statisticService.get(id, (err1, statistics) => {
@@ -176,13 +176,9 @@ module.exports = {
       return cb(new Error("Tag is required"), null);
     }
 
-    this.find(id, (err0, lastMeeting) => {
+    this.find(id, (err0, lastMeeting, code = 400) => {
       if (err0) {
-        return cb(err0, null, 500);
-      }
-
-      if (!lastMeeting) {
-        return cb(new Error("Meeting does not exist"), null, 404);
+        return cb(err0, null, code);
       }
 
       if (station_id != lastMeeting.station_id) {
@@ -201,11 +197,9 @@ module.exports = {
         "UPDATE meetings SET meeting_type_id = ?, tag = ?, held_on = ? WHERE id = ? AND station_id = ?",
         [meeting_type_id, tag, held_on, id, station_id],
         (err, result) => {
-          if (err) {
-            return cb(new Error("Meeting cannot be updated"), null, 500);
-          }
-
-          return cb(null, meeting, 304);
+          return err
+            ? cb(new Error("Meeting cannot be updated"), null, 500)
+            : cb(null, meeting, 204);
         }
       );
     });
@@ -217,7 +211,7 @@ module.exports = {
     }
 
     if (!id || isNaN(id)) {
-      return cb(new Error("Resource-id is required"), null);
+      return cb(new Error("Meeting-id is required"), null);
     }
 
     db.query(
@@ -232,7 +226,7 @@ module.exports = {
 
         let meeting; // check-case: result[0] is null
         if (!(meeting = result[0])) {
-          return cb(null, meeting, 404);
+          return cb(new Error("Meeting not found"), null, 404);
         }
 
         statisticService.get(id, (err1, statistics) => {

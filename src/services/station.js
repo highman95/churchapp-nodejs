@@ -5,7 +5,7 @@ module.exports = {
     }
 
     db.query("SELECT id, name FROM stations ORDER BY name", (err, result) => {
-      return err ? cb(err, null) : cb(null, result);
+      return err ? cb(err, null, 500) : cb(null, result, 200);
     });
   },
 
@@ -21,9 +21,9 @@ module.exports = {
     // extract parameters
     const { organization_id, name } = station;
 
-    this.findByName(organization_id, name, (err0, namedStation) => {
-      if (err0) {
-        return cb(err0, null);
+    this.findByName(organization_id, name, (err0, namedStation, code = 400) => {
+      if (err0 && code !== 404) {
+        return cb(err0, null, code);
       }
 
       if (namedStation) {
@@ -59,7 +59,11 @@ module.exports = {
       "SELECT id FROM stations WHERE organization_id = ? AND name = ?",
       [organization_id, name.trim().toLowerCase()],
       (err, result) => {
-        return err ? cb(err, null) : cb(null, result[0]);
+        return err
+          ? cb(err, null, 500)
+          : result[0]
+          ? cb(null, result[0], 200)
+          : cb(new Error("Station not found"), null, 404);
       }
     );
   },
@@ -77,7 +81,11 @@ module.exports = {
       "SELECT organization_id, name FROM stations WHERE id = ?",
       [id],
       (err, result) => {
-        return err ? cb(err, null) : cb(null, result[0]);
+        return err
+          ? cb(err, null, 500)
+          : result[0]
+          ? cb(null, result[0], 200)
+          : cb(new Error("Station not found"), null, 404);
       }
     );
   },

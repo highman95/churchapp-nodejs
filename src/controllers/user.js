@@ -3,16 +3,11 @@ const userService = require("../services/user");
 module.exports = {
   get: (req, res, next) => {
     try {
-      userService.get((err, users) => {
-        if (err) {
-          res.status(400).json({ status: false, message: err.message });
-          return;
-        }
-
-        res.json({
-          status: true,
+      userService.get((err, users, code = 400) => {
+        res.status(code).json({
+          status: !err,
           data: users,
-          message: "Users successfully fetched",
+          message: err ? err.message : "Users successfully fetched",
         });
       });
     } catch (e) {
@@ -29,15 +24,10 @@ module.exports = {
   create: (req, res, next) => {
     try {
       userService.create(req.body, (err, user, code = 400) => {
-        if (err) {
-          res.status(code).json({ status: false, message: err.message });
-          return;
-        }
-
         res.status(code).json({
-          status: true,
+          status: !err,
           data: user,
-          message: "User successfully created",
+          message: err ? err.message : "User successfully created",
         });
       });
     } catch (e) {

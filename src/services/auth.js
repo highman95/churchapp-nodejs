@@ -8,22 +8,18 @@ module.exports = {
       throw new Error("Callback is not defined");
     }
 
-    userService.findByEmail(username, true, (err, user) => {
+    userService.findByEmail(username, true, (err, user, code = 400) => {
       if (err) {
-        return cb(err, null, 400);
-      }
-
-      if (!user) {
-        return cb(new Error("User cannot be found"), null, 404);
+        return cb(err, null, code);
       }
 
       if (parseInt(user.active) === 0) {
-        return cb(new Error("Your account is inactive"), null, 400);
+        return cb(new Error("Your account is inactive"), null);
       }
 
       bcrypt.compare(password, user.password, (err, isCorrect) => {
         if (err || !isCorrect) {
-          return cb(new Error("Invalid username/password"), null, 400);
+          return cb(new Error("Invalid username/password"), null);
         }
 
         // generate JWT-token
@@ -35,10 +31,14 @@ module.exports = {
         // remove PIIs
         delete user.password;
 
-        return cb(null, {
-          data: { ...user, active: user.active == 1 },
-          token,
-        });
+        return cb(
+          null,
+          {
+            data: { ...user, active: user.active == 1 },
+            token,
+          },
+          200
+        );
       });
     });
   },

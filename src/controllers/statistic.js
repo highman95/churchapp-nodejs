@@ -3,8 +3,8 @@ const statisticService = require("../services/statistic");
 module.exports = {
   get: (req, res, next) => {
     try {
-      statisticService.get(req.params.id, (err, stats) => {
-        res.status(err ? 400 : 200).json({
+      statisticService.get(req.params.id, (err, stats, code = 400) => {
+        res.status(code).json({
           status: !err,
           data: stats,
           message: err ? err.message : "Statistics successfully fetched",

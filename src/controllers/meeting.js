@@ -5,8 +5,8 @@ const meetingTypeService = require("../services/meeting-type");
 module.exports = {
   get: (req, res, next) => {
     try {
-      meetingService.get((err, meetings) => {
-        res.status(err ? 400 : 200).json({
+      meetingService.get((err, meetings, code = 400) => {
+        res.status(code).json({
           status: !err,
           data: meetings,
           message: err ? err.message : "Meetings successfully fetched",

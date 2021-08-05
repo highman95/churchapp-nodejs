@@ -11,9 +11,9 @@ module.exports = {
     // extract parameters
     const { user_id, station_id, posted_at } = posting;
 
-    this.find(user_id, station_id, (err0, lastPosting) => {
-      if (err0) {
-        return cb(err0, null, 500);
+    this.find(user_id, station_id, (err0, lastPosting, code = 400) => {
+      if (err0 && code !== 404) {
+        return cb(err0, null, code);
       }
 
       if (lastPosting) {
@@ -65,7 +65,11 @@ module.exports = {
       "SELECT serving, posted_at FROM postings WHERE hex(user_id) = ? AND station_id = ?",
       [user_id, station_id],
       (err, result) => {
-        return err ? cb(err, null) : cb(null, result[0]);
+        return err
+          ? cb(err, null, 500)
+          : result[0]
+          ? cb(null, result[0], 200)
+          : cb(new Error("Posting not found"), null, 404);
       }
     );
   },

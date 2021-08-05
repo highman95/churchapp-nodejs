@@ -5,10 +5,10 @@ module.exports = {
     try {
       const { username, password } = req.body;
 
-      authService.login(username, password, (err, payload, code = 200) => {
+      authService.login(username, password, (err, payload, code = 400) => {
         res.status(code).json({
           status: !err,
-          ...payload,
+          data: payload,
           message: err ? err.message : null,
         });
       });

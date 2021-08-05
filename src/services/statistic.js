@@ -12,7 +12,7 @@ module.exports = {
       "SELECT * FROM statistics WHERE meeting_id = ? ORDER BY mno, held_at",
       [meeting_id],
       (err, result) => {
-        return err ? cb(err, null) : cb(null, result);
+        return err ? cb(err, null, 500) : cb(null, result, 200);
       }
     );
   },
@@ -43,9 +43,9 @@ module.exports = {
       held_at = new Date().toISOString().slice(0, 19),
     } = statistic;
 
-    this.findByMno(meeting_id, mno, (err0, stats) => {
-      if (err0) {
-        return cb(err0, null, 500);
+    this.findByMno(meeting_id, mno, (err0, stats, code = 400) => {
+      if (err0 && code !== 404) {
+        return cb(err0, null, code);
       }
 
       if (stats) {
@@ -99,7 +99,11 @@ module.exports = {
       "SELECT * FROM statistics WHERE meeting_id = ? AND mno = ?",
       [meeting_id, mno],
       (err, result) => {
-        return err ? cb(err, null) : cb(null, result[0]);
+        return err
+          ? cb(err, null, 500)
+          : result[0]
+          ? cb(null, result[0], 200)
+          : cb(new Error("Statistics not found"), null, 404);
       }
     );
   },
@@ -113,13 +117,9 @@ module.exports = {
       return cb(new Error("Statistics are required"), null);
     }
 
-    this.find(meeting_id, id, (err0, stat) => {
+    this.find(meeting_id, id, (err0, stat, code = 400) => {
       if (err0) {
-        return cb(err0, null, 500);
-      }
-
-      if (!stat) {
-        return cb(new Error("Statistics not found"), null, 404);
+        return cb(err0, null, code);
       }
 
       if (stat.mno !== mno) {
@@ -186,7 +186,11 @@ module.exports = {
       "SELECT * FROM statistics WHERE id = ? AND meeting_id = ?",
       [id, meeting_id],
       (err, result) => {
-        return err ? cb(err, null) : cb(null, result[0]);
+        return err
+          ? cb(err, null, 500)
+          : result[0]
+          ? cb(null, result[0], 200)
+          : cb(new Error("Statistics not found"), null, 404);
       }
     );
   },

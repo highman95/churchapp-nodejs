@@ -10,7 +10,7 @@ module.exports = {
     db.query(
       "SELECT hex(id) as id, first_name, last_name, phone, email, active FROM users ORDER BY last_name",
       (err, result) => {
-        return err ? cb(err, null) : cb(null, result);
+        return err ? cb(err, null, 500) : cb(null, result, 200);
       }
     );
   },
@@ -51,9 +51,9 @@ module.exports = {
       return cb(new Error("Password is required"), null);
     }
 
-    this.findByEmail(email, false, (err0, emailUser) => {
-      if (err0) {
-        return cb(err0, null, 500);
+    this.findByEmail(email, false, (err0, emailUser, code = 400) => {
+      if (err0 && code !== 404) {
+        return cb(err0, null, code);
       }
 
       if (emailUser) {
@@ -62,7 +62,7 @@ module.exports = {
 
       bcrypt.hash(password, 10, (err1, passwordHash) => {
         if (err1) {
-          return cb(new Error("Password cannot be hashed"), null);
+          return cb(new Error("Password cannot be hashed"), null, 500);
         }
 
         // re-format values
@@ -70,7 +70,8 @@ module.exports = {
         const email_lc = email.trim().toLowerCase();
 
         db.query(
-          "INSERT INTO users (id, title, first_name, last_name, phone, email, password) VALUES (UNHEX(REPLACE(?,'-','')), ?, ?, ?, ?, ?, ?)",
+          `INSERT INTO users (id, title, first_name, last_name, phone, email, password) 
+           VALUES (UNHEX(REPLACE(?,'-','')), ?, ?, ?, ?, ?, ?)`,
           [id, title, first_name, last_name, phone, email_lc, passwordHash],
           (err2, result) => {
             return err2
@@ -97,7 +98,11 @@ module.exports = {
       } FROM users WHERE email = ? LIMIT 1`,
       [email.trim().toLowerCase()],
       (err, result, fields) => {
-        return err ? cb(err, null) : cb(null, result[0]);
+        return err
+          ? cb(err, null, 500)
+          : result[0]
+          ? cb(null, result[0], 200)
+          : cb(new Error("User not found"), null, 404);
       }
     );
   },
@@ -115,7 +120,11 @@ module.exports = {
       "SELECT first_name, last_name, phone, email, active FROM users WHERE hex(id) = ?",
       [id],
       (err, result) => {
-        return err ? cb(err, null) : cb(null, result[0]);
+        return err
+          ? cb(err, null, 500)
+          : result[0]
+          ? cb(null, result[0], 200)
+          : cb(new Error("User not found"), null, 404);
       }
     );
   },

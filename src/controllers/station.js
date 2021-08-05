@@ -3,8 +3,8 @@ const stationService = require("../services/station");
 module.exports = {
   get: (req, res, next) => {
     try {
-      stationService.get((err, stations) => {
-        res.status(err ? 400 : 200).json({
+      stationService.get((err, stations, code = 400) => {
+        res.status(code).json({
           status: !err,
           data: stations,
           message: err ? err.message : "Stations successfully fetched",
