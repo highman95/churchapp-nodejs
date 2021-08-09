@@ -53,7 +53,9 @@ module.exports = {
 
   createPage: (req, res) => {
     try {
-      stationService.get((err0, stations) => {
+      const { organization_id } = (req.auth || {}).user || {};
+
+      stationService.get(organization_id, (err0, stations) => {
         meetingTypeService.get((err1, meetingTypes) => {
           var now = new Date();
           now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // local-datetime

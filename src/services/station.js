@@ -1,12 +1,20 @@
 module.exports = {
-  get: (cb) => {
+  get: (organization_id, cb) => {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
 
-    db.query("SELECT id, name FROM stations ORDER BY name", (err, result) => {
-      return err ? cb(err, null, 500) : cb(null, result, 200);
-    });
+    if (!organization_id || isNaN(organization_id)) {
+      return cb(new Error("Organization-Id is required"), null);
+    }
+
+    db.query(
+      "SELECT id, name FROM stations WHERE organization_id = ? ORDER BY name",
+      [organization_id],
+      (err, result) => {
+        return err ? cb(err, null, 500) : cb(null, result, 200);
+      }
+    );
   },
 
   create(station, cb) {
