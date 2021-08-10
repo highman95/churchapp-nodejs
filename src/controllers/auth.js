@@ -16,4 +16,15 @@ module.exports = {
       next(e);
     }
   },
+
+  loginView: (req, res) => {
+    res.render("users-signin", { title: "Login" });
+  },
+
+  logout: (req, res) => {
+    if (req.isWR) {
+      req.logout();
+      res.redirect("/");
+    }
+  },
 };

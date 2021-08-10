@@ -1,9 +1,11 @@
+<h3>Users</h3>
+<hr />
+
 <table class="table table-bordered table-sm table-hoverx table-striped">
   <thead class="thead-dark" style="font-variant: small-caps">
     <tr>
       <th scope="col">s-no</th>
-      <th scope="col">first-name</th>
-      <th scope="col">last-name</th>
+      <th scope="col">full-name</th>
       <th scope="col">status</th>
       <th scope="col">action</th>
     </tr>
@@ -14,12 +16,17 @@
         <tr>
           <td scope="row">{{index}}</td>
           <td>
-            {{user.last_name}}
-            <span class="text-info d-block">{{user.email}}</span>
-            <span class="text-muted d-block">{{user.phone}}</span>
+            <strong>{{user.last_name}}</strong> {{user.first_name}}
+            <small class="text-danger font-weight-bold d-block">
+              {{user.email}}
+            </small>
+            <small class="text-muted d-block">{{user.phone}}</small>
           </td>
-          <td>{{user.first_name}}</td>
-          <td>{{user.active}}</td>
+          <td>
+            <span class="badge badge-info">
+              {{!if (user.active === "0") "ACTIVE" "INACTIVE"}}
+            </span>
+          </td>
           <td>---</td>
         </tr>
       {{/each}}

@@ -32,7 +32,7 @@ const auth = (req, res, next) => {
 
   userService.findByEmail(payload.data.username, true, (err, user) => {
     // error-occurred || user === null
-    if (err || !user) {
+    if (err) {
       next(new Error("Token-user verification failed"));
       return;
     }
@@ -45,7 +45,7 @@ const auth = (req, res, next) => {
     }
 
     req.auth = {
-      user: { firstName, lastName, email },
+      user: { firstName, lastName, email/* , organization_id */ },
     };
     next();
   });
