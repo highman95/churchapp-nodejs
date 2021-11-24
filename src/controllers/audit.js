@@ -41,7 +41,7 @@ module.exports = {
     try {
       auditService.find(req.params.id, (err, audit) => {
         return !!audit
-          ? res.render("audits/view", { title: "Audits", audit })
+          ? res.render("audits/detail", { title: "Audits", audit })
           : res.redirect("/audits");
       });
     } catch (e) {}

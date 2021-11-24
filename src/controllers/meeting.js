@@ -134,7 +134,7 @@ module.exports = {
         }
 
         return !!meeting
-          ? res.render("meetings/view", { title: "Meetings", meeting })
+          ? res.render("meetings/detail", { title: "Meetings", meeting })
           : res.redirect("/meetings");
       });
     } catch (e) {}
