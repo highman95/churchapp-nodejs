@@ -24,13 +24,20 @@ module.exports = {
     // extract parameters
     const { name, founded_on } = organization;
 
-    if (!founded_on || !new Date(founded_on).getTime()) {
-      return cb(new Error("Founded-on is required as date"), null);
-    }
-
     this.findByName(name, (err0, organization0, code = 400) => {
       if (err0 && code !== 404) {
         return cb(err0, null, code);
+      }
+
+      if (!founded_on || !founded_on.trim()) {
+        return cb(new Error("Founded-on is required"), null);
+      }
+
+      if (!new Date(founded_on).getTime()) {
+        return cb(
+          new Error("Founded-on must be in YYYY-MM-DD date-format"),
+          null
+        );
       }
 
       if (organization0) {
@@ -38,7 +45,7 @@ module.exports = {
       }
 
       db.query(
-        "INSERT INTO organizations (name, founded_on) VALUES (?)",
+        "INSERT INTO organizations (name, founded_on) VALUES (?, ?)",
         [name.trim().toLowerCase(), founded_on],
         (err, result) => {
           return err
