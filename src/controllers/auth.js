@@ -18,7 +18,7 @@ module.exports = {
   },
 
   loginView: (req, res) => {
-    res.render("users-signin", { title: "Login" });
+    res.render("users/signin", { title: "Login" });
   },
 
   logout: (req, res) => {
