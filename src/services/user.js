@@ -1,6 +1,15 @@
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 
+const isEmail = (email) => {
+  return (
+    email &&
+    /^([a-zA-Z0-9_\-]+)(\.)?([a-zA-Z0-9_\-]+)@([a-zA-Z]+)\.([a-zA-Z]{2,})$/.test(
+      email
+    )
+  );
+};
+
 module.exports = {
   get: (cb) => {
     if (typeof cb !== "function") {
@@ -64,6 +73,7 @@ module.exports = {
         // re-format values
         const id = uuidv4(); // new-user-id
         const email_lc = email.trim().toLowerCase();
+        delete user.password;
 
         db.query(
           `INSERT INTO users (id, title, first_name, last_name, phone, email, password) 
@@ -86,6 +96,10 @@ module.exports = {
 
     if (!email || !email.trim()) {
       return cb(new Error("E-mail is required"), null);
+    }
+
+    if (!isEmail(email)) {
+      return cb(new Error("E-mail is not in valid format"), null);
     }
 
     db.query(
