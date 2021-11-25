@@ -111,6 +111,28 @@ module.exports = {
     });
   },
 
+  toggle(email, isOn, cb) {
+    if (typeof cb !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    this.findByEmail(email, false, (err0, user, code = 400) => {
+      if (err0) {
+        return cb(err0, null, code);
+      }
+
+      db.query(
+        `UPDATE users SET active = ? WHERE email = ?`,
+        [isOn ? "1" : "0", email],
+        (err1, _) => {
+          return err1
+            ? cb(err1, null, 500)
+            : cb(null, { ...user, active: user.active == 1 }, 204);
+        }
+      );
+    });
+  },
+
   changePassword(email, oldPassword, newPassword, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");

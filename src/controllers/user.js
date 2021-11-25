@@ -50,4 +50,22 @@ module.exports = {
       next(e);
     }
   },
+
+  toggle: (req, res, next) => {
+    try {
+      const { username, isOn = false } = req.body;
+
+      userService.toggle(username, isOn, (err, data, code = 400) => {
+        res.status(code).json({
+          status: !err,
+          data,
+          message: err
+            ? err.message
+            : `User successfully ${isOn ? "" : "de-"}activated`,
+        });
+      });
+    } catch (e) {
+      next(e);
+    }
+  },
 };
