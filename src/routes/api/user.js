@@ -5,6 +5,8 @@ module.exports = (router) => {
   router.get("/api/v1/users", userController.get);
   router.post("/api/v1/users", userController.create);
 
+  router.put("/api/v1/users/verify", userController.verify);
+
   router.get("/api/v1/users/:id/postings", postingController.get);
   router.post("/api/v1/users/:id/postings", postingController.create);
 };

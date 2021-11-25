@@ -34,4 +34,20 @@ module.exports = {
       next(e);
     }
   },
+
+  verify: (req, res, next) => {
+    try {
+      const { username } = req.body;
+
+      userService.verify(username, (err, data, code = 400) => {
+        res.status(code).json({
+          status: !err,
+          data,
+          message: err ? err.message : "User successfully verified",
+        });
+      });
+    } catch (e) {
+      next(e);
+    }
+  },
 };
