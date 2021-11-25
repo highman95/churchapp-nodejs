@@ -14,7 +14,7 @@
     {{#if users}}
       {{#each users as |user index|}}
         <tr>
-          <td scope="row">{{index}}</td>
+          <td scope="row">{{computeSno index}}</td>
           <td>
             <strong>{{user.last_name}}</strong> {{user.first_name}}
             <small class="text-danger font-weight-bold d-block">

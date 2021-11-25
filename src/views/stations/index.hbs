@@ -14,7 +14,7 @@
     {{#if stations}}
       {{#each stations as |station index|}}
         <tr>
-          <td scope="row">{{index}}</td>
+          <td scope="row">{{computeSno index}}</td>
           <td>{{station.name}}</td>
           <td>---</td>
         </tr>

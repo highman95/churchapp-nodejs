@@ -43,10 +43,6 @@ module.exports = {
       return cb(new Error("Phone is required"), null);
     }
 
-    if (!email || !email.trim()) {
-      return cb(new Error("E-mail is required"), null);
-    }
-
     if (!password || !password.trim()) {
       return cb(new Error("Password is required"), null);
     }
