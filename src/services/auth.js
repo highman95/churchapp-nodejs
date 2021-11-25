@@ -42,4 +42,19 @@ module.exports = {
       });
     });
   },
+
+  resetPassword: (username, oldPassword, newPassword, cb) => {
+    if (typeof cb !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    userService.changePassword(
+      username,
+      oldPassword,
+      newPassword,
+      (err, user = null, code = 400) => {
+        return err ? cb(err, null, code) : cb(null, user, 204);
+      }
+    );
+  },
 };

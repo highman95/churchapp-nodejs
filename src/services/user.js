@@ -76,7 +76,7 @@ module.exports = {
         delete user.password;
 
         db.query(
-          `INSERT INTO users (id, title, first_name, last_name, phone, email, password) 
+          `INSERT INTO users (id, title, first_name, last_name, phone, email, password)
            VALUES (UNHEX(REPLACE(?,'-','')), ?, ?, ?, ?, ?, ?)`,
           [id, title, first_name, last_name, phone, email_lc, passwordHash],
           (err2, result) => {
@@ -85,6 +85,60 @@ module.exports = {
               : cb(null, { id: id.replace("-", ""), ...user }, 201);
           }
         );
+      });
+    });
+  },
+
+  changePassword(email, oldPassword, newPassword, cb) {
+    if (typeof cb !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    this.findByEmail(email, false, (err, user) => {
+      if (err) {
+        return cb(err);
+      }
+
+      if (!oldPassword || !oldPassword.trim()) {
+        return cb(new Error("Your previous password is required"));
+      }
+
+      if (!newPassword || !newPassword.trim()) {
+        return cb(new Error("Your current password is required"));
+      }
+
+      if (oldPassword === newPassword) {
+        return cb(new Error("Your previous password cannot be reused"));
+      }
+
+      if (parseInt(user.active) === 0) {
+        return cb(new Error("Your account is inactive"), null, 406);
+      }
+
+      bcrypt.compare(oldPassword, user.password, (err0, isCorrect) => {
+        if (err0 || !isCorrect) {
+          return cb(new Error("Invalid username/password"));
+        }
+
+        bcrypt.hash(newPassword, 10, (err1, passwordHash) => {
+          if (err1) {
+            return cb(new Error("Password cannot be hashed"), null, 500);
+          }
+
+          // clean-up PII-information
+          delete user.id;
+          delete user.password;
+
+          db.query(
+            `UPDATE users SET password = ? WHERE email = ?`,
+            [passwordHash, email],
+            (err2, _) => {
+              return err2
+                ? cb(err2, null, 500)
+                : cb(null, { ...user, active: user.active == 1 }, 204);
+            }
+          );
+        });
       });
     });
   },

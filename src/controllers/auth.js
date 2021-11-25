@@ -27,4 +27,25 @@ module.exports = {
       res.redirect("/");
     }
   },
+
+  resetPassword: (req, res, next) => {
+    try {
+      const { username, oldPassword, newPassword } = req.body;
+
+      authService.resetPassword(
+        username,
+        oldPassword,
+        newPassword,
+        (err, data, code = 400) => {
+          res.status(code).json({
+            status: !err,
+            data,
+            message: err ? err.message : null,
+          });
+        }
+      );
+    } catch (e) {
+      next(e);
+    }
+  },
 };
