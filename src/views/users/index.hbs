@@ -16,16 +16,19 @@
         <tr>
           <td scope="row">{{computeSno index}}</td>
           <td>
-            <strong>{{user.last_name}}</strong> {{user.first_name}}
+            <strong>{{user.last_name}}</strong>
+            {{user.first_name}}
             <small class="text-danger font-weight-bold d-block">
               {{user.email}}
             </small>
             <small class="text-muted d-block">{{user.phone}}</small>
           </td>
           <td>
-            <span class="badge badge-info">
-              {{!if (user.active === "0") "ACTIVE" "INACTIVE"}}
-            </span>
+            {{#if (isTrue user.active "1")}}
+              <span class="badge badge-info">ACTIVE</span>
+            {{else}}
+              <span class="badge badge-danger">INACTIVE</span>
+            {{/if}}
           </td>
           <td>---</td>
         </tr>

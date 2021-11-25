@@ -36,6 +36,7 @@ app.set("views", path.join(__dirname, "views"));
 
 hbs.registerPartials(path.join(__dirname, "views/partials"), (err) => {});
 hbs.registerHelper("computeSno", (index) => index + 1);
+hbs.registerHelper("isTrue", (p0, p1) => p0 === p1);
 
 // Initialize Passport and restore authentication state, if any, from the session.
 app.use(passportService.initialize());
