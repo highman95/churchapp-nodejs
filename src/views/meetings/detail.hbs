@@ -1,0 +1,208 @@
+<h3>Meeting Information</h3>
+<hr />
+
+<div class="row mt-4">
+  <div class="col-12">
+    <!-- Main meeting details -->
+    {{#if meeting}}
+      <div class="row">
+        <div class="col-md-4 col-6">
+          <label for="held-at">Date/Time-Held:</label>
+          {{meeting.held_on}}&nbsp;
+        </div>
+        <div class="col-md-4 col-6">
+          <label for="meeting-type">Meeting-Type:</label>
+          {{meeting.meeting_type}}&nbsp;
+        </div>
+        <div class="col-md-4">
+          <label for="station">Station:</label>
+          {{meeting.station}}&nbsp;
+        </div>
+        <div class="col-md-10 col-9">
+          <label for="tag-name">Tag-Name:</label>
+          {{meeting.tag}}&nbsp;
+        </div>
+        <div class="col-md-2 col-3 text-right">
+          <div class="btn-group" role="group" aria-label="edit-return-btn-group">
+            <button type="button" class="btn btn-danger font-weight-bold" onclick="location.href='/meetings/edit/{{meeting.id}}'">
+              <span title="Edit">&#9998;</span>
+            </button>
+            <button type="button" class="btn btn-dark font-weight-bold" onclick="location.href='/meetings'">
+              <span title="Return">&#10558;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {{#if meeting.statistics}}
+        {{#each meeting.statistics as |stat index|}}
+          <!-- Attendance -->
+          <div class="row">
+            <div class="col-md-12">
+              <h6 class="pt-5">Session-{{stat.mno}}: [Attendance / Finances]</h6>
+              <button type="button" class="close pt-2 text-danger" aria-label="Delete">
+                <span aria-hidden="true" title="Delete">&#128465;</span>
+              </button>
+              <hr />
+            </div>
+            <div class="col-4 col-md-2 mb-1">
+              <label for="male">Male:</label>
+              {{stat.male}}&nbsp;
+            </div>
+            <div class="col-4 col-md-2 mb-1">
+              <label for="female">Female:</label>
+              {{stat.female}}&nbsp;
+            </div>
+            <div class="col-4 col-md-2 mb-1">
+              <label for="children">Children:</label>
+              {{stat.children}}&nbsp;
+            </div>
+            <div class="col-4 col-md-2 mb-1">
+              <label for="converts">N/Converts:</label>
+              {{stat.converts}}&nbsp;
+            </div>
+            <div class="col-4 col-md-2 mb-1">
+              <label for="first-timers">F/Timers:</label>
+              {{stat.first_timers}}&nbsp;
+            </div>
+            <div class="col-4 col-md-2 mb-1">
+              <label for="testimonies">Testimonies:</label>
+              {{stat.testimonies}}&nbsp;
+            </div>
+          </div>
+
+          <!-- Finances -->
+          <div class="row">
+            <div class="col-4 col-md-2 mb-1">
+              <label for="tithe">Tithe:</label>
+              <span class="font-weight-bold">&#8358;</span> {{stat.tithe}}
+            </div>
+            <div class="col-4 col-md-2 mb-1">
+              <label for="worship">Worship Offering:</label>
+              <span class="font-weight-bold">&#8358;</span> {{stat.worship}}
+            </div>
+            <div class="col-4 col-md-2 mb-1">
+              <label for="project">Project Offering:</label>
+              <span class="font-weight-bold">&#8358;</span> {{stat.project}}
+            </div>
+            <div class="col-4 col-md-2 mb-1">
+              <label for="shiloh_sac">Shiloh Sacrifice:</label>
+              <span class="font-weight-bold">&#8358;</span> {{stat.shiloh_sac}}
+            </div>
+            <div class="col-4 col-md-2 mb-1">
+              <label for="vow">Vow:</label>
+              <span class="font-weight-bold">&#8358;</span> {{stat.vow}}
+            </div>
+          </div>
+        {{/each}}
+      {{/if}}
+
+      <form action="/meetings/{{meeting.id}}/stats" method="post" enctype="application/x-www-form-urlencoded">
+        <!-- Attendance -->
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <h6 class="pt-5">Attendance / Finances (Offerings)</h6>
+            <hr />
+          </div>
+          <div class="form-group col-4 col-md-4">
+            <label for="male">Male:</label>
+            <input type="text" class="form-control" id="male" name="male" required />
+          </div>
+          <div class="form-group col-4 col-md-4">
+            <label for="female">Female:</label>
+            <input type="text" class="form-control" id="female" name="female" required />
+          </div>
+          <div class="form-group col-4 col-md-4">
+            <label for="children">Children:</label>
+            <input type="text" class="form-control" id="children" name="children" required />
+          </div>
+          <div class="form-group col-4 col-md-4">
+            <label for="converts">Converts:</label>
+            <input type="text" class="form-control" id="converts" name="converts" />
+          </div>
+          <div class="form-group col-4 col-md-4">
+            <label for="first-timers">F/Timers:</label>
+            <input type="text" class="form-control" id="first-timers" name="first_timers" />
+          </div>
+          <div class="form-group col-4 col-md-4">
+            <label for="testimonies">Testimonies:</label>
+            <input type="text" class="form-control" id="testimonies" name="testimonies" />
+          </div>
+        </div>
+
+        <div><hr></div>
+
+        <!-- Finances -->
+        <div class="form-row">
+          <div class="form-group col-6 col-md-4">
+            <label for="tithe">Tithe:</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">&#8358;</span>
+              </div>
+              <input type="text" class="form-control" id="tithe" name="tithe" />
+            </div>
+          </div>
+          <div class="form-group col-6 col-md-4">
+            <label for="worship">Worship Offering:</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">&#8358;</span>
+              </div>
+              <input type="text" class="form-control" id="worship" name="worship" />
+            </div>
+          </div>
+          <div class="form-group col-6 col-md-4">
+            <label for="project">Project Offering:</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">&#8358;</span>
+              </div>
+              <input type="text" class="form-control" id="project" name="project" />
+            </div>
+          </div>
+          <div class="form-group col-6 col-md-4">
+            <label for="shiloh_sac">Shiloh Sacrifice:</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">&#8358;</span>
+              </div>
+              <input type="text" class="form-control" id="shiloh_sac" name="shiloh_sac" />
+            </div>
+          </div>
+          <div class="form-group col-6 col-md-4">
+            <label for="vow">Vow:</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">&#8358;</span>
+              </div>
+              <input type="text" class="form-control" id="vow" name="vow" />
+            </div>
+          </div>
+          <div class="form-group col-6 col-md-4 text-right">
+            <label for="submit-btn">&nbsp;</label>
+            <div class="btn-group" role="group" aria-label="submit-cancel-btn-group">
+              <button type="submit" id="submit-btn" class="btn btn-danger font-weight-bold">
+                Submit
+              </button>
+              <button type="button" id="cancel-btn" class="btn btn-dark font-weight-bold" onclick="location.href='/meetings'">
+                <span title="Cancel">&#10558;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="form-group">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gridCheck">
+            <label class="form-check-label" for="gridCheck">
+              Check me out
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-danger font-weight-bold">Submit</button> -->
+        <input type="hidden" name="mno" value="{{meeting.s_cnt}}" />
+      </form>
+    {{/if}}
+  </div>
+</div>

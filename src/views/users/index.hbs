@@ -1,0 +1,38 @@
+<h3>Users</h3>
+<hr />
+
+<table class="table table-bordered table-sm table-hoverx table-striped">
+  <thead class="thead-dark" style="font-variant: small-caps">
+    <tr>
+      <th scope="col">s-no</th>
+      <th scope="col">full-name</th>
+      <th scope="col">status</th>
+      <th scope="col">action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#if users}}
+      {{#each users as |user index|}}
+        <tr>
+          <td scope="row">{{computeSno index}}</td>
+          <td>
+            <strong>{{user.last_name}}</strong>
+            {{user.first_name}}
+            <small class="text-danger font-weight-bold d-block">
+              {{user.email}}
+            </small>
+            <small class="text-muted d-block">{{user.phone}}</small>
+          </td>
+          <td>
+            {{#if (isTrue user.active "1")}}
+              <span class="badge badge-info">ACTIVE</span>
+            {{else}}
+              <span class="badge badge-danger">INACTIVE</span>
+            {{/if}}
+          </td>
+          <td>---</td>
+        </tr>
+      {{/each}}
+    {{/if}}
+  </tbody>
+</table>
