@@ -49,11 +49,7 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser((id, cb) => {
   userService.find(id, (err, user) => {
-    if (err) {
-      return cb(err);
-    }
-
-    cb(null, user);
+    return err ? cb(err) : cb(null, user);
   });
 });
 

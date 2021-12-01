@@ -45,7 +45,7 @@ const auth = (req, res, next) => {
     }
 
     req.auth = {
-      user: { firstName, lastName, email/* , organization_id */ },
+      user: { firstName, lastName, email /* , organization_id */ },
     };
     next();
   });
@@ -58,7 +58,7 @@ const routeType = (req, res, next) => {
 
 const errorHandler = (err, req, res, next) => {
   // console.log(`error:\n${JSON.stringify(err, null, 2)}`);
-  // next(e);
+  // next(err);
 };
 
 module.exports = {

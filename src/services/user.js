@@ -17,7 +17,7 @@ module.exports = {
     }
 
     db.query(
-      "SELECT hex(id) as id, first_name, last_name, phone, email, active FROM users ORDER BY last_name",
+      "SELECT lower(hex(id)) as id, first_name, last_name, phone, email, active FROM users ORDER BY last_name",
       (err, result) => {
         return err ? cb(err, null, 500) : cb(null, result, 200);
       }
@@ -100,7 +100,7 @@ module.exports = {
       }
 
       db.query(
-        `UPDATE users SET verified = '1' WHERE email = ?`,
+        `UPDATE users SET active = '1', verified = '1' WHERE email = ?`,
         [email],
         (err1, _) => {
           return err1
@@ -202,10 +202,10 @@ module.exports = {
 
     db.query(
       `SELECT first_name, last_name, phone, email, active ${
-        isAuth ? ", password, hex(id) as id" : ""
+        isAuth ? ", password, lower(hex(id)) as id" : ""
       } FROM users WHERE email = ? LIMIT 1`,
       [email.trim().toLowerCase()],
-      (err, result, fields) => {
+      (err, result, _fields) => {
         return err
           ? cb(err, null, 500)
           : result[0]
