@@ -29,6 +29,7 @@ module.exports = {
     stationService.get(organization_id, (err, stations) => {
       res.render("stations", {
         title: "Stations",
+        user0: req.user,
         stations: err ? [] : stations,
       });
     });

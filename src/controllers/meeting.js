@@ -20,11 +20,12 @@ module.exports = {
   show: (req, res) => {
     const {
       query: { err: error },
+      user: user0,
     } = req;
 
     try {
       meetingService.get((err, meetings) => {
-        res.render("meetings", { title: "Meetings", meetings, error });
+        res.render("meetings", { title: "Meetings", user0, meetings, error });
       });
     } catch (e) {}
   },
@@ -62,6 +63,7 @@ module.exports = {
 
           res.render("meetings/add", {
             title: "Meetings",
+            user0: req.user,
             stations,
             meetingTypes,
             currentDateTime: now.toISOString().slice(0, 16),
@@ -114,6 +116,7 @@ module.exports = {
       meetingService.find(req.params.id, (err, meeting) => {
         res.render("meetings/edit", {
           title: "Meetings",
+          user0: req.user,
           meeting: { ...meeting, id: req.params.id },
         });
       });
@@ -134,7 +137,11 @@ module.exports = {
         }
 
         return !!meeting
-          ? res.render("meetings/detail", { title: "Meetings", meeting })
+          ? res.render("meetings/detail", {
+              title: "Meetings",
+              user0: req.user,
+              meeting,
+            })
           : res.redirect("/meetings");
       });
     } catch (e) {}

@@ -18,7 +18,12 @@ module.exports = {
   show: (req, res) => {
     try {
       auditService.get((error, audits) => {
-        res.render("audits", { title: "Audits", audits, error });
+        res.render("audits", {
+          title: "Audits",
+          user0: req.user,
+          audits,
+          error,
+        });
       });
     } catch (e) {}
   },
@@ -41,7 +46,11 @@ module.exports = {
     try {
       auditService.find(req.params.id, (err, audit) => {
         return !!audit
-          ? res.render("audits/detail", { title: "Audits", audit })
+          ? res.render("audits/detail", {
+              title: "Audits",
+              user0: req.user,
+              audit,
+            })
           : res.redirect("/audits");
       });
     } catch (e) {}

@@ -17,7 +17,11 @@ module.exports = {
 
   view: (req, res) => {
     userService.get((err, users) => {
-      res.render("users", { title: "Users", users: err ? [] : users });
+      res.render("users", {
+        title: "Users",
+        user0: req.user,
+        users: err ? [] : users,
+      });
     });
   },
 
