@@ -1,3 +1,5 @@
+const { ensureLoggedIn } = require("connect-ensure-login");
+
 const auditsRoutes = require("./audit");
 const authRoutes = require("./auth");
 const stationsRoutes = require("./station");
@@ -12,10 +14,9 @@ module.exports = (router) => {
   meetingsRoutes(router);
   usersRoutes(router);
   organizationsRoutes(router);
-  // return require("connect-ensure-login").ensureLoggedIn();
 
-  router.get("/", (req, res) => {
-    res.render("index", { title: "Home" });
+  router.get("/", ensureLoggedIn(), (req, res) => {
+    res.render("index", { title: "Home", user0: req.user });
   });
 
   return router;
