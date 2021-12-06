@@ -8,7 +8,9 @@ module.exports = {
       authService.login(username, password, (err, payload, code = 400) => {
         res.status(code).json({
           status: !err,
-          data: payload,
+          data: payload?.data
+            ? { token: payload.token, ...payload.data }
+            : payload,
           message: err ? err.message : null,
         });
       });

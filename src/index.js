@@ -10,6 +10,7 @@ global.db = require("./utils/db");
 const app = express();
 
 // enable cors, compression, helmet on api-routes
+app.use(routeType);
 app.use(
   "/api/v1",
   require("cors")(),
@@ -25,8 +26,10 @@ app.use(
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: false,
+    // cookie: { secure: true, maxAge: 60000 },
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../public"))); // configure express to use public folder
@@ -43,6 +46,6 @@ app.use(passportService.initialize());
 app.use(passportService.session());
 
 // define all routes and route-type
-app.use(routeType, routes(express.Router()), errorHandler);
+app.use(routes(express.Router()), errorHandler);
 
 module.exports = app;
