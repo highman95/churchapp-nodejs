@@ -6,6 +6,7 @@
     <tr>
       <th scope="col">s-no</th>
       <th scope="col">full-name</th>
+      <th scope="col">contact-info</th>
       <th scope="col">status</th>
       <th scope="col">action</th>
     </tr>
@@ -14,14 +15,16 @@
     {{#if users}}
       {{#each users as |user index|}}
         <tr>
-          <td scope="row">{{computeSno index}}</td>
+          <td scope="row">{{computeSno index}}.</td>
           <td>
             <strong>{{user.last_name}}</strong>
             {{user.first_name}}
-            <small class="text-danger font-weight-bold d-block">
+          </td>
+          <td>
+            <small class="text-danger font-weight-bold d-block-x">
               {{user.email}}
             </small>
-            <small class="text-muted d-block">{{user.phone}}</small>
+            <small class="text-muted d-block-x"> | {{user.phone}}</small>
           </td>
           <td>
             {{#if (isTrue user.active "1")}}

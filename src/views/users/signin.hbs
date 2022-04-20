@@ -1,45 +1,47 @@
+<link href="/assets/css/signin.css" rel="stylesheet" />
+
 <h3>Login</h3>
 <hr />
 
-<div className="col-lg-4 offset-lg-8 mt-5">
-  <main className="form-signin">
+<div class="col-lg-4 offset-lg-8 mt-5">
+  <main class="form-signin">
     <form name="form" method="post" enctype="application/x-www-form-urlencoded">
-      <div className="form-floating">
+      <div class="form-floating">
         <input
           type="email"
           id="floating-username"
-          className="form-control"
+          class="form-control"
           name="username"
-          placeholder="john.doe@example.com"
+          placeholder="E-mail Address"
         />
         <label
-          htmlFor="floating-username"
-          className="text-dark"
+          for="floating-username"
+          class="text-dark sr-only"
         >Username</label>
       </div>
 
-      <div className="form-floating">
+      <div class="form-floating">
         <input
           type="password"
           id="floating-password"
-          className="form-control"
+          class="form-control"
           name="password"
           placeholder="Password"
         />
         <label
-          htmlFor="floating-password"
-          className="text-dark"
+          for="floating-password"
+          class="text-dark sr-only"
         >Password</label>
       </div>
 
-      <div className="checkbox mb-3 text-end">
-        <label style="cursor: 'pointer'">
+      <div class="checkbox mb-3 text-end">
+        <label style="cursor: pointer">
           <input type="checkbox" value="remember-me" />
           Remember me
         </label>
       </div>
 
-      <button className="w-100 btn btn-lg btn-info" type="submit">
+      <button class="w-100 btn btn-danger" type="submit">
         Sign in
       </button>
     </form>
