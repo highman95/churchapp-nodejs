@@ -4,46 +4,43 @@
 <hr />
 
 <div class="col-lg-4 offset-lg-8 mt-5">
-  <main class="form-signin">
-    <form name="form" method="post" enctype="application/x-www-form-urlencoded">
-      <div class="form-floating">
-        <input
-          type="email"
-          id="floating-username"
-          class="form-control"
-          name="username"
-          placeholder="E-mail Address"
-        />
-        <label
-          for="floating-username"
-          class="text-dark sr-only"
-        >Username</label>
-      </div>
+  <form
+    name="form"
+    class="form-signin"
+    method="post"
+    enctype="application/x-www-form-urlencoded"
+  >
+    <div class="form-floating">
+      <input
+        type="email"
+        id="floating-username"
+        class="form-control"
+        name="username"
+        placeholder="E-mail address"
+      />
+      <label for="floating-username" class="text-dark sr-only">Username</label>
+    </div>
 
-      <div class="form-floating">
-        <input
-          type="password"
-          id="floating-password"
-          class="form-control"
-          name="password"
-          placeholder="Password"
-        />
-        <label
-          for="floating-password"
-          class="text-dark sr-only"
-        >Password</label>
-      </div>
+    <div class="form-floating">
+      <input
+        type="password"
+        id="floating-password"
+        class="form-control"
+        name="password"
+        placeholder="Password"
+      />
+      <label for="floating-password" class="text-dark sr-only">Password</label>
+    </div>
 
-      <div class="checkbox mb-3 text-end">
-        <label style="cursor: pointer">
-          <input type="checkbox" value="remember-me" />
-          Remember me
-        </label>
-      </div>
+    <div class="checkbox mb-3 text-end">
+      <label style="cursor: pointer">
+        <input type="checkbox" value="remember-me" />
+        Remember me
+      </label>
+    </div>
 
-      <button class="w-100 btn btn-danger" type="submit">
-        Sign in
-      </button>
-    </form>
-  </main>
+    <button class="w-100 btn btn-danger" type="submit">
+      Sign in
+    </button>
+  </form>
 </div>

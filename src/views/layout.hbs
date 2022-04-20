@@ -62,9 +62,14 @@
   </head>
   <body>
     <div id="app">
+      {{! <header> }}
       <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-        <div class="container">
-          <a class="navbar-brand font-weight-bold" href=".">
+        <div class="container-fluid">
+          <a
+            class="navbar-brand d-flex-x align-items-center-x font-weight-bold"
+            href="."
+          >
+            <img src="/icons/church-icons8-24.png" alt="churchapp-icon" />
             Churchapp |
             <span class="small font-weight-bold text-uppercasex text-danger">
               {{title}}
@@ -112,8 +117,10 @@
           </div>
         </div>
       </nav>
-      <div class="container">
-        <main class="py-4 sapi-content-wrapper">
+      {{! </header> }}
+
+      <div class="container-fluid">
+        <main class="py-4 px-4 sapi-content-wrapper">
           {{{body}}}
         </main>
 
