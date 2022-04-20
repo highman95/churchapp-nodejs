@@ -201,7 +201,7 @@ module.exports = {
     }
 
     db.query(
-      `SELECT first_name, last_name, phone, email, active ${
+      `SELECT first_name, last_name, phone, email, active, 1 as organization_id ${
         isAuth ? ", password, lower(hex(id)) as id" : ""
       } FROM users WHERE email = ? LIMIT 1`,
       [email.trim().toLowerCase()],
@@ -225,7 +225,7 @@ module.exports = {
     }
 
     db.query(
-      "SELECT first_name, last_name, phone, email, active FROM users WHERE hex(id) = ?",
+      "SELECT first_name, last_name, phone, email, active, 1 as organization_id FROM users WHERE hex(id) = ?",
       [id],
       (err, result) => {
         return err

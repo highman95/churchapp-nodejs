@@ -3,7 +3,7 @@ const stationService = require("../services/station");
 module.exports = {
   get: (req, res, next) => {
     try {
-      const { organization_id } = (req.auth || {}).user || {};
+      const { organization_id } = req.user || {};
 
       stationService.get(organization_id, (err, stations, code = 400) => {
         res.status(code).json({
@@ -24,7 +24,7 @@ module.exports = {
    * @param {object} res
    */
   view: (req, res) => {
-    const { organization_id } = (req.auth || {}).user || {};
+    const { organization_id } = req.user || {};
 
     stationService.get(organization_id, (err, stations) => {
       res.render("stations", {

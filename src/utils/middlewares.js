@@ -37,16 +37,20 @@ const auth = (req, res, next) => {
       return;
     }
 
-    const { first_name: firstName, last_name: lastName, email, active } = user;
+    const {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      active,
+      organization_id,
+    } = user;
 
     if (active === "0") {
       next(new Error("Token-user account inactive"));
       return;
     }
 
-    req.auth = {
-      user: { firstName, lastName, email /* , organization_id */ },
-    };
+    req.user = { firstName, lastName, email, organization_id };
     next();
   });
 };

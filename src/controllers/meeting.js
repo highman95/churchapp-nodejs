@@ -54,7 +54,7 @@ module.exports = {
 
   createPage: (req, res) => {
     try {
-      const { organization_id } = (req.auth || {}).user || {};
+      const { organization_id } = req.user || {};
 
       stationService.get(organization_id, (err0, stations) => {
         meetingTypeService.get((err1, meetingTypes) => {
