@@ -10,6 +10,14 @@
     method="post"
     enctype="application/x-www-form-urlencoded"
   >
+    {{#if hasMessages}}
+      <ul class="small">
+        {{#each messages as |message|}}
+          <li>{{message}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+
     <div class="form-floating">
       <input
         type="email"
@@ -17,6 +25,8 @@
         class="form-control"
         name="username"
         placeholder="E-mail address"
+        required
+        aria-required="true"
       />
       <label for="floating-username" class="text-dark sr-only">Username</label>
     </div>
@@ -28,11 +38,13 @@
         class="form-control"
         name="password"
         placeholder="Password"
+        required
+        aria-required="true"
       />
       <label for="floating-password" class="text-dark sr-only">Password</label>
     </div>
 
-    <div class="checkbox mb-3 text-end">
+    <div class="checkbox mb-3 text-end small">
       <label style="cursor: pointer">
         <input type="checkbox" value="remember-me" />
         Remember me

@@ -3,9 +3,15 @@ const jwt = require("jsonwebtoken");
 const userService = require("./user");
 
 module.exports = {
+  find: userService.find, // alias for user-service logic
+
   login: (username, password, cb) => {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
+    }
+
+    if (!password || !password.trim()) {
+      return cb(new Error("Password is required"), null);
     }
 
     userService.findByEmail(username, true, (err, user, code = 400) => {
@@ -19,7 +25,7 @@ module.exports = {
 
       bcrypt.compare(password, user.password, (err, isCorrect) => {
         if (err || !isCorrect) {
-          return cb(new Error("Invalid username/password"), null);
+          return cb(new Error("Invalid username / password"), null);
         }
 
         // generate JWT-token

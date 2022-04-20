@@ -27,7 +27,18 @@ app.use(
     resave: false,
     saveUninitialized: false,
     // cookie: { secure: true, maxAge: 60000 },
-  })
+  }),
+  (req, res, next) => {
+    if (req.isWR && req.session) {
+      const msgs = req.session.messages || [];
+
+      res.locals.messages = msgs;
+      res.locals.hasMessages = !!msgs.length;
+      req.session.messages = [];
+    }
+
+    next();
+  }
 );
 
 app.use(express.json());
@@ -42,8 +53,7 @@ hbs.registerHelper("computeSno", (index) => index + 1);
 hbs.registerHelper("isTrue", (p0, p1) => p0 === p1);
 
 // Initialize Passport and restore authentication state, if any, from the session.
-app.use(passportService.initialize());
-app.use(passportService.session());
+app.use(passportService.initialize(), passportService.session());
 
 // define all routes and route-type
 app.use(routes(express.Router()), errorHandler);

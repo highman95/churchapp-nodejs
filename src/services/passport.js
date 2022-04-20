@@ -1,9 +1,9 @@
-const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const userService = require("./user");
+const authService = require("./auth");
 
 //@see: https://github.com/passport/express-4.x-local-example/blob/master/server.js
+//@see: https://github.com/passport/express-4.x-local-example/blob/master/boot/auth.js
 //
 // Configure the local strategy for use by Passport.
 //
@@ -13,25 +13,10 @@ const userService = require("./user");
 // will be set at `req.user` in route handlers after authentication.
 passport.use(
   new LocalStrategy((username, password, cb) => {
-    userService.findByEmail(username, true, (err, user) => {
-      if (err) {
-        return cb(err);
-      }
-
-      if (!user || parseInt(user.active) === 0) {
-        return cb(null, false);
-      }
-
-      bcrypt.compare(password, user.password, (err, isCorrect) => {
-        if (err || !isCorrect) {
-          return cb(null, false);
-        }
-
-        // remove PIIs
-        delete user.password;
-
-        return cb(null, { ...user, active: user.active == 1 });
-      });
+    authService.login(username, password, (err, user) => {
+      return err
+        ? cb(null, false, { message: err.message })
+        : cb(null, { ...user.data });
     });
   })
 );
@@ -44,12 +29,15 @@ passport.use(
 // serializing, and querying the user record by ID from the database when
 // deserializing.
 passport.serializeUser((user, cb) => {
-  cb(null, user.id);
+  process.nextTick(() => cb(null, user.id));
 });
 
 passport.deserializeUser((id, cb) => {
-  userService.find(id, (err, user) => {
-    return err ? cb(err) : cb(null, user);
+  process.nextTick(() => {
+    authService.find(id, (err, user) => {
+      delete user.password;
+      return err ? cb(err) : cb(null, user);
+    });
   });
 });
 
