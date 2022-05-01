@@ -27,7 +27,7 @@
             <small class="text-muted d-block-x"> | {{user.phone}}</small>
           </td>
           <td>
-            {{#if (isTrue user.active "1")}}
+            {{#if user.active}}
               <span class="badge badge-info">ACTIVE</span>
             {{else}}
               <span class="badge badge-danger">INACTIVE</span>

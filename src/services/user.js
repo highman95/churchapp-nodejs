@@ -103,9 +103,7 @@ module.exports = {
         `UPDATE users SET active = '1', verified = '1' WHERE email = ?`,
         [email],
         (err1, _) => {
-          return err1
-            ? cb(err1, null, 500)
-            : cb(null, { ...user, active: user.active == 1 }, 204);
+          return err1 ? cb(err1, null, 500) : cb(null, user, 204);
         }
       );
     });
@@ -125,9 +123,7 @@ module.exports = {
         `UPDATE users SET active = ? WHERE email = ?`,
         [isOn ? "1" : "0", email],
         (err1, _) => {
-          return err1
-            ? cb(err1, null, 500)
-            : cb(null, { ...user, active: user.active == 1 }, 204);
+          return err1 ? cb(err1, null, 500) : cb(null, user, 204);
         }
       );
     });
@@ -155,7 +151,7 @@ module.exports = {
         return cb(new Error("Your previous password cannot be reused"));
       }
 
-      if (parseInt(user.active) === 0) {
+      if (!user.active) {
         return cb(new Error("Your account is inactive"), null, 406);
       }
 
@@ -177,9 +173,7 @@ module.exports = {
             "UPDATE users SET password = ?, locked = '0' WHERE email = ?",
             [passwordHash, email],
             (err2, _) => {
-              return err2
-                ? cb(err2, null, 500)
-                : cb(null, { ...user, active: user.active == 1 }, 204);
+              return err2 ? cb(err2, null, 500) : cb(null, user, 204);
             }
           );
         });

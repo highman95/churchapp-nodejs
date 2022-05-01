@@ -7,7 +7,10 @@ const connection = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   typeCast: function (field, next) {
-    if (field.type === "ENUM" && field.length === 1) {
+    if (
+      (field.type === "ENUM" && field.length === 1) ||
+      (field.type === "STRING" && field.length === 3)
+    ) {
       return field.string() === "1"; // 1 = true, 0 = false
     } else {
       return next();

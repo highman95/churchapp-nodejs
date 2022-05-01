@@ -19,7 +19,7 @@ module.exports = {
         return cb(err, null, code);
       }
 
-      if (parseInt(user.active) === 0) {
+      if (!user.active) {
         return cb(new Error("Your account is inactive"), null);
       }
 
@@ -36,7 +36,7 @@ module.exports = {
           });
         }
 
-        if (parseInt(user.attempts) > 0) {
+        if (user.attempts > 0) {
           userService.resetTries(username, (err2, _) => _);
         }
 
@@ -47,21 +47,14 @@ module.exports = {
         });
 
         // make account stale (i.e. not fresh/first-time login user)
-        if (parseInt(user.fresh) === 1) {
+        if (user.fresh) {
           userService.makeStale(username, (err3, _) => _);
         }
 
         // remove PIIs
         delete user.password;
 
-        return cb(
-          null,
-          {
-            data: { ...user, active: user.active == 1 },
-            token,
-          },
-          200
-        );
+        return cb(null, { data: user, token }, 200);
       });
     });
   },
