@@ -174,7 +174,7 @@ module.exports = {
           delete user.password;
 
           db.query(
-            `UPDATE users SET password = ? WHERE email = ?`,
+            "UPDATE users SET password = ?, locked = '0' WHERE email = ?",
             [passwordHash, email],
             (err2, _) => {
               return err2
@@ -185,6 +185,76 @@ module.exports = {
         });
       });
     });
+  },
+
+  incrementTries(email, cb) {
+    if (typeof cb !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    db.query(
+      "UPDATE users SET attempts = attempts + 1 WHERE email = ?",
+      [email],
+      (err, _) => {
+        return err ? cb(err, 500) : cb(null, 204);
+      }
+    );
+  },
+
+  resetTries(email, cb) {
+    if (typeof cb !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    db.query(
+      "UPDATE users SET attempts = 0 WHERE email = ?",
+      [email],
+      (err, _) => {
+        return err ? cb(err, 500) : cb(null, 204);
+      }
+    );
+  },
+
+  lock(email, cb) {
+    if (typeof cb !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    db.query(
+      "UPDATE users SET locked = '1' WHERE email = ?",
+      [email],
+      (err, _) => {
+        return err ? cb(err, 500) : cb(null, 204);
+      }
+    );
+  },
+
+  unlock(email, cb) {
+    if (typeof cb !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    db.query(
+      "UPDATE users SET locked = '0' WHERE email = ?",
+      [email],
+      (err, _) => {
+        return err ? cb(err, 500) : cb(null, 204);
+      }
+    );
+  },
+
+  makeStale(email, cb) {
+    if (typeof cb !== "function") {
+      throw new Error("Callback is not defined");
+    }
+
+    db.query(
+      "UPDATE users SET fresh = '0' WHERE email = ?",
+      [email],
+      (err, _) => {
+        return err ? cb(err, 500) : cb(null, 204);
+      }
+    );
   },
 
   findByEmail: (email, isAuth, cb) => {
@@ -202,7 +272,9 @@ module.exports = {
 
     db.query(
       `SELECT first_name, last_name, phone, email, active, 1 as organization_id ${
-        isAuth ? ", password, lower(hex(id)) as id" : ""
+        isAuth
+          ? ", password, fresh, attempts, locked, lower(hex(id)) as id"
+          : ""
       } FROM users WHERE email = ? LIMIT 1`,
       [email.trim().toLowerCase()],
       (err, result, _fields) => {

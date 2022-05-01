@@ -23,9 +23,21 @@ module.exports = {
         return cb(new Error("Your account is inactive"), null);
       }
 
+      if (user.attempts >= parseInt(process.env.LOGIN_TRIES)) {
+        return userService.lock(username, (err0, _) => {
+          return cb(new Error("Your account has been locked"), null);
+        });
+      }
+
       bcrypt.compare(password, user.password, (err, isCorrect) => {
         if (err || !isCorrect) {
-          return cb(new Error("Invalid username / password"), null);
+          return userService.incrementTries(username, (err1, _) => {
+            return cb(new Error("Invalid username / password"), null);
+          });
+        }
+
+        if (parseInt(user.attempts) > 0) {
+          userService.resetTries(username, (err2, _) => _);
         }
 
         // generate JWT-token
@@ -33,6 +45,11 @@ module.exports = {
           expiresIn: process.env.JWT_EXPIRY,
           issuer: process.env.JWT_ISSUER,
         });
+
+        // make account stale (i.e. not fresh/first-time login user)
+        if (parseInt(user.fresh) === 1) {
+          userService.makeStale(username, (err3, _) => _);
+        }
 
         // remove PIIs
         delete user.password;
