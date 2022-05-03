@@ -3,7 +3,7 @@ const stationService = require("../services/station");
 const meetingTypeService = require("../services/meeting-type");
 
 module.exports = {
-  get: (req, res, next) => {
+  get: (_req, res, next) => {
     try {
       meetingService.get((err, meetings, code = 400) => {
         res.status(code).json({
@@ -24,7 +24,7 @@ module.exports = {
     } = req;
 
     try {
-      meetingService.get((err, meetings) => {
+      meetingService.get((_err, meetings) => {
         res.render("meetings", { title: "Meetings", user0, meetings, error });
       });
     } catch (e) {}
@@ -56,8 +56,8 @@ module.exports = {
     try {
       const { organization_id } = req.user || {};
 
-      stationService.get(organization_id, (err0, stations) => {
-        meetingTypeService.get((err1, meetingTypes) => {
+      stationService.get(organization_id, (_err0, stations) => {
+        meetingTypeService.get((_err1, meetingTypes) => {
           var now = new Date();
           now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // local-datetime
 
@@ -93,16 +93,21 @@ module.exports = {
         req.params.id,
         req.body,
         (err, meeting, code = 400) => {
+          const redirectUri = err ? "edit/" : "";
+          let message = err ? err.message : undefined;
+          message =
+            message === undefined && req.isWR
+              ? ""
+              : "Meeting successfully updated";
+
           return req.isWR
             ? res.redirect(
-                `/meetings/${err ? "edit/" : ""}${meeting.id}?err=${
-                  err ? err.message : ""
-                }`
+                `/meetings/${redirectUri}${meeting.id}?err=${message}`
               )
             : res.status(code).json({
                 status: !!err,
                 data: meeting,
-                message: err ? err.message : "Meeting successfully updated",
+                message,
               });
         }
       );
@@ -113,7 +118,7 @@ module.exports = {
 
   editPage: (req, res) => {
     try {
-      meetingService.find(req.params.id, (err, meeting) => {
+      meetingService.find(req.params.id, (_err, meeting) => {
         res.render("meetings/edit", {
           title: "Meetings",
           user0: req.user,
@@ -125,7 +130,7 @@ module.exports = {
 
   describe: (req, res) => {
     try {
-      meetingService.find(req.params.id, (err, meeting) => {
+      meetingService.find(req.params.id, (_err, meeting) => {
         if (meeting) {
           var held_on = new Date(meeting.held_on);
           held_on.setMinutes(

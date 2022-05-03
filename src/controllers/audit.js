@@ -1,7 +1,7 @@
 const auditService = require("../services/audit");
 
 module.exports = {
-  get: (req, res, next) => {
+  get: (_req, res, next) => {
     try {
       auditService.get((err, audits, code = 400) => {
         res.status(code).json({
@@ -44,7 +44,7 @@ module.exports = {
 
   describe: (req, res) => {
     try {
-      auditService.find(req.params.id, (err, audit) => {
+      auditService.find(req.params.id, (_err, audit) => {
         return !!audit
           ? res.render("audits/detail", {
               title: "Audits",

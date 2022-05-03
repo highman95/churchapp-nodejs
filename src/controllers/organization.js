@@ -15,7 +15,7 @@ module.exports = {
     }
   },
 
-  get: (req, res, next) => {
+  get: (_req, res, next) => {
     try {
       organizationService.get((err, organizations, code = 400) => {
         res.status(code).json({

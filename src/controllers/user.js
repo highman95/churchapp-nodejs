@@ -1,7 +1,7 @@
 const userService = require("../services/user");
 
 module.exports = {
-  get: (req, res, next) => {
+  get: (_req, res, next) => {
     try {
       userService.get((err, users, code = 400) => {
         res.status(code).json({
@@ -60,12 +60,12 @@ module.exports = {
       const { username, isOn = false } = req.body;
 
       userService.toggle(username, isOn, (err, data, code = 400) => {
+        const prefix = isOn ? "" : "de-";
+
         res.status(code).json({
           status: !err,
           data,
-          message: err
-            ? err.message
-            : `User successfully ${isOn ? "" : "de-"}activated`,
+          message: err ? err.message : `User successfully ${prefix}activated`,
         });
       });
     } catch (e) {
