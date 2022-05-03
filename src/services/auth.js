@@ -5,7 +5,7 @@ const userService = require("./user");
 module.exports = {
   find: userService.find, // alias for user-service logic
 
-  login: (username, password, cb) => {
+  login(username, password, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -14,30 +14,30 @@ module.exports = {
       return cb(new Error("Password is required"), null);
     }
 
-    userService.findByEmail(username, true, (err, user, code = 400) => {
-      if (err) {
-        return cb(err, null, code);
+    userService.findByEmail(username, true, (err0, user0, code = 400) => {
+      if (err0) {
+        return cb(err0, null, code);
       }
 
-      if (!user.active) {
+      if (!user0.active) {
         return cb(new Error("Your account is inactive"), null);
       }
 
-      if (user.attempts >= parseInt(process.env.LOGIN_TRIES)) {
-        return userService.lock(username, (err0, _) => {
+      if (user0.attempts >= parseInt(process.env.LOGIN_TRIES)) {
+        return userService.lock(username, (_err0, _) => {
           return cb(new Error("Your account has been locked"), null);
         });
       }
 
-      bcrypt.compare(password, user.password, (err, isCorrect) => {
-        if (err || !isCorrect) {
-          return userService.incrementTries(username, (err1, _) => {
+      bcrypt.compare(password, user0.password, (err1, isCorrect) => {
+        if (err1 || !isCorrect) {
+          return userService.incrementTries(username, (_err1, _) => {
             return cb(new Error("Invalid username / password"), null);
           });
         }
 
-        if (user.attempts > 0) {
-          userService.resetTries(username, (err2, _) => _);
+        if (user0.attempts > 0) {
+          userService.resetTries(username, (_err2, _) => _);
         }
 
         // generate JWT-token
@@ -47,19 +47,19 @@ module.exports = {
         });
 
         // make account stale (i.e. not fresh/first-time login user)
-        if (user.fresh) {
-          userService.makeStale(username, (err3, _) => _);
+        if (user0.fresh) {
+          userService.makeStale(username, (_err3, _) => _);
         }
 
         // remove PIIs
-        delete user.password;
+        delete user0.password;
 
-        return cb(null, { data: user, token }, 200);
+        return cb(null, { data: user0, token }, 200);
       });
     });
   },
 
-  resetPassword: (username, oldPassword, newPassword, cb) => {
+  resetPassword(username, oldPassword, newPassword, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }

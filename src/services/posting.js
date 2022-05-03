@@ -1,3 +1,6 @@
+const { findResultHandler } = require("./common");
+const modelName = "Posting";
+
 module.exports = {
   create(posting, cb) {
     if (typeof cb !== "function") {
@@ -23,14 +26,14 @@ module.exports = {
       db.query(
         "INSERT INTO postings SET user_id = UNHEX(?), station_id = ?, posted_at = ?",
         [user_id, station_id, posted_at],
-        (err, result) => {
+        (err, _) => {
           return err ? cb(err, null, 500) : cb(null, posting, 201);
         }
       );
     });
   },
 
-  get: (user_id, cb) => {
+  get(user_id, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -48,7 +51,7 @@ module.exports = {
     );
   },
 
-  find: (user_id, station_id, cb) => {
+  find(user_id, station_id, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -64,13 +67,7 @@ module.exports = {
     db.query(
       "SELECT serving, posted_at FROM postings WHERE hex(user_id) = ? AND station_id = ?",
       [user_id, station_id],
-      (err, result) => {
-        return err
-          ? cb(err, null, 500)
-          : result[0]
-          ? cb(null, result[0], 200)
-          : cb(new Error("Posting not found"), null, 404);
-      }
+      findResultHandler(modelName, cb)
     );
   },
 };

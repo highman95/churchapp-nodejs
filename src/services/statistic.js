@@ -1,5 +1,8 @@
+const { findResultHandler } = require("./common");
+const modelName = "Statistic";
+
 module.exports = {
-  get: (meeting_id, cb) => {
+  get(meeting_id, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -81,7 +84,7 @@ module.exports = {
     });
   },
 
-  findByMno: (meeting_id, mno, cb) => {
+  findByMno(meeting_id, mno, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -98,13 +101,7 @@ module.exports = {
     db.query(
       "SELECT * FROM statistics WHERE meeting_id = ? AND mno = ?",
       [meeting_id, mno],
-      (err, result) => {
-        return err
-          ? cb(err, null, 500)
-          : result[0]
-          ? cb(null, result[0], 200)
-          : cb(new Error("Statistics not found"), null, 404);
-      }
+      findResultHandler(modelName, cb)
     );
   },
 
@@ -161,15 +158,14 @@ module.exports = {
           meeting_id,
         ],
         (err, result) => {
-          return err
-            ? cb(err, null, 500)
-            : cb(null, statistic, result.changedRows ? 204 : 304);
+          const code0 = result.changedRows ? 204 : 304;
+          return err ? cb(err, null, 500) : cb(null, statistic, code0);
         }
       );
     });
   },
 
-  find: (meeting_id, id, cb) => {
+  find(meeting_id, id, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -185,13 +181,7 @@ module.exports = {
     db.query(
       "SELECT * FROM statistics WHERE id = ? AND meeting_id = ?",
       [id, meeting_id],
-      (err, result) => {
-        return err
-          ? cb(err, null, 500)
-          : result[0]
-          ? cb(null, result[0], 200)
-          : cb(new Error("Statistics not found"), null, 404);
-      }
+      findResultHandler(modelName, cb)
     );
   },
 };

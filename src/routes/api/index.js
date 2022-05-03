@@ -13,7 +13,7 @@ module.exports = (router) => {
   usersRoutes(router);
   organizationsRoutes(router);
 
-  router.get("/api/v1/ping", (req, res) => {
+  router.get("/api/v1/ping", (_req, res) => {
     res.json({ status: true, message: "It's all good..." });
   });
 

@@ -1,5 +1,8 @@
+const { findResultHandler } = require("./common");
+const modelName = "Organization";
+
 module.exports = {
-  get: (cb) => {
+  get(cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -24,20 +27,20 @@ module.exports = {
     // extract parameters
     const { name, founded_on } = organization;
 
+    if (!founded_on || !founded_on.trim()) {
+      return cb(new Error("Founded-on is required"), null);
+    }
+
+    if (!new Date(founded_on).getTime()) {
+      return cb(
+        new Error("Founded-on must be in YYYY-MM-DD date-format"),
+        null
+      );
+    }
+
     this.findByName(name, (err0, organization0, code = 400) => {
       if (err0 && code !== 404) {
         return cb(err0, null, code);
-      }
-
-      if (!founded_on || !founded_on.trim()) {
-        return cb(new Error("Founded-on is required"), null);
-      }
-
-      if (!new Date(founded_on).getTime()) {
-        return cb(
-          new Error("Founded-on must be in YYYY-MM-DD date-format"),
-          null
-        );
       }
 
       if (organization0) {
@@ -56,7 +59,7 @@ module.exports = {
     });
   },
 
-  findByName: (name, cb) => {
+  findByName(name, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -68,17 +71,11 @@ module.exports = {
     db.query(
       "SELECT id, founded_on, created_at FROM organizations WHERE name = ?",
       [name.trim().toLowerCase()],
-      (err, result) => {
-        return err
-          ? cb(err, null, 500)
-          : result[0]
-          ? cb(null, result[0], 200)
-          : cb(new Error("Organization not found"), null, 404);
-      }
+      findResultHandler(modelName, cb)
     );
   },
 
-  find: (id, cb) => {
+  find(id, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -90,13 +87,7 @@ module.exports = {
     db.query(
       "SELECT name, founded_on, created_at FROM organizations WHERE id = ?",
       [id],
-      (err, result) => {
-        return err
-          ? cb(err, null, 500)
-          : result[0]
-          ? cb(null, result[0], 200)
-          : cb(new Error("Organization not found"), null, 404);
-      }
+      findResultHandler(modelName, cb)
     );
   },
 };

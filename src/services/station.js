@@ -1,5 +1,8 @@
+const { findResultHandler } = require("./common");
+const modelName = "Station";
+
 module.exports = {
-  get: (organization_id, cb) => {
+  get(organization_id, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -50,7 +53,7 @@ module.exports = {
     });
   },
 
-  findByName: (organization_id, name, cb) => {
+  findByName(organization_id, name, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -66,17 +69,11 @@ module.exports = {
     db.query(
       "SELECT id FROM stations WHERE organization_id = ? AND name = ?",
       [organization_id, name.trim().toLowerCase()],
-      (err, result) => {
-        return err
-          ? cb(err, null, 500)
-          : result[0]
-          ? cb(null, result[0], 200)
-          : cb(new Error("Station not found"), null, 404);
-      }
+      findResultHandler(modelName, cb)
     );
   },
 
-  find: (id, cb) => {
+  find(id, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -88,13 +85,7 @@ module.exports = {
     db.query(
       "SELECT organization_id, name FROM stations WHERE id = ?",
       [id],
-      (err, result) => {
-        return err
-          ? cb(err, null, 500)
-          : result[0]
-          ? cb(null, result[0], 200)
-          : cb(new Error("Station not found"), null, 404);
-      }
+      findResultHandler(modelName, cb)
     );
   },
 };

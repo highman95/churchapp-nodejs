@@ -1,5 +1,8 @@
+const { findResultHandler } = require("./common");
+const modelName = "Audit";
+
 module.exports = {
-  get: (cb) => {
+  get(cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -12,7 +15,7 @@ module.exports = {
     );
   },
 
-  create: (audit, cb) => {
+  create(audit, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -47,7 +50,7 @@ module.exports = {
     );
   },
 
-  find: (organization_id, id, cb) => {
+  find(organization_id, id, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -64,17 +67,11 @@ module.exports = {
     db.query(
       "SELECT action, actor, url, data FROM audits WHERE id = ?",
       [id],
-      (err, results) => {
-        return err
-          ? cb(err, null, 500)
-          : results[0]
-          ? cb(null, results[0], 200)
-          : cb(new Error("Audit not found"), null, 404);
-      }
+      findResultHandler(modelName, cb)
     );
   },
 
-  ping: () => {
+  ping() {
     db.ping((err) => {
       if (err) throw err;
       console.log("Server responded to ping");

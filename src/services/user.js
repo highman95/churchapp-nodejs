@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
+const { findResultHandler } = require("./common");
+const modelName = "User";
 
 const isEmail = (email) => {
   return (
@@ -11,7 +13,7 @@ const isEmail = (email) => {
 };
 
 module.exports = {
-  get: (cb) => {
+  get(cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -79,7 +81,7 @@ module.exports = {
           `INSERT INTO users (id, title, first_name, last_name, phone, email, password)
            VALUES (UNHEX(REPLACE(?,'-','')), ?, ?, ?, ?, ?, ?)`,
           [id, title, first_name, last_name, phone, email_lc, passwordHash],
-          (err2, result) => {
+          (err2, _) => {
             return err2
               ? cb(err2, null, 500)
               : cb(null, { id: id.replace("-", ""), ...user }, 201);
@@ -134,21 +136,21 @@ module.exports = {
       throw new Error("Callback is not defined");
     }
 
+    if (!oldPassword || !oldPassword.trim()) {
+      return cb(new Error("Your previous password is required"));
+    }
+
+    if (!newPassword || !newPassword.trim()) {
+      return cb(new Error("Your current password is required"));
+    }
+
+    if (oldPassword === newPassword) {
+      return cb(new Error("Your previous password cannot be reused"));
+    }
+
     this.findByEmail(email, false, (err, user) => {
       if (err) {
         return cb(err);
-      }
-
-      if (!oldPassword || !oldPassword.trim()) {
-        return cb(new Error("Your previous password is required"));
-      }
-
-      if (!newPassword || !newPassword.trim()) {
-        return cb(new Error("Your current password is required"));
-      }
-
-      if (oldPassword === newPassword) {
-        return cb(new Error("Your previous password cannot be reused"));
       }
 
       if (!user.active) {
@@ -251,7 +253,7 @@ module.exports = {
     );
   },
 
-  findByEmail: (email, isAuth, cb) => {
+  findByEmail(email, isAuth, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -271,17 +273,11 @@ module.exports = {
           : ""
       } FROM users WHERE email = ? LIMIT 1`,
       [email.trim().toLowerCase()],
-      (err, result, _fields) => {
-        return err
-          ? cb(err, null, 500)
-          : result[0]
-          ? cb(null, result[0], 200)
-          : cb(new Error("User not found"), null, 404);
-      }
+      findResultHandler(modelName, cb)
     );
   },
 
-  find: (id, cb) => {
+  find(id, cb) {
     if (typeof cb !== "function") {
       throw new Error("Callback is not defined");
     }
@@ -293,13 +289,7 @@ module.exports = {
     db.query(
       "SELECT first_name, last_name, phone, email, active, 1 as organization_id FROM users WHERE hex(id) = ?",
       [id],
-      (err, result) => {
-        return err
-          ? cb(err, null, 500)
-          : result[0]
-          ? cb(null, result[0], 200)
-          : cb(new Error("User not found"), null, 404);
-      }
+      findResultHandler(modelName, cb)
     );
   },
 };

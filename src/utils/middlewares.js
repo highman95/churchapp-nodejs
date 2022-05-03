@@ -6,7 +6,7 @@ const userService = require("../services/user");
 const upload = multer({ dest: "uploads/" });
 
 // #region authentication middleware
-const auth = (req, res, next) => {
+const auth = (req, _, next) => {
   const { authorization = "" } = req.headers;
   const [, token] = authorization.split(" ");
 
@@ -55,14 +55,14 @@ const auth = (req, res, next) => {
   });
 };
 
-const routeType = (req, res, next) => {
+const routeType = (req, _, next) => {
   req.isWR = req.path && !req.path.startsWith("/api"); // is web-route
   next();
 };
 
-const errorHandler = (err, req, res, next) => {
-  // console.log(`error:\n${JSON.stringify(err, null, 2)}`);
-  // next(err);
+const errorHandler = (_err, _req, _res_, _next) => {
+  // console.log(`error:\n${JSON.stringify(_err, null, 2)}`);
+  // next(_err);
 };
 
 module.exports = {

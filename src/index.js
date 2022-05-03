@@ -16,7 +16,7 @@ app.use(
   require("cors")(),
   require("helmet")(),
   require("compression")(),
-  (req, res, next) => {
+  (_req, _res, next) => {
     next();
   }
 );
@@ -48,7 +48,7 @@ app.use(express.static(path.join(__dirname, "../public"))); // configure express
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
-hbs.registerPartials(path.join(__dirname, "views/partials"), (err) => {});
+hbs.registerPartials(path.join(__dirname, "views/partials"), (_) => _);
 hbs.registerHelper("computeSno", (index) => index + 1);
 hbs.registerHelper("isTrue", (p0, p1) => p0 === p1);
 
