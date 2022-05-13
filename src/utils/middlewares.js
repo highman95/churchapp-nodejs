@@ -3,10 +3,10 @@ const jwt = require("jsonwebtoken");
 const userService = require("../services/user");
 
 // #region multer middleware
-const upload = multer({ dest: "uploads/" });
+exports.upload = multer({ dest: "uploads/" });
 
 // #region authentication middleware
-const auth = (req, _, next) => {
+exports.auth = (req, _, next) => {
   const { authorization = "" } = req.headers;
   const [, token] = authorization.split(" ");
 
@@ -55,19 +55,11 @@ const auth = (req, _, next) => {
   });
 };
 
-const routeType = (req, _, next) => {
+exports.routeType = (req, _, next) => {
   req.isWR = req.path && !req.path.startsWith("/api"); // is web-route
   next();
 };
 
-const errorHandler = (_err, _req, _res_, _next) => {
-  // console.log(`error:\n${JSON.stringify(_err, null, 2)}`);
-  // next(_err);
-};
-
-module.exports = {
-  auth,
-  routeType,
-  upload,
-  errorHandler,
+exports.errorHandler = (err, _req, _res, next) => {
+  next(err);
 };

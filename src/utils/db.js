@@ -29,7 +29,7 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
   if (err) {
-    console.error(`error connecting: \n${err.stack}`);
+    console.error(`error connecting: \n${err.message}`);
     return;
   }
 
