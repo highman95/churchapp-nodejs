@@ -128,7 +128,7 @@ function findByStationAndMeetingTypeAndDate(
   }
 
   db.query(
-    `SELECT tag, held_on, mt.name meeting_type, s.name station FROM meetings m
+    `SELECT m.id, tag, held_on, mt.name meeting_type, s.name station FROM meetings m
       LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
       LEFT JOIN stations s ON s.id = m.station_id
       WHERE station_id = ? AND meeting_type_id = ? AND DATE(held_on) = ?`,
@@ -207,7 +207,7 @@ function find(id, cb) {
   }
 
   db.query(
-    `SELECT tag, held_on, mt.name meeting_type, s.name station FROM meetings m
+    `SELECT m.id, tag, held_on, mt.name meeting_type, s.name station FROM meetings m
       LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
       LEFT JOIN stations s ON s.id = m.station_id WHERE m.id = ?`,
     [id],
@@ -218,7 +218,7 @@ exports.find = find;
 
 function onFoundResultFetchStatistics(cb) {
   return findResultHandler(modelName, cb, (meeting) => {
-    return statisticService.get(id, (err0, statistics) => {
+    return statisticService.get(meeting.id, (err0, statistics) => {
       return err0
         ? cb(new Error("Stats could not be retrieved"), null, 500)
         : cb(null, { ...meeting, statistics }, 200);
