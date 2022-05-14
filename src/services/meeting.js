@@ -27,13 +27,7 @@ exports.create = function (meeting, cb) {
   }
 
   // extract parameters
-  const {
-    station_id,
-    meeting_type_id,
-    tag,
-    held_at: held_on,
-    statistic,
-  } = meeting;
+  const { station_id, meeting_type_id, tag, held_at: held_on } = meeting;
 
   if (!tag || !tag.trim()) {
     return cb(new Error("Tag is required"), null);
@@ -43,67 +37,9 @@ exports.create = function (meeting, cb) {
     station_id,
     meeting_type_id,
     held_on,
-    (err0, lastMeeting, code = 400) => {
-      if (err0 && code !== 404) {
-        return cb(err0, null, code);
-      }
-
-      if (!!lastMeeting) {
-        return cb(new Error("Meeting already saved"), null, 409);
-      }
-
-      // begin transaction here
-      db.beginTransaction((err1) => {
-        if (err1) {
-          return cb(err1, null, 500);
-        }
-
-        db.query(
-          "INSERT INTO meetings (meeting_type_id, station_id, tag, held_on) VALUES (?, ?, ?, ?)",
-          [meeting_type_id, station_id, tag, held_on],
-          onCreatedMeetingAddStatistic(meeting, statistic, cb)
-        );
-      });
-    }
+    onCheckedNonExistenceCreateMeeting(meeting, cb)
   );
 };
-
-function onCreatedMeetingAddStatistic(meeting, statistic, cb) {
-  return (err, result) => {
-    if (err) {
-      return db.rollback(() =>
-        cb(new Error("Meeting cannot be created"), null, 500)
-      );
-    }
-
-    // set the meeting-id
-    const meeting_id = result.insertId;
-
-    if (!statistic || typeof statistic !== "object") {
-      return db.commit((err3) => {
-        if (err3) {
-          return db.rollback(() => cb(err3, null, 500));
-        }
-
-        return cb(null, { id: meeting_id, ...meeting }, 201);
-      });
-    }
-
-    statisticService.create(meeting_id, statistic, (err4, stat) => {
-      if (err4) {
-        return db.rollback(() => cb(err4, null, 500));
-      }
-
-      return db.commit((err5) => {
-        if (err5) {
-          return db.rollback(() => cb(err5, null, 500));
-        }
-
-        return cb(null, { id: meeting_id, ...meeting, statistic: stat }, 201);
-      });
-    });
-  };
-}
 
 function findByStationAndMeetingTypeAndDate(
   station_id,
@@ -135,6 +71,84 @@ function findByStationAndMeetingTypeAndDate(
     [station_id, meeting_type_id, held_on],
     onFoundResultFetchStatistics(cb)
   );
+}
+
+function onCheckedNonExistenceCreateMeeting(meeting, cb) {
+  return (err0, lastMeeting, code = 400) => {
+    if (err0 && code !== 404) {
+      return cb(err0, null, code);
+    }
+
+    if (!!lastMeeting) {
+      return cb(new Error("Meeting already saved"), null, 409);
+    }
+
+    const {
+      station_id,
+      meeting_type_id,
+      tag,
+      held_at: held_on,
+      statistic,
+    } = meeting;
+
+    // begin transaction here
+    db.beginTransaction((err1) => {
+      if (err1) {
+        return cb(err1, null, 500);
+      }
+
+      db.query(
+        "INSERT INTO meetings (meeting_type_id, station_id, tag, held_on) VALUES (?, ?, ?, ?)",
+        [meeting_type_id, station_id, tag, held_on],
+        onCreatedMeetingAddStatistic(statistic)
+      );
+    });
+  };
+
+  function onCreatedMeetingAddStatistic(statistic) {
+    return (err, result) => {
+      if (err) {
+        return db.rollback(() =>
+          cb(new Error("Meeting cannot be created"), null, 500)
+        );
+      }
+
+      // set the meeting-id
+      const meeting_id = result.insertId;
+
+      if (!statistic || typeof statistic !== "object") {
+        return db.commit((err3) => {
+          if (err3) {
+            return db.rollback(() => cb(err3, null, 500));
+          }
+
+          return cb(null, { id: meeting_id, ...meeting }, 201);
+        });
+      }
+
+      statisticService.create(
+        meeting_id,
+        statistic,
+        onAddedStatisticFinalizeTransaction(meeting_id)
+      );
+    };
+  }
+
+  function onAddedStatisticFinalizeTransaction(meeting_id) {
+    return (err4, stat) => {
+      if (err4) {
+        return db.rollback(() => cb(err4, null, 500));
+      }
+
+      return db.commit((err5) => {
+        if (err5) {
+          return db.rollback(() => cb(err5, null, 500));
+        }
+
+        return cb(null, { id: meeting_id, ...meeting, statistic: stat }, 201);
+      });
+    };
+  }
 }
 
 exports.edit = function (id, meeting, cb) {

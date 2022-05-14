@@ -51,6 +51,16 @@ app.set("views", path.join(__dirname, "views"));
 hbs.registerPartials(path.join(__dirname, "views/partials"), (_) => _);
 hbs.registerHelper("computeSno", (index) => index + 1);
 hbs.registerHelper("isTrue", (p0, p1) => p0 === p1);
+hbs.registerHelper("addSuffix", (numericValue) => {
+  const remainder = numericValue % 10;
+
+  let suffix = remainder === 1 ? "st" : undefined;
+  suffix = !suffix && remainder === 2 ? "nd" : suffix;
+  suffix = !suffix && remainder === 3 ? "rd" : suffix;
+  suffix = suffix ?? "th";
+
+  return `${numericValue}${suffix}`;
+});
 
 // Initialize Passport and restore authentication state, if any, from the session.
 app.use(passportService.initialize(), passportService.session());

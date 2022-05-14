@@ -58,10 +58,10 @@ exports.create = function (user, cb) {
   }
 
   delete user.password;
-  findByEmail(email, false, onCheckedExistenceGeneratePasswordHash(user, cb));
+  findByEmail(email, false, onCheckedNonExistenceComputePasswordHash(user, cb));
 };
 
-function onCheckedExistenceGeneratePasswordHash(user, cb) {
+function onCheckedNonExistenceComputePasswordHash(user, cb) {
   return (err0, user0, code = 400) => {
     if (err0 && code !== 404) {
       return cb(err0, null, code);
