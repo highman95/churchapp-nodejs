@@ -27,7 +27,7 @@ exports.create = function (meeting, cb) {
   }
 
   // extract parameters
-  const { station_id, meeting_type_id, tag, held_at: held_on } = meeting;
+  const { station_id, meeting_type_id, tag, held_on } = meeting;
 
   if (!tag || !tag.trim()) {
     return cb(new Error("Tag is required"), null);
@@ -40,6 +40,52 @@ exports.create = function (meeting, cb) {
     onCheckedNonExistenceCreateMeeting(meeting, cb)
   );
 };
+
+exports.edit = function (id, meeting, cb) {
+  if (typeof cb !== "function") {
+    throw new Error("Callback is not defined");
+  }
+
+  if (!meeting || typeof meeting !== "object") {
+    return cb(new Error("Meeting-profile is required"), null);
+  }
+
+  // extract parameters
+  const { station_id, meeting_type_id, tag } = meeting;
+
+  if (!station_id || isNaN(station_id)) {
+    return cb(new Error("Meeting-station is required"), null);
+  }
+
+  if (!meeting_type_id || isNaN(meeting_type_id)) {
+    return cb(new Error("Meeting-type is required"), null);
+  }
+
+  if (!tag || !tag.trim()) {
+    return cb(new Error("Tag is required"), null);
+  }
+
+  find(id, onCheckedExistenceUpdateMeeting(id, meeting, cb));
+};
+
+function find(id, cb) {
+  if (typeof cb !== "function") {
+    throw new Error("Callback is not defined");
+  }
+
+  if (!id || isNaN(id)) {
+    return cb(new Error("Meeting-id is required"), null);
+  }
+
+  db.query(
+    `SELECT m.id, tag, held_on, mt.name meeting_type, s.name station FROM meetings m
+      LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
+      LEFT JOIN stations s ON s.id = m.station_id WHERE m.id = ?`,
+    [id],
+    onFoundResultFetchStatistics(cb)
+  );
+}
+exports.find = find;
 
 function findByStationAndMeetingTypeAndDate(
   station_id,
@@ -83,13 +129,7 @@ function onCheckedNonExistenceCreateMeeting(meeting, cb) {
       return cb(new Error("Meeting already saved"), null, 409);
     }
 
-    const {
-      station_id,
-      meeting_type_id,
-      tag,
-      held_at: held_on,
-      statistic,
-    } = meeting;
+    const { station_id, meeting_type_id, tag, held_on, statistic } = meeting;
 
     // begin transaction here
     db.beginTransaction((err1) => {
@@ -151,33 +191,6 @@ function onCheckedNonExistenceCreateMeeting(meeting, cb) {
   }
 }
 
-exports.edit = function (id, meeting, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
-
-  if (!meeting || typeof meeting !== "object") {
-    return cb(new Error("Meeting-profile is required"), null);
-  }
-
-  // extract parameters
-  const { station_id, meeting_type_id, tag } = meeting;
-
-  if (!station_id || isNaN(station_id)) {
-    return cb(new Error("Meeting-station is required"), null);
-  }
-
-  if (!meeting_type_id || isNaN(meeting_type_id)) {
-    return cb(new Error("Meeting-type is required"), null);
-  }
-
-  if (!tag || !tag.trim()) {
-    return cb(new Error("Tag is required"), null);
-  }
-
-  find(id, onCheckedExistenceUpdateMeeting(id, meeting, cb));
-};
-
 function onCheckedExistenceUpdateMeeting(id, meeting, cb) {
   return (err0, lastMeeting, code = 400) => {
     if (err0) {
@@ -185,7 +198,7 @@ function onCheckedExistenceUpdateMeeting(id, meeting, cb) {
     }
 
     // extract parameters
-    const { station_id, meeting_type_id, tag, held_at: held_on } = meeting;
+    const { station_id, meeting_type_id, tag, held_on } = meeting;
 
     if (station_id != lastMeeting.station_id) {
       return cb(new Error("Meeting-station/venue cannot be updated"), null);
@@ -210,25 +223,6 @@ function onCheckedExistenceUpdateMeeting(id, meeting, cb) {
     );
   };
 }
-
-function find(id, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
-
-  if (!id || isNaN(id)) {
-    return cb(new Error("Meeting-id is required"), null);
-  }
-
-  db.query(
-    `SELECT m.id, tag, held_on, mt.name meeting_type, s.name station FROM meetings m
-      LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
-      LEFT JOIN stations s ON s.id = m.station_id WHERE m.id = ?`,
-    [id],
-    onFoundResultFetchStatistics(cb)
-  );
-}
-exports.find = find;
 
 function onFoundResultFetchStatistics(cb) {
   return findResultHandler(modelName, cb, (meeting) => {

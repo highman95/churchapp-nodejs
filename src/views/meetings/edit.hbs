@@ -5,19 +5,34 @@
   <div class="col-12">
     <!-- Main meeting details -->
     {{#if meeting}}
-      <form action="/meetings/edit/{{meeting.id}}" method="post" enctype="application/x-www-form-urlencoded">
+      <form
+        action="/meetings/edit/{{meeting.id}}"
+        method="post"
+        enctype="application/x-www-form-urlencoded"
+      >
         <div class="form-row">
           <div class="form-group col-md-12">
             <h6>Basic Information</h6>
             <hr />
           </div>
           <div class="form-group col-md-4 col-6">
-            <label for="held-at">Date/Time-Held:</label>
-            <input type="datetime-local" class="form-control" id="held-at" value="{{{meeting.held_on}}}" name="held_at"/>
+            <label for="held-on">Date/Time-Held:</label>
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="held-on"
+              value="{{meeting.held_on}}"
+              name="held_on"
+            />
           </div>
           <div class="form-group col-md-4 col-6">
             <label for="meeting-type">Meeting-Type:</label>
-            <select id="meeting-type" name="meeting_type_id" class="custom-select form-control" required>
+            <select
+              id="meeting-type"
+              name="meeting_type_id"
+              class="custom-select form-control"
+              required
+            >
               <option selected>Choose...</option>
               {{#if meetingTypes}}
                 {{#each meetingTypes as |meetingType index|}}
@@ -28,7 +43,12 @@
           </div>
           <div class="form-group col-md-4">
             <label for="station">Station:</label>
-            <select id="station" name="station_id" class="custom-select form-control" required>
+            <select
+              id="station"
+              name="station_id"
+              class="custom-select form-control"
+              required
+            >
               <option selected>Choose...</option>
               {{#if stations}}
                 {{#each stations as |station index|}}
@@ -40,13 +60,28 @@
           <div class="form-group col-md-12">
             <label for="tag-name">Tag-Name:</label>
             <div class="input-group mb-3">
-              <input type="text" class="form-control" id="tag-name" name="tag"
-                value="{{{meeting.tag}}}" maxlength="55" required placeholder="Covenant day of..." />
+              <input
+                type="text"
+                class="form-control"
+                id="tag-name"
+                name="tag"
+                value="{{{meeting.tag}}}"
+                maxlength="55"
+                required
+                placeholder="Covenant day of..."
+              />
               <div class="input-group-append">
-                  <button type="submit" class="btn btn-danger font-weight-bold">Submit</button>
-                  <button type="button" class="btn btn-dark font-weight-bold" onclick="location.href='/meetings'">
-                    <span title="Cancel">&#10558;</span>
-                  </button>
+                <button
+                  type="submit"
+                  class="btn btn-danger font-weight-bold"
+                >Submit</button>
+                <button
+                  type="button"
+                  class="btn btn-dark font-weight-bold"
+                  onclick="location.href='/meetings'"
+                >
+                  <span title="Cancel">&#10558;</span>
+                </button>
               </div>
             </div>
           </div>
@@ -55,40 +90,85 @@
 
       {{#if meeting.statistics}}
         {{#each meeting.statistics as |stat index|}}
-          <form action="/meetings/edit/{{stat.meeting_id}}/stats/{{stat.id}}" method="post" enctype="application/x-www-form-urlencoded">
+          <form
+            action="/meetings/edit/{{stat.meeting_id}}/stats/{{stat.id}}"
+            method="post"
+            enctype="application/x-www-form-urlencoded"
+          >
             <!-- Attendance -->
             <div class="form-row">
               <div class="form-group col-md-12">
-                <h6 class="pt-5">Session-{{stat.mno}}: Attendance / Finances (Offerings)</h6>
+                <h6 class="pt-5">
+                  Session-{{stat.mno}}: Attendance / Finances (Offerings)
+                </h6>
                 <hr />
               </div>
               <div class="form-group col-4 col-md-4">
                 <label for="male">Male:</label>
-                <input type="text" class="form-control" id="male" name="male" value={{stat.male}} required />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="male"
+                  name="male"
+                  value={{stat.male}}
+                  required
+                />
               </div>
               <div class="form-group col-4 col-md-4">
                 <label for="female">Female:</label>
-                <input type="text" class="form-control" id="female" name="female" value={{stat.female}} required />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="female"
+                  name="female"
+                  value={{stat.female}}
+                  required
+                />
               </div>
               <div class="form-group col-4 col-md-4">
                 <label for="children">Children:</label>
-                <input type="text" class="form-control" id="children" name="children" value={{stat.children}} required />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="children"
+                  name="children"
+                  value={{stat.children}}
+                  required
+                />
               </div>
               <div class="form-group col-4 col-md-4">
                 <label for="converts">N/Converts:</label>
-                <input type="text" class="form-control" id="converts" name="converts" value={{stat.converts}} />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="converts"
+                  name="converts"
+                  value={{stat.converts}}
+                />
               </div>
               <div class="form-group col-4 col-md-4">
                 <label for="first-timers">F/Timers:</label>
-                <input type="text" class="form-control" id="first-timers" name="first_timers" value={{stat.first_timers}} />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="first-timers"
+                  name="first_timers"
+                  value={{stat.first_timers}}
+                />
               </div>
               <div class="form-group col-4 col-md-4">
                 <label for="testimonies">Testimonies:</label>
-                <input type="text" class="form-control" id="testimonies" name="testimonies" value={{stat.testimonies}} />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="testimonies"
+                  name="testimonies"
+                  value={{stat.testimonies}}
+                />
               </div>
             </div>
 
-            <div><hr></div>
+            <div><hr /></div>
 
             <!-- Finances -->
             <div class="form-row">
@@ -96,52 +176,105 @@
                 <label for="tithe">Tithe:</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text font-weight-bold">&#8358;</span>
+                    <span
+                      class="input-group-text font-weight-bold"
+                    >&#8358;</span>
                   </div>
-                  <input type="text" class="form-control" id="tithe" name="tithe" value={{stat.tithe}} />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="tithe"
+                    name="tithe"
+                    value={{stat.tithe}}
+                  />
                 </div>
               </div>
               <div class="form-group col-6 col-md-4">
                 <label for="worship">Worship Offering:</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text font-weight-bold">&#8358;</span>
+                    <span
+                      class="input-group-text font-weight-bold"
+                    >&#8358;</span>
                   </div>
-                  <input type="text" class="form-control" id="worship" name="worship" value={{stat.worship}} />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="worship"
+                    name="worship"
+                    value={{stat.worship}}
+                  />
                 </div>
               </div>
               <div class="form-group col-6 col-md-4">
                 <label for="project">Project Offering:</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text font-weight-bold">&#8358;</span>
+                    <span
+                      class="input-group-text font-weight-bold"
+                    >&#8358;</span>
                   </div>
-                  <input type="text" class="form-control" id="project" name="project" value={{stat.project}} />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="project"
+                    name="project"
+                    value={{stat.project}}
+                  />
                 </div>
               </div>
               <div class="form-group col-6 col-md-4">
                 <label for="shiloh_sac">Shiloh Sacrifice:</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text font-weight-bold">&#8358;</span>
+                    <span
+                      class="input-group-text font-weight-bold"
+                    >&#8358;</span>
                   </div>
-                  <input type="text" class="form-control" id="shiloh_sac" name="shiloh_sac" value={{stat.shiloh_sac}} />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="shiloh_sac"
+                    name="shiloh_sac"
+                    value={{stat.shiloh_sac}}
+                  />
                 </div>
               </div>
               <div class="form-group col-6 col-md-4">
                 <label for="vow">Vow:</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text font-weight-bold">&#8358;</span>
+                    <span
+                      class="input-group-text font-weight-bold"
+                    >&#8358;</span>
                   </div>
-                  <input type="text" class="form-control" id="vow" name="vow" value={{stat.vow}} />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="vow"
+                    name="vow"
+                    value={{stat.vow}}
+                  />
                 </div>
               </div>
               <div class="form-group col-6 col-md-4 text-right">
                 <label for="submit-btn">&nbsp;</label>
-                <div class="btn-group" role="group" aria-label="submit-cancel-btn-group">
-                  <button type="submit" id="submit-btn" class="btn btn-danger btn-block font-weight-bold">Submit</button>
-                  <button type="button" id="cancel-btn" class="btn btn-dark font-weight-bold" onclick="location.href='/meetings'">
+                <div
+                  class="btn-group"
+                  role="group"
+                  aria-label="submit-cancel-btn-group"
+                >
+                  <button
+                    type="submit"
+                    id="submit-btn"
+                    class="btn btn-danger btn-block font-weight-bold"
+                  >Submit</button>
+                  <button
+                    type="button"
+                    id="cancel-btn"
+                    class="btn btn-dark font-weight-bold"
+                    onclick="location.href='/meetings'"
+                  >
                     <span title="Cancel">&#10558;</span>
                   </button>
                 </div>
