@@ -2,13 +2,22 @@ const meetingService = require("../services/meeting");
 const stationService = require("../services/station");
 const meetingTypeService = require("../services/meeting-type");
 
+const defaultPage = 1;
+const defaultSize = process.env.PAGINATION_CHUNK_SIZE;
+
 module.exports = {
-  get: (_req, res, next) => {
+  get: (req, res, next) => {
+    const { page = defaultPage, size = defaultSize } = req.query;
+
     try {
-      meetingService.get((err, meetings, code = 400) => {
+      meetingService.get(page, size, (err, meetings, code = 400) => {
+        const { data = [], count = 0 } = meetings ?? {};
+
         res.status(code).json({
           status: !err,
-          data: meetings,
+          data,
+          count,
+          currentPage: page,
           message: err ? err.message : "Meetings successfully fetched",
         });
       });
@@ -19,13 +28,22 @@ module.exports = {
 
   show: (req, res) => {
     const {
-      query: { err: error },
+      query: { page = defaultPage, size = defaultSize, err: error },
       user: user0,
     } = req;
 
     try {
-      meetingService.get((_err, meetings) => {
-        res.render("meetings", { title: "Meetings", user0, meetings, error });
+      meetingService.get(page, size, (_err, meetings) => {
+        const { data = [], count = 0 } = meetings ?? {};
+
+        res.render("meetings", {
+          title: "Meetings",
+          user0,
+          meetings: data,
+          count,
+          currentPage: page,
+          error,
+        });
       });
     } catch (e) {}
   },

@@ -2,17 +2,41 @@ const { findResultHandler } = require("./common");
 const statisticService = require("./statistic");
 const modelName = "Meeting";
 
-exports.get = function (cb) {
+exports.get = function (page, size, cb) {
   if (typeof cb !== "function") {
     throw new Error("Callback is not defined");
   }
 
+  const pageIndex = (!page ? 1 : Math.abs(parseInt(page) || 1)) - 1;
+  const limit = !size ? 10 : Math.abs(parseInt(size) || 10);
+
+  const sql = `SELECT {expectations} FROM meetings m
+               LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
+               LEFT JOIN stations s ON s.id = m.station_id ORDER BY held_on, m.id`;
+
   db.query(
-    `SELECT m.id, tag, held_on, mt.name meeting_type, s.name station FROM meetings m
-      LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
-      LEFT JOIN stations s ON s.id = m.station_id ORDER BY held_on`,
-    (err, result) => {
-      return err ? cb(err, null, 500) : cb(null, result, 200);
+    `${sql.replace("{expectations}", "COUNT(m.id) as count")}`,
+    (err0, meetings) => {
+      if (err0) {
+        return cb(new Error("All Meetings could not fetched"), null, 500);
+      }
+
+      const count = meetings[0]?.count ?? 0;
+      if (count === 0) {
+        return cb(null, { data: [], count }, 200);
+      }
+
+      db.query(
+        `${sql.replace(
+          "{expectations}",
+          "m.id, tag, held_on, mt.name meeting_type, s.name station"
+        )} LIMIT ${pageIndex * size}, ${limit}`,
+        (err1, meetingsInPage) => {
+          return err1
+            ? cb("Meetings could not fetched", null, 500)
+            : cb(null, { data: meetingsInPage, count }, 200);
+        }
+      );
     }
   );
 };
