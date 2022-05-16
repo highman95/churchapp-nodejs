@@ -61,46 +61,6 @@ exports.create = function (user, cb) {
   findByEmail(email, false, onCheckedNonExistenceComputePasswordHash(user, cb));
 };
 
-function onCheckedNonExistenceComputePasswordHash(user, cb) {
-  return (err0, user0, code = 400) => {
-    if (err0 && code !== 404) {
-      return cb(err0, null, code);
-    }
-
-    if (user0) {
-      return cb(new Error("E-mail already used"), null, 409);
-    }
-
-    bcrypt.hash(password, 10, onHashedPasswordCreateUser());
-  };
-
-  function onHashedPasswordCreateUser() {
-    return (err1, passwordHash) => {
-      if (err1) {
-        return cb(new Error("Password cannot be hashed"), null, 500);
-      }
-
-      // extract parameters
-      const { title, first_name, last_name, phone, email } = user;
-
-      // re-format values
-      const id = uuidv4(); // new-user-id
-      const email_lc = email.trim().toLowerCase();
-
-      db.query(
-        `INSERT INTO users (id, title, first_name, last_name, phone, email, password)
-           VALUES (UNHEX(REPLACE(?,'-','')), ?, ?, ?, ?, ?, ?)`,
-        [id, title, first_name, last_name, phone, email_lc, passwordHash],
-        (err2, _) => {
-          return err2
-            ? cb(err2, null, 500)
-            : cb(null, { id: id.replace("-", ""), ...user }, 201);
-        }
-      );
-    };
-  }
-}
-
 exports.verify = function (email, cb) {
   if (typeof cb !== "function") {
     throw new Error("Callback is not defined");
@@ -165,6 +125,45 @@ exports.changePassword = function (email, oldPassword, newPassword, cb) {
   );
 };
 
+function onCheckedNonExistenceComputePasswordHash(user, cb) {
+  return (err0, user0, code = 400) => {
+    if (err0 && code !== 404) {
+      return cb(err0, null, code);
+    }
+
+    if (user0) {
+      return cb(new Error("E-mail already used"), null, 409);
+    }
+
+    bcrypt.hash(password, 10, onHashedPasswordCreateUser());
+  };
+
+  function onHashedPasswordCreateUser() {
+    return (err1, passwordHash) => {
+      if (err1) {
+        return cb(new Error("Password cannot be hashed"), null, 500);
+      }
+
+      // extract parameters
+      const { title, first_name, last_name, phone, email } = user;
+
+      // re-format values
+      const id = uuidv4(); // new-user-id
+      const email_lc = email.trim().toLowerCase();
+
+      db.query(
+        `INSERT INTO users (id, title, first_name, last_name, phone, email, password)
+           VALUES (UNHEX(REPLACE(?,'-','')), ?, ?, ?, ?, ?, ?)`,
+        [id, title, first_name, last_name, phone, email_lc, passwordHash],
+        (err2, _) => {
+          return err2
+            ? cb(err2, null, 500)
+            : cb(null, { id: id.replace("-", ""), ...user }, 201);
+        }
+      );
+    };
+  }
+}
 function onCheckedExistenceValidateOldPassword(
   email,
   oldPassword,

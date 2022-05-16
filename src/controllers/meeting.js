@@ -7,20 +7,28 @@ const defaultSize = process.env.PAGINATION_CHUNK_SIZE;
 
 module.exports = {
   get: (req, res, next) => {
-    const { page = defaultPage, size = defaultSize } = req.query;
+    const {
+      query: { page = defaultPage, size = defaultSize },
+      user: { organization_id },
+    } = req;
 
     try {
-      meetingService.get(page, size, (err, meetings, code = 400) => {
-        const { data = [], count = 0 } = meetings ?? {};
+      meetingService.get(
+        organization_id,
+        page,
+        size,
+        (err, meetings, code = 400) => {
+          const { data = [], count = 0 } = meetings ?? {};
 
-        res.status(code).json({
-          status: !err,
-          data,
-          count,
-          currentPage: page,
-          message: err ? err.message : "Meetings successfully fetched",
-        });
-      });
+          res.status(code).json({
+            status: !err,
+            data,
+            count,
+            currentPage: page,
+            message: err ? err.message : "Meetings successfully fetched",
+          });
+        }
+      );
     } catch (e) {
       next(e);
     }
@@ -33,18 +41,23 @@ module.exports = {
     } = req;
 
     try {
-      meetingService.get(page, size, (_err, meetings) => {
-        const { data = [], count = 0 } = meetings ?? {};
+      meetingService.get(
+        user0.organization_id,
+        page,
+        size,
+        (_err, meetings) => {
+          const { data = [], count = 0 } = meetings ?? {};
 
-        res.render("meetings", {
-          title: "Meetings",
-          user0,
-          meetings: data,
-          count,
-          currentPage: page,
-          error,
-        });
-      });
+          res.render("meetings", {
+            title: "Meetings",
+            user0,
+            meetings: data,
+            count,
+            currentPage: page,
+            error,
+          });
+        }
+      );
     } catch (e) {}
   },
 
@@ -106,19 +119,24 @@ module.exports = {
   },
 
   edit: (req, res, next) => {
+    const {
+      params: { id },
+      body,
+      user: { organization_id },
+      isWR,
+    } = req;
+
     try {
       meetingService.edit(
-        req.params.id,
-        req.body,
+        organization_id,
+        id,
+        body,
         (err, meeting, code = 400) => {
           const redirectUri = err ? "edit/" : "";
           let message = err ? err.message : undefined;
-          message =
-            message === undefined && req.isWR
-              ? ""
-              : "Meeting successfully updated";
+          message = !message && isWR ? "" : "Meeting successfully updated";
 
-          return req.isWR
+          return isWR
             ? res.redirect(
                 `/meetings/${redirectUri}${meeting.id}?err=${message}`
               )
@@ -135,20 +153,30 @@ module.exports = {
   },
 
   editPage: (req, res) => {
+    const {
+      params: { id },
+      user: user0,
+    } = req;
+
     try {
-      meetingService.find(req.params.id, (_err, meeting) => {
+      meetingService.find(user0.organization_id, id, (_err, meeting) => {
         res.render("meetings/edit", {
           title: "Meetings",
-          user0: req.user,
-          meeting: { ...meeting, id: req.params.id },
+          user0,
+          meeting: { ...meeting, id },
         });
       });
     } catch (e) {}
   },
 
   describe: (req, res) => {
+    const {
+      params: { id },
+      user: user0,
+    } = req;
+
     try {
-      meetingService.find(req.params.id, (_err, meeting) => {
+      meetingService.find(user0.organization_id, id, (_err, meeting) => {
         if (meeting) {
           var held_on = new Date(meeting.held_on);
           held_on.setMinutes(
@@ -156,13 +184,13 @@ module.exports = {
           ); // local-datetime
 
           const s_cnt = meeting.statistics.length + 1;
-          meeting = { ...meeting, held_on, id: req.params.id, s_cnt };
+          meeting = { ...meeting, held_on, id, s_cnt };
         }
 
         return !!meeting
           ? res.render("meetings/detail", {
               title: "Meetings",
-              user0: req.user,
+              user0,
               meeting,
             })
           : res.redirect("/meetings");

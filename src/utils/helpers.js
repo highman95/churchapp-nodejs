@@ -1,4 +1,6 @@
 exports.showPaginationLinks = (totalCount, page) => {
+  if (totalCount <= 0) return;
+
   const currentPage = Math.abs(parseInt(page));
   const chunkSize = parseInt(process.env.PAGINATION_CHUNK_SIZE) || 10; // to avoid divide-by-zero error
   const noOfPages = Math.ceil(totalCount / chunkSize);

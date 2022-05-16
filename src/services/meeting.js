@@ -2,9 +2,13 @@ const { findResultHandler } = require("./common");
 const statisticService = require("./statistic");
 const modelName = "Meeting";
 
-exports.get = function (page, size, cb) {
+exports.get = function (organization_id, page, size, cb) {
   if (typeof cb !== "function") {
     throw new Error("Callback is not defined");
+  }
+
+  if (!organization_id || isNaN(organization_id)) {
+    return cb(new Error("Organization-id is required"), null);
   }
 
   const pageIndex = (!page ? 1 : Math.abs(parseInt(page) || 1)) - 1;
@@ -12,10 +16,12 @@ exports.get = function (page, size, cb) {
 
   const sql = `SELECT {expectations} FROM meetings m
                LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
-               LEFT JOIN stations s ON s.id = m.station_id ORDER BY held_on, m.id`;
+               LEFT JOIN stations s ON s.id = m.station_id
+               WHERE s.organization_id = ? ORDER BY held_on, m.id`;
 
   db.query(
     `${sql.replace("{expectations}", "COUNT(m.id) as count")}`,
+    [organization_id],
     (err0, meetings) => {
       if (err0) {
         return cb(new Error("All Meetings could not fetched"), null, 500);
@@ -31,6 +37,7 @@ exports.get = function (page, size, cb) {
           "{expectations}",
           "m.id, tag, held_on, mt.name meeting_type, s.name station"
         )} LIMIT ${pageIndex * size}, ${limit}`,
+        [organization_id],
         (err1, meetingsInPage) => {
           return err1
             ? cb("Meetings could not fetched", null, 500)
@@ -65,7 +72,7 @@ exports.create = function (meeting, cb) {
   );
 };
 
-exports.edit = function (id, meeting, cb) {
+exports.edit = function (organization_id, id, meeting, cb) {
   if (typeof cb !== "function") {
     throw new Error("Callback is not defined");
   }
@@ -89,12 +96,16 @@ exports.edit = function (id, meeting, cb) {
     return cb(new Error("Tag is required"), null);
   }
 
-  find(id, onCheckedExistenceUpdateMeeting(id, meeting, cb));
+  find(organization_id, id, onCheckedExistenceUpdateMeeting(id, meeting, cb));
 };
 
-function find(id, cb) {
+function find(organization_id, id, cb) {
   if (typeof cb !== "function") {
     throw new Error("Callback is not defined");
+  }
+
+  if (!organization_id || isNaN(organization_id)) {
+    return cb(new Error("Organization-id is required"), null);
   }
 
   if (!id || isNaN(id)) {
@@ -103,9 +114,9 @@ function find(id, cb) {
 
   db.query(
     `SELECT m.id, tag, held_on, mt.name meeting_type, s.name station FROM meetings m
-      LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
-      LEFT JOIN stations s ON s.id = m.station_id WHERE m.id = ?`,
-    [id],
+     LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
+     LEFT JOIN stations s ON s.id = m.station_id WHERE m.id = ? AND s.organization_id = ?`,
+    [id, organization_id],
     onFoundResultFetchStatistics(cb)
   );
 }
