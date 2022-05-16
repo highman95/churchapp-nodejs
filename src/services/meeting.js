@@ -115,7 +115,7 @@ function find(organization_id, id, cb) {
   db.query(
     `SELECT m.id, tag, held_on, mt.name meeting_type, s.name station FROM meetings m
      LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
-     LEFT JOIN stations s ON s.id = m.station_id WHERE m.id = ? AND s.organization_id = ?`,
+     LEFT JOIN stations s ON s.id = m.station_id WHERE m.id = ? AND s.organization_id = ? LIMIT 1`,
     [id, organization_id],
     onFoundResultFetchStatistics(cb)
   );
@@ -146,9 +146,9 @@ function findByStationAndMeetingTypeAndDate(
 
   db.query(
     `SELECT m.id, tag, held_on, mt.name meeting_type, s.name station FROM meetings m
-      LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
-      LEFT JOIN stations s ON s.id = m.station_id
-      WHERE station_id = ? AND meeting_type_id = ? AND DATE(held_on) = ?`,
+     LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
+     LEFT JOIN stations s ON s.id = m.station_id
+     WHERE station_id = ? AND meeting_type_id = ? AND DATE(held_on) = DATE(?) LIMIT 1`,
     [station_id, meeting_type_id, held_on],
     onFoundResultFetchStatistics(cb)
   );
