@@ -1,3 +1,4 @@
+const { isInTheFuture } = require("../utils/helpers");
 const { findResultHandler } = require("./common");
 const statisticService = require("./statistic");
 const modelName = "Meeting";
@@ -142,6 +143,10 @@ function findByStationAndMeetingTypeAndDate(
 
   if (!held_on || !held_on.trim()) {
     return cb(new Error("Meeting-date is required"), null);
+  }
+
+  if (isInTheFuture(held_on)) {
+    return cb(new Error("Meeting-date cannot be a future date"), null);
   }
 
   db.query(
