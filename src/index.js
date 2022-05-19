@@ -72,4 +72,9 @@ app.use(passportService.initialize(), passportService.session());
 // define all routes and route-type
 app.use(routes(express.Router()), errorHandler);
 
+process.on("uncaughtException", (err) => {
+  console.error("There was an uncaught error --> ", err);
+  process.exit(1);
+});
+
 module.exports = app;
