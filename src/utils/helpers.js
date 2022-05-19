@@ -63,3 +63,10 @@ exports.isInTheFuture = (date) => {
   const today = new Date();
   return new Date(date).setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0);
 };
+
+exports.formatDateToISO = (date) => {
+  const isoString = (
+    typeof date === "string" ? new Date(date) : date
+  ).toISOString();
+  return isoString.substring(0, (isoString.indexOf("T") | 0) + (6 | 0));
+};

@@ -21,6 +21,7 @@ const connection = mysql.createConnection({
       return next();
     }
   },
+  timezone: "Z",
   supportBigNumbers: true,
   // debug: process.env.DEBUG_MODE === "true",
   // connectTimeout: 50000,

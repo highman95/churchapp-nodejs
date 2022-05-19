@@ -4,7 +4,7 @@ const hbs = require("hbs");
 const passportService = require("./services/passport");
 
 const { routeType, errorHandler } = require("./utils/middlewares");
-const { showPaginationLinks } = require("./utils/helpers");
+const { showPaginationLinks, formatDateToISO } = require("./utils/helpers");
 const routes = require("./routes");
 global.db = require("./utils/db");
 
@@ -24,7 +24,7 @@ app.use(
 
 app.use(
   require("express-session")({
-    secret: "keyboard cat",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     // cookie: { secure: true, maxAge: 60000 },
@@ -64,6 +64,7 @@ hbs.registerHelper("addSuffix", (number) => {
 });
 
 hbs.registerHelper("showPaginationLinks", showPaginationLinks);
+hbs.registerHelper("formatDateToISO", formatDateToISO);
 
 // Initialize Passport and restore authentication state, if any, from the session.
 app.use(passportService.initialize(), passportService.session());
