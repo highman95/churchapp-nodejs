@@ -4,7 +4,14 @@ const hbs = require("hbs");
 const passportService = require("./services/passport");
 
 const { routeType, errorHandler } = require("./utils/middlewares");
-const { showPaginationLinks, formatDateToISO } = require("./utils/helpers");
+const {
+  showPaginationLinks,
+  formatDateToISO,
+  formatToDateOnly,
+  commafy,
+  addSuffix,
+  selected,
+} = require("./utils/helpers");
 const routes = require("./routes");
 global.db = require("./utils/db");
 
@@ -50,21 +57,17 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
 hbs.registerPartials(path.join(__dirname, "views/partials"), (_) => _);
-hbs.registerHelper("computeSno", (index) => index + 1);
+hbs.registerHelper(
+  "computeSno",
+  (index, index0) => index + 1 + (typeof index0 === "number" ? index0 : 0)
+);
 hbs.registerHelper("isTrue", (p0, p1) => p0 === p1);
-hbs.registerHelper("addSuffix", (number) => {
-  const remainder = number % 10;
-
-  let suffix = remainder === 1 ? "st" : undefined;
-  suffix = suffix ?? (remainder === 2 ? "nd" : suffix);
-  suffix = suffix ?? (remainder === 3 ? "rd" : suffix);
-  suffix = suffix ?? "th";
-
-  return `${number}<sup>${suffix}</sup>`;
-});
-
+hbs.registerHelper("addSuffix", addSuffix);
 hbs.registerHelper("showPaginationLinks", showPaginationLinks);
 hbs.registerHelper("formatDateToISO", formatDateToISO);
+hbs.registerHelper("formatToDateOnly", formatToDateOnly);
+hbs.registerHelper("commafy", commafy);
+hbs.registerHelper("selected", selected);
 
 // Initialize Passport and restore authentication state, if any, from the session.
 app.use(passportService.initialize(), passportService.session());

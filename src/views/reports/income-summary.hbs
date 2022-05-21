@@ -1,0 +1,186 @@
+<h3>Daily Income Analysis</h3>
+<hr />
+
+<div class="row d-print-none">
+  <div class="col-md-12">
+    <form method="get" action="">
+      <div class="form-row align-items-center">
+        <div class="col-auto">
+          <label class="mb-2 sr-only-x" for="station-box">Station:</label>
+          <select
+            class="custom-select mb-2"
+            name="station"
+            id="station-box"
+            required
+          >
+            <option value="">Choose Station...</option>
+            {{#if stations}}
+              {{#each stations}}
+                <option value={{id}} {{selected ../queryRef.station id}}>
+                  {{name}}
+                </option>
+              {{/each}}
+            {{/if}}
+          </select>
+        </div>
+
+        <div class="col-auto">
+          <label class="mb-2 sr-only-x" for="month-box">Month:</label>
+          <input
+            type="month"
+            name="monthYear"
+            id="month-box"
+            class="form-control mb-2"
+            min="1930-01"
+            max="{{queryRef.max}}"
+            value="{{queryRef.current}}"
+            required
+          />
+        </div>
+
+        <div class="col-auto">
+          <label>&nbsp;</label>
+          <button type="submit" class="btn btn-danger btn-sm mb-2">Show</button>
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm mb-2"
+            onclick="window.print()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-printer"
+              viewBox="0 0 16 16"
+            >
+              <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"></path>
+              <path
+                d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"
+              ></path>
+            </svg>
+            Print
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<hr class="mb-0 d-print-none" />
+
+<div class="row">
+  <div class="col-12">
+    <div class="table-responsive-md">
+      <table class="table table-striped table-bordered table-sm">
+        <thead
+          style="background-color:#aaaaaa;font-size:11px;line-height:normal;"
+        >
+          <tr style="text-transform:uppercase;">
+            <th rowspan="2">s/n</th>
+            <th rowspan="2" align="left">Date</th>
+            <th colspan="3">Tithe</th>
+            <th colspan="3">Offering</th>
+            <th colspan="3">Project Offering</th>
+            <th>Thanksgiving</th>
+            <th>Total</th>
+            <th>Shiloh Sacrifice</th>
+            <th rowspan="2">Grand Total</th>
+          </tr>
+          <tr>
+            <th>Cash</th>
+            <th>Cheque</th>
+            <th>Total</th>
+            <th>Cash</th>
+            <th>Cheque</th>
+            <th>Total</th>
+            <th>Cash</th>
+            <th>Cheque</th>
+            <th>Total</th>
+            <th>Cash &amp; Chq.</th>
+            <th>Tithe, Offering, Project &amp; Others</th>
+            <th>Cash &amp; Chq.</th>
+          </tr>
+        </thead>
+        <tbody style="font-size:smaller;line-height:normal;text-align:right;">
+          {{#if records}}
+            {{#each records as |recordsPerDay index|}}
+              {{#each recordsPerDay as |record index0|}}
+                <tr>
+                  <td scope="row">{{computeSno index index0}}.</td>
+                  <td scope="row" style="text-align:left;">
+                    {{formatToDateOnly record.held_on true}}
+                    <small class="text-muted d-block">{{record.tag}}</small>
+                  </td>
+                  <td scope="row">
+                    {{commafy record.tithe}}
+                  </td>
+                  <td scope="row">
+                    {{commafy record.tithe_chq}}
+                  </td>
+                  <td scope="row" style="font-weight: bold;">
+                    {{commafy record.total_tithe}}
+                  </td>
+                  <td scope="row">
+                    {{commafy record.worship}}
+                  </td>
+                  <td scope="row">
+                    {{commafy record.worship_chq}}
+                  </td>
+                  <td scope="row" style="font-weight: bold;">
+                    {{commafy record.total_worship}}
+                  </td>
+                  <td scope="row">
+                    {{commafy record.project}}
+                  </td>
+                  <td scope="row">
+                    {{commafy record.project_chq}}
+                  </td>
+                  <td scope="row" style="font-weight: bold;">
+                    {{commafy record.total_project}}
+                  </td>
+                  <td scope="row" style="font-weight: bold;">
+                    {{commafy record.total_thanksgiving}}
+                  </td>
+                  <td scope="row" style="font-weight: bold;">
+                    {{commafy record.total_income}}
+                  </td>
+                  <td scope="row" style="font-weight: bold;">
+                    {{commafy record.total_shiloh_sac}}
+                  </td>
+                  <td scope="row" style="font-weight: bold;">
+                    {{commafy record.grand_total_income}}
+                  </td>
+                </tr>
+              {{/each}}
+            {{/each}}
+
+            {{!-- Column-based Totals --}}
+            <tr style="background-color:ivory;font-weight:bold;line-height:20px;">
+                <td colspan="2" align="right">Total: [&#8358;]</td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td align="right"></td>
+            </tr>
+
+          {{else}}
+            {{#if queryRef.station}}
+            <tr>
+              <td scope="row" colspan="15" style="text-align:left;">No data found</td>
+            </tr>
+            {{/if}}
+          {{/if}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

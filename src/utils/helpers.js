@@ -64,9 +64,47 @@ exports.isInTheFuture = (date) => {
   return new Date(date).setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0);
 };
 
+exports.addSuffix = (number) => {
+  const remainder = number % 10;
+
+  let suffix = remainder === 1 ? "st" : undefined;
+  suffix = suffix ?? (remainder === 2 ? "nd" : suffix);
+  suffix = suffix ?? (remainder === 3 ? "rd" : suffix);
+  suffix = suffix ?? "th";
+
+  return `${number}<sup>${suffix}</sup>`;
+};
+
+exports.commafy = (number) => {
+  if (!number || isNaN(number)) return "---";
+
+  var parts = number.toString().replace(/,/, "").split("."); //remove any commas in number first, then split on decimal pt.
+  return `${parts[0].replace(/\B(?=(\d{3})+(?=$))/g, ",")}${
+    parts[1] ? `.${parts[1]}` : ""
+  }`;
+};
+
+exports.selected = (chosen_option, reference_option) => {
+  // don't do strict comparison
+  // because of possible data-type mismatch
+  return chosen_option == reference_option ? "selected" : "";
+};
+
+exports.formatToDateOnly = (rawdate, is_readable = false) => {
+  if (!rawdate) return;
+
+  const date = typeof rawdate === "string" ? new Date(rawdate) : rawdate;
+  return typeof is_readable === "boolean" && is_readable
+    ? date.toDateString()
+    : rawdate.toISOString().split("T")[0];
+};
+
 exports.formatDateToISO = (date) => {
+  if (!date) return;
+
   const isoString = (
     typeof date === "string" ? new Date(date) : date
   ).toISOString();
+
   return isoString.substring(0, (isoString.indexOf("T") | 0) + (6 | 0));
 };

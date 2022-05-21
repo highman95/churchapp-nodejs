@@ -6,6 +6,7 @@ const stationsRoutes = require("./station");
 const meetingsRoutes = require("./meeting");
 const usersRoutes = require("./user");
 const organizationsRoutes = require("./organization");
+const reportsRoutes = require("./report");
 
 module.exports = (router) => {
   auditsRoutes(router);
@@ -14,6 +15,7 @@ module.exports = (router) => {
   meetingsRoutes(router);
   usersRoutes(router);
   organizationsRoutes(router);
+  reportsRoutes(router);
 
   router.get("/", ensureLoggedIn(), (req, res) => {
     res.render("index", { title: "Home", user0: req.user });

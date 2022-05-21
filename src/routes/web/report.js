@@ -1,5 +1,12 @@
-const meetingController = require('../../controllers/meeting');
+const { ensureLoggedIn } = require("connect-ensure-login");
+const reportController = require("../../controllers/report");
 
 module.exports = (router) => {
-  // router.get('/reports', meetingController.show);
+  router.get("/reports", ensureLoggedIn(), reportController.homePage);
+
+  router.get(
+    "/reports/income-analysis",
+    ensureLoggedIn(),
+    reportController.dailyIncomeAnalysisPage
+  );
 };

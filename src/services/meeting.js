@@ -123,6 +123,47 @@ function find(organization_id, id, cb) {
 }
 exports.find = find;
 
+exports.fetchSchedulesByMonthYear = (station_id, month, year, cb) => {
+  if (typeof cb !== "function") {
+    throw new Error("Callback is not defined");
+  }
+
+  const sql = `SELECT DISTINCT held_on FROM meetings
+               WHERE station_id = ? AND MONTH(held_on) = ? AND YEAR(held_on) = ? ORDER BY held_on`;
+
+  db.query(sql, [station_id, month, year], (err, data) => {
+    return err
+      ? cb(new Error("Unable to fetch service dates"), null)
+      : cb(null, data);
+  });
+};
+
+exports.fetchDailyIncomeRecords = (station_id, held_on, do_aggregate, cb) => {
+  if (typeof cb !== "function") {
+    throw new Error("Callback is not defined");
+  }
+
+  const sql = `SELECT m.id, m.held_on, m.tag, mt.name meeting_type, SUM(male) male, SUM(female) female, SUM(children) children, SUM(male + female + children) total_attendance,
+               SUM(tithe) tithe, SUM(tithe_chq) tithe_chq, SUM(worship) worship, SUM(worship_chq) worship_chq, SUM(project) project,
+               SUM(project_chq) as project_chq, SUM(thanksgiving) thanksgiving, SUM(thanksgiving_chq) thanksgiving_chq,
+               SUM(tithe + tithe_chq + worship + worship_chq + project + project_chq + thanksgiving + thanksgiving_chq) total_income,
+               SUM(tithe + tithe_chq) total_tithe, SUM(worship + worship_chq) total_worship, SUM(project + project_chq) total_project,
+               SUM(shiloh_sac + shiloh_sac_chq) total_shiloh_sac, SUM(thanksgiving + thanksgiving_chq) total_thanksgiving,
+               SUM(tithe + tithe_chq + worship + worship_chq + project + project_chq + shiloh_sac + shiloh_sac_chq + thanksgiving + thanksgiving_chq) grand_total_income
+               FROM meetings m
+               LEFT JOIN statistics s ON s.meeting_id = m.id
+               LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
+               WHERE m.station_id = ? AND DATE(m.held_on) = DATE(?) ${
+                 do_aggregate ? " GROUP BY DATE(m.held_on), mno" : "" // sum up by 1st, 2nd, 3rd, etc. services
+               }`;
+
+  db.query(sql, [station_id, held_on], (err, data) => {
+    return err
+      ? cb(new Error("Unable to fetch daily service records"), null)
+      : cb(null, data);
+  });
+};
+
 function findByStationAndMeetingTypeAndDate(
   station_id,
   meeting_type_id,

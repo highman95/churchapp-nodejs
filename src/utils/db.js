@@ -30,11 +30,11 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
   if (err) {
-    console.error(`error connecting: \n${err.message}`);
+    console.error(`Error connecting: \n${err.message}`);
     return;
   }
 
-  console.log(`database-connected @ thread-${connection.threadId}`);
+  console.log(`Database connected @ thread-${connection.threadId}`);
 });
 
 module.exports = connection;
