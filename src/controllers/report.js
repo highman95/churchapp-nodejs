@@ -11,6 +11,37 @@ exports.homePage = (req, res) => {
   });
 };
 
+exports.dailyAttendanceAnalysisPage = (req, res) => {
+  const {
+    user: user0,
+    query: { station, monthYear },
+  } = req;
+
+  stationService.get(user0.organization_id, (_err0, stations) => {
+    const [year, month] = new Date().toISOString().split("T")[0].split("-");
+    const maxMonthYear = `${year}-${month}`;
+    var currentMonthYear = monthYear ?? maxMonthYear;
+
+    reportService.dailyAttendanceSummary(
+      station,
+      monthYear,
+      (_err1, records) => {
+        res.render("reports/attendance-summary", {
+          title: "Daily Attendance Analysis",
+          user0,
+          stations,
+          queryRef: {
+            current: currentMonthYear,
+            station,
+            max: maxMonthYear,
+          },
+          records,
+        });
+      }
+    );
+  });
+};
+
 exports.dailyExpenditureAnalysisPage = (req, res) => {
   const { user: user0 } = req;
 
