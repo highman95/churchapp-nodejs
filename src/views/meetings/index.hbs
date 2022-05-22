@@ -3,7 +3,9 @@
 
 <div class="row">
   <div class="col-12 text-right mb-3">
-    <a href="/meetings/add" class="btn btn-danger font-weight-bold">Add Meeting</a>
+    <a href="/meetings/add" class="btn btn-danger btn-sm font-weight-bold">
+      Add Meeting
+    </a>
   </div>
 
   {{#if error}}
@@ -14,7 +16,7 @@
 
   {{#if meetings}}
     {{#each meetings as |meeting index|}}
-      <div class="col-3 mb-4">
+      <div class="col-6 col-md-3 mb-4">
         <div class="card">
           <div class="card-body">
             <!-- <button type="button" class="close" aria-label="Delete">

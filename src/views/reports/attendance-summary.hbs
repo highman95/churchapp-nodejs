@@ -8,7 +8,7 @@
         <div class="col-auto">
           <label class="mb-2 sr-only-x" for="station-box">Station:</label>
           <select
-            class="custom-select mb-2"
+            class="custom-select custom-select-sm mb-2"
             name="station"
             id="station-box"
             required
@@ -30,7 +30,7 @@
             type="month"
             name="monthYear"
             id="month-box"
-            class="form-control mb-2"
+            class="form-control form-control-sm mb-2"
             min="1930-01"
             max="{{queryRef.max}}"
             value="{{queryRef.current}}"
@@ -94,7 +94,7 @@
               {{#each recordsPerDay as |record index0|}}
                 <tr>
                   <td scope="row" style="text-align: right;">
-                    {{computeSno index index0}}
+                    {{computeSno index index0}}.
                   </td>
                   <td scope="row" style="text-align: left;">
                     {{formatToDateOnly record.held_on true}}
