@@ -11,6 +11,8 @@ const {
   commafy,
   addSuffix,
   selected,
+  monthName,
+  dayOfWeek,
 } = require("./utils/helpers");
 const routes = require("./routes");
 global.db = require("./utils/db");
@@ -68,6 +70,8 @@ hbs.registerHelper("formatDateToISO", formatDateToISO);
 hbs.registerHelper("formatToDateOnly", formatToDateOnly);
 hbs.registerHelper("commafy", commafy);
 hbs.registerHelper("selected", selected);
+hbs.registerHelper("month-name", monthName);
+hbs.registerHelper("day-of-week", dayOfWeek);
 
 // Initialize Passport and restore authentication state, if any, from the session.
 app.use(passportService.initialize(), passportService.session());

@@ -1,0 +1,327 @@
+<h3>Mission Station Analysis</h3>
+<hr />
+
+<div class="row d-print-none">
+  <div class="col-md-12">
+    <form method="get" action="">
+      <div class="form-row align-items-center">
+        <div class="col-auto">
+          <label class="mb-2" for="station-box">Station:</label>
+          <select
+            class="custom-select custom-select-sm mb-2"
+            name="station"
+            id="station-box"
+            required
+          >
+            <option value="">Choose Station...</option>
+            {{#if stations}}
+              {{#each stations}}
+                <option value={{id}} {{selected ../queryRef.station id}}>
+                  {{name}}
+                </option>
+              {{/each}}
+            {{/if}}
+          </select>
+        </div>
+
+        <div class="col-auto">
+          <label class="mb-2" for="from-month-box">Month(s) In-View:</label>
+          <div class="input-group input-group-sm mb-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text font-weight-bold" id="from-month">
+                From:
+              </div>
+            </div>
+            <input
+              type="month"
+              name="fromMonthYear"
+              id="from-month-box"
+              class="form-control form-control-sm"
+              min="1930-01"
+              max="{{queryRef.max}}"
+              value="{{queryRef.current.from}}"
+              aria-label="From:"
+              aria-describedby="from-month"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="col-auto">
+          <label class="mb-2" for="to-month-box">&nbsp;</label>
+          <div class="input-group input-group-sm mb-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text font-weight-bold" id="to-month">
+                To:
+              </div>
+            </div>
+            <input
+              type="month"
+              name="toMonthYear"
+              id="to-month-box"
+              class="form-control"
+              min="1930-01"
+              max="{{queryRef.max}}"
+              value="{{queryRef.current.to}}"
+              aria-label="To:"
+              aria-describedby="to-month"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="col-auto">
+          <label>&nbsp;</label>
+          <button type="submit" class="btn btn-danger btn-sm mb-2">Show</button>
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm mb-2"
+            onclick="window.print()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-printer"
+              viewBox="0 0 16 16"
+            >
+              <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"></path>
+              <path
+                d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"
+              ></path>
+            </svg>
+            Print
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<hr class="mb-0 d-print-none" />
+
+<div class="row">
+  <div class="col-12">
+    <div class="table-response-md">
+      <table
+        class="table table-bordered table-hover table-sm"
+        style="font-size:smaller;"
+      >
+        <tr
+          style="background-color:#aaaaaa;line-height:normal;text-transform:uppercase;"
+        >
+          <th align="left">Parameters</th>
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <th width="6.5%">
+                {{month-name period.month}}
+                {{period.year}}
+              </th>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Average Sunday Attendance </th>
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <td>---</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Highest Sunday Attendance </th>
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <td>---</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left">Average MidWeek Attendance</th>
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <td>---</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Highest MidWeek Attendance </th>
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <td>---</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left">First Timers</th>
+          {{#if records.periods}}
+            {{#each records.total_first_timers as |attendance|}}
+              <td>{{commafy attendance}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> New Converts </th>
+          {{#if records.periods}}
+            {{#each records.total_converts as |attendance|}}
+              <td>{{commafy attendance}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Believers Foundation Sch. </th>
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <td>---</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Holy Ghost Baptism </th>
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <td>---</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Water Baptism </th>
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <td>---</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="ivory" colspan={{computeSno periodLength}}>&nbsp;</th>
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left">Tithe</th>
+          {{#if records.total_tithes}}
+            {{#each records.total_tithes as |income|}}
+              <td align="right">{{commafy income}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left">Offering</th>
+          {{#if records.total_worships}}
+            {{#each records.total_worships as |income|}}
+              <td align="right">{{commafy income}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left">Thanksgiving Offering</th>
+          {{#if records.total_thanksgivings}}
+            {{#each records.total_thanksgivings as |income|}}
+              <td align="right">{{commafy income}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left">Local Project Offering</th>
+          {{#if records.total_projects}}
+            {{#each records.total_projects as |income|}}
+              <td align="right">{{commafy income}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left">Shiloh Sacrifice / Offering</th>
+          {{#if records.total_shiloh_sacs}}
+            {{#each records.total_shiloh_sacs as |income|}}
+              <td align="right">{{commafy income}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Other Offering </th>
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <td align="right">---</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr style="font-weight:bold;">
+          <th bgcolor="#09D93D" align="left">Total Income</th>
+          {{#if records.total_incomes}}
+            {{#each records.total_incomes as |income|}}
+              <td bgcolor="#09D93D" align="right">{{commafy income}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr style="font-weight:bold;">
+          <th bgcolor="#fafafa" align="left"> Titheable Income </th>
+          {{#if records.total_titheables}}
+            {{#each records.total_titheables as |titheable|}}
+              <td align="right">{{commafy titheable}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Staff Allowance/Salaries </th>
+          {{! #get the formular/data later }}
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <td align="right">---</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> R.O.F </th>
+          {{#if records.periods}}
+            {{#each records.periods as |period|}}
+              <td align="right">---</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="ivory" colspan={{computeSno periodLength}}>&nbsp;</th>
+        </tr>
+        <tr>
+          <th
+            style="text-align:left;background-color:#ffdd00;line-height:normal;text-transform:uppercase;"
+          >
+            Remittance Details
+          </th>
+          {{#if periodLength}}
+            <th colspan={{computeSno periodLength -1}} bgcolor="#444444"></th>
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Tithe </th>
+          {{#if records.total_payable_tithes}}
+            {{#each records.total_payable_tithes as |payable_tithe|}}
+              <td align="right">{{commafy payable_tithe}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Shiloh Sacrifice </th>
+          {{#if records.total_shiloh_sacs}}
+            {{#each records.total_shiloh_sacs as |income|}}
+              <td align="right">{{commafy income}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Total HQ Remittance </th>
+          {{#if records.total_hq_remittances}}
+            {{#each records.total_hq_remittances as |remittance|}}
+              <td align="right">{{commafy remittance}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+        <tr>
+          <th bgcolor="#fafafa" align="left"> Reserve Account </th>
+          {{#if records.total_reserves}}
+            {{#each records.total_reserves as |reserve|}}
+              <td align="right">{{commafy reserve}}</td>
+            {{/each}}
+          {{/if}}
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

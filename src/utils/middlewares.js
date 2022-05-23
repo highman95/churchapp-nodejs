@@ -6,7 +6,7 @@ const userService = require("../services/user");
 exports.upload = multer({ dest: "uploads/" });
 
 // #region authentication middleware
-exports.auth = (req, _, next) => {
+exports.authenticate = (req, _, next) => {
   const { authorization = "" } = req.headers;
   const [, token] = authorization.split(" ");
 
@@ -30,7 +30,7 @@ exports.auth = (req, _, next) => {
     return;
   }
 
-  userService.findByEmail(payload.data.username, true, (err, user) => {
+  userService.findByEmail(payload.username, true, (err, user) => {
     // error-occurred || user === null
     if (err) {
       next(new Error("Token-user verification failed"));

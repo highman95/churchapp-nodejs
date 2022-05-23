@@ -78,12 +78,13 @@ exports.dailyIncomeAnalysisPage = (req, res) => {
   });
 };
 
-exports.missionStationAnalysisPage = (req, res) => {
-  const { user: user0 } = req;
+exports.missionStationAnalysis = (req, res) => {
+  executeMissionStationAnalysis(req, res);
+};
 
-  res.render("reports/mission-station-summary", {
-    title: "Mission Station Analysis",
-    user0,
+exports.missionStationAnalysisPage = (req, res) => {
+  stationService.get(req?.user?.organization_id, (_err0, stations) => {
+    executeMissionStationAnalysis(req, res, { stations });
   });
 };
 
@@ -95,3 +96,48 @@ exports.rofControlAnalysisPage = (req, res) => {
     user0,
   });
 };
+
+function executeMissionStationAnalysis(req, res, { stations } = {}) {
+  const {
+    query: { station, fromMonthYear, toMonthYear },
+    user: user0,
+    isWR,
+  } = req;
+
+  reportService.missionStationPeriodicSummary(
+    station,
+    fromMonthYear,
+    toMonthYear,
+    (err, records, code = 400) => {
+      // if called from api
+      if (!isWR) {
+        delete (records ?? {}).periods;
+
+        return res.status(code).json({
+          status: !err,
+          data: records,
+          message: err?.message ?? "Station statistics successfully fetched",
+        });
+      }
+
+      const [year, month] = new Date().toISOString().split("T")[0].split("-");
+      const maxMonthYear = `${year}-${month}`;
+
+      const currentFromMonthYear = fromMonthYear ?? maxMonthYear;
+      const currentToMonthYear = toMonthYear ?? maxMonthYear;
+
+      res.render("reports/mission-station-summary", {
+        title: "Mission Station Analysis",
+        user0,
+        stations,
+        queryRef: {
+          current: { from: currentFromMonthYear, to: currentToMonthYear },
+          station,
+          max: maxMonthYear,
+        },
+        records,
+        periodLength: records?.periods.length ?? 0,
+      });
+    }
+  );
+}

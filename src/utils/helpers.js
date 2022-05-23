@@ -108,3 +108,69 @@ exports.formatDateToISO = (date) => {
 
   return isoString.substring(0, (isoString.indexOf("T") | 0) + (6 | 0));
 };
+
+exports.monthNoOfDays = (month, year) => {
+  const $month = parseInt(month); // ensure it starts with a non-zero digit
+  const $is_leap_year = year % 400 == 0 || (year % 4 == 0 && year % 100 != 0); //is current year a LEAP year
+
+  let $number_of_days_in_month;
+  if ($month === 2) {
+    $number_of_days_in_month = $is_leap_year ? 29 : 28;
+  } else {
+    $number_of_days_in_month = [4, 6, 9, 11].indexOf($month) ? 30 : 31;
+  }
+
+  return $number_of_days_in_month;
+};
+
+exports.monthName = (month_value, as_short) => {
+  const monthNames =
+    typeof as_short === "boolean" && as_short
+      ? [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sept",
+          "Oct",
+          "Nov",
+          "Dec",
+        ]
+      : [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+
+  return monthNames[month_value - 1];
+};
+
+exports.dayOfWeek = (day_no, as_short) => {
+  const dayOfWeekNames =
+    typeof as_short === "boolean" && as_short
+      ? ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"]
+      : [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+
+  return dayOfWeekNames[day_no];
+};

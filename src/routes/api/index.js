@@ -4,6 +4,7 @@ const stationsRoutes = require("./station");
 const meetingsRoutes = require("./meeting");
 const usersRoutes = require("./user");
 const organizationsRoutes = require("./organization");
+const reportRoutes = require("./report");
 
 module.exports = (router) => {
   auditsRoutes(router);
@@ -12,6 +13,7 @@ module.exports = (router) => {
   meetingsRoutes(router);
   usersRoutes(router);
   organizationsRoutes(router);
+  reportRoutes(router);
 
   router.get("/api/v1/ping", (_req, res) => {
     res.json({ status: true, message: "It's all good..." });

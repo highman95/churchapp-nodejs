@@ -141,7 +141,7 @@ module.exports = {
                 `/meetings/${redirectUri}${meeting.id}?err=${message}`
               )
             : res.status(code).json({
-                status: !!err,
+                status: !err,
                 data: meeting,
                 message,
               });

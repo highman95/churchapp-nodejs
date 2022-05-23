@@ -72,6 +72,40 @@ module.exports = {
       findResultHandler(modelName, cb)
     );
   },
+
+  getTotalAttendees(station_id, month, year, cb) {
+    const $sql = `SELECT SUM(first_timers) total_first_timers, SUM(converts) total_converts,
+                    SUM(male + female + children) total_attendees
+                  FROM statistics s
+                  LEFT JOIN meetings m ON m.id = s.meeting_id
+                  WHERE m.station_id = ? AND MONTH(held_on) = ? AND YEAR(held_on) = ?`;
+
+    db.query($sql, [station_id, month, year], (err, data) => {
+      return err
+        ? cb(new Error("Unable to fetch total-attendance records"), null)
+        : cb(null, data);
+    });
+  },
+
+  getTotalIncomes(station_id, month, year, cb) {
+    const $sql = `SELECT SUM(tithe + tithe_chq) total_tithes,
+                    SUM(worship + worship_chq) total_worships,
+                    SUM(project + project_chq) total_projects,
+                    SUM(shiloh_sac + shiloh_sac_chq) total_shiloh_sacs,
+                    SUM(thanksgiving + thanksgiving_chq) total_thanksgivings,
+                    SUM(tithe + tithe_chq + worship + worship_chq + project + project_chq +
+                      shiloh_sac + shiloh_sac_chq + thanksgiving + thanksgiving_chq) total_incomes,
+                    SUM(shiloh_sac + shiloh_sac_chq + project + project_chq) total_titheables
+                  FROM statistics s
+                  LEFT JOIN meetings m ON m.id = s.meeting_id
+                  WHERE m.station_id = ? AND EXTRACT(MONTH FROM held_on) = ? AND EXTRACT(YEAR FROM held_on) = ?`;
+
+    db.query($sql, [station_id, month, year], (err, data) => {
+      return err
+        ? cb(new Error("Unable to fetch total-income records", null))
+        : cb(null, data);
+    });
+  },
 };
 
 function findByMno(meeting_id, mno, cb) {
