@@ -17,7 +17,7 @@ module.exports = (router) => {
   organizationsRoutes(router);
   reportsRoutes(router);
 
-  router.get("/", ensureLoggedIn(), (req, res) => {
+  router.get("*", ensureLoggedIn(), (req, res) => {
     res.render("index", { title: "Home", user0: req.user });
   });
 

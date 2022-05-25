@@ -25,10 +25,7 @@ app.use(
   "/api/v1",
   require("cors")(),
   require("helmet")(),
-  require("compression")(),
-  (_req, _res, next) => {
-    next();
-  }
+  require("compression")()
 );
 
 app.use(

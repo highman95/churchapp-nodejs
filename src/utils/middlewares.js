@@ -24,7 +24,9 @@ exports.authenticate = (req, _, next) => {
   } catch (e) {
     next(
       new Error(
-        `Token is ${e.name === "TokenExpiredError" ? "expired" : "invalid"}`
+        `Token is ${
+          e.name === jwt.TokenExpiredError.name ? "expired" : "invalid"
+        }`
       )
     );
     return;
@@ -60,6 +62,26 @@ exports.routeType = (req, _, next) => {
   next();
 };
 
-exports.errorHandler = (err, _req, _res, next) => {
-  next(err);
+exports.errorHandler = (err, _req, res, _next) => {
+  let message = err.message || err.error.message;
+  const messageLC = message?.toLowerCase() ?? "";
+
+  const isBRE = err.name === ReferenceError.name; // bad-reference error
+  const isTAE =
+    messageLC.indexOf("token") >= 0 &&
+    ["required", "invalid", "expired"].some((v) => messageLC.indexOf(v) >= 0);
+
+  // client-side (input) error
+  const isCSE = [EvalError.name, Error.name, RangeError.name].includes(
+    err.name
+  );
+
+  let statusCode = isCSE ? 400 : 500;
+  statusCode = isTAE ? 401 : statusCode;
+
+  return res.status(err.code || (isBRE ? 404 : statusCode)).send({
+    status: false,
+    data: null,
+    message,
+  });
 };
