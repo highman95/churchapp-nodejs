@@ -267,8 +267,8 @@ function onFetchedMeetingDayRecords(
   meeting_days_count,
   cb
 ) {
-  return (err1, data) => {
-    if (err1) {
+  return (err, data) => {
+    if (err) {
       return cb(
         new Error(
           `Unable to fetch meeting records for ${formatToDateOnly(date)}`

@@ -136,7 +136,7 @@ function executeMissionStationAnalysis(req, res, { stations } = {}) {
           max: maxMonthYear,
         },
         records,
-        periodLength: records?.periods.length ?? 0,
+        periodLength: records?.periods?.length ?? 0,
       });
     }
   );
