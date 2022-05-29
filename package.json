@@ -6,7 +6,15 @@
   "scripts": {
     "start": "node --trace-warnings ./bin/www",
     "dev": "nodemon ./bin/www -e js,hbs",
-    "test": "jest"
+    "test": "jest --watchAll",
+    "test-0": "jest --watchAll --detectOpenHandles",
+    "test-wcov": "jest --collect-coverage"
+  },
+  "jest": {
+    "collectCoverage": false,
+    "testPathIgnorePatterns": [
+      "__tests__/utils.js"
+    ]
   },
   "repository": {
     "type": "git",
