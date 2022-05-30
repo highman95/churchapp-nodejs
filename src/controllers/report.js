@@ -11,34 +11,13 @@ exports.homePage = (req, res) => {
   });
 };
 
+exports.dailyAttendanceAnalysis = (req, res) => {
+  executeDailyAttendanceAnalysis(req, res);
+};
+
 exports.dailyAttendanceAnalysisPage = (req, res) => {
-  const {
-    user: user0,
-    query: { station, monthYear },
-  } = req;
-
-  stationService.get(user0.organization_id, (_err0, stations) => {
-    const [year, month] = new Date().toISOString().split("T")[0].split("-");
-    const maxMonthYear = `${year}-${month}`;
-    var currentMonthYear = monthYear ?? maxMonthYear;
-
-    reportService.dailyAttendanceSummary(
-      station,
-      monthYear,
-      (_err1, records) => {
-        res.render("reports/attendance-summary", {
-          title: "Daily Attendance Analysis",
-          user0,
-          stations,
-          queryRef: {
-            current: currentMonthYear,
-            station,
-            max: maxMonthYear,
-          },
-          records,
-        });
-      }
-    );
+  stationService.get(req?.user0?.organization_id, (_err, stations) => {
+    executeDailyAttendanceAnalysis(req, res, { stations });
   });
 };
 
@@ -51,30 +30,13 @@ exports.dailyExpenditureAnalysisPage = (req, res) => {
   });
 };
 
+exports.dailyIncomeAnalysis = (req, res) => {
+  executeDailyIncomeAnalysis(req, res);
+};
+
 exports.dailyIncomeAnalysisPage = (req, res) => {
-  const {
-    user: user0,
-    query: { station, monthYear },
-  } = req;
-
-  stationService.get(user0.organization_id, (_err0, stations) => {
-    const [year, month] = new Date().toISOString().split("T")[0].split("-");
-    const maxMonthYear = `${year}-${month}`;
-    var currentMonthYear = monthYear ?? maxMonthYear;
-
-    reportService.dailyIncomeSummary(station, monthYear, (_err1, records) => {
-      res.render("reports/income-summary", {
-        title: "Daily Income Analysis",
-        user0,
-        stations,
-        queryRef: {
-          current: currentMonthYear,
-          station,
-          max: maxMonthYear,
-        },
-        records,
-      });
-    });
+  stationService.get(req?.user0?.organization_id, (_err, stations) => {
+    executeDailyIncomeAnalysis(req, res, { stations });
   });
 };
 
@@ -83,7 +45,7 @@ exports.missionStationAnalysis = (req, res) => {
 };
 
 exports.missionStationAnalysisPage = (req, res) => {
-  stationService.get(req?.user?.organization_id, (_err0, stations) => {
+  stationService.get(req?.user?.organization_id, (_err, stations) => {
     executeMissionStationAnalysis(req, res, { stations });
   });
 };
@@ -96,6 +58,84 @@ exports.rofControlAnalysisPage = (req, res) => {
     user0,
   });
 };
+
+function executeDailyAttendanceAnalysis(req, res, { stations } = {}) {
+  const {
+    query: { station, monthYear },
+    user: user0,
+    isWR,
+  } = req;
+
+  reportService.dailyAttendanceSummary(
+    station,
+    monthYear,
+    (err, records, code = 400) => {
+      // if called from api
+      if (!isWR) {
+        return res.status(code).json({
+          status: !err,
+          data: records,
+          message:
+            err?.message ?? "Daily attendance statistics successfully fetched",
+        });
+      }
+
+      const [year, month] = new Date().toISOString().split("T")[0].split("-");
+      const maxMonthYear = `${year}-${month}`;
+
+      res.render("reports/attendance-summary", {
+        title: "Daily Attendance Analysis",
+        user0,
+        stations,
+        queryRef: {
+          current: monthYear ?? maxMonthYear,
+          station,
+          max: maxMonthYear,
+        },
+        records,
+      });
+    }
+  );
+}
+
+function executeDailyIncomeAnalysis(req, res, { stations } = {}) {
+  const {
+    query: { station, monthYear },
+    user: user0,
+    isWR,
+  } = req;
+
+  reportService.dailyIncomeSummary(
+    station,
+    monthYear,
+    (err, records, code = 400) => {
+      // if called from api
+      if (!isWR) {
+        return res.status(code).json({
+          status: !err,
+          data: records,
+          message:
+            err?.message ?? "Daily income statistics successfully fetched",
+        });
+      }
+
+      const [year, month] = new Date().toISOString().split("T")[0].split("-");
+      const maxMonthYear = `${year}-${month}`;
+
+      res.render("reports/income-summary", {
+        title: "Daily Income Analysis",
+        user0,
+        stations,
+        queryRef: {
+          current: monthYear ?? maxMonthYear,
+          station,
+          max: maxMonthYear,
+        },
+        records,
+      });
+    }
+  );
+}
 
 function executeMissionStationAnalysis(req, res, { stations } = {}) {
   const {
@@ -123,15 +163,15 @@ function executeMissionStationAnalysis(req, res, { stations } = {}) {
       const [year, month] = new Date().toISOString().split("T")[0].split("-");
       const maxMonthYear = `${year}-${month}`;
 
-      const currentFromMonthYear = fromMonthYear ?? maxMonthYear;
-      const currentToMonthYear = toMonthYear ?? maxMonthYear;
-
       res.render("reports/mission-station-summary", {
         title: "Mission Station Analysis",
         user0,
         stations,
         queryRef: {
-          current: { from: currentFromMonthYear, to: currentToMonthYear },
+          current: {
+            from: fromMonthYear ?? maxMonthYear,
+            to: toMonthYear ?? maxMonthYear,
+          },
           station,
           max: maxMonthYear,
         },

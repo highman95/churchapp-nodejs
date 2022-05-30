@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-const server = require("../src/app");
+const server = require("../bin/www");
 
 module.exports = {
   startServer() {
@@ -14,8 +14,7 @@ module.exports = {
   },
 
   stopServer(cb) {
-    server.close();
-    cb();
+    server.close(() => cb());
   },
 
   responseHandler(cb) {

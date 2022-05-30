@@ -1,6 +1,6 @@
 const reportService = require("../../src/services/report");
 
-describe("Report Service Test", () => {
+describe("Report Service Unit-Test", () => {
   describe("Daily Attendance Summary Test", () => {
     test("should return error message when undefined station-id", (done) => {
       reportService.dailyAttendanceSummary(undefined, undefined, (err, _) => {

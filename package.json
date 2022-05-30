@@ -6,12 +6,12 @@
   "scripts": {
     "start": "node --trace-warnings ./bin/www",
     "dev": "nodemon ./bin/www -e js,hbs",
-    "test": "jest --watchAll",
-    "test-0": "jest --watchAll --detectOpenHandles",
-    "test-wcov": "jest --collect-coverage"
+    "test": "jest",
+    "test-w": "jest --watchAll --detectOpenHandles --maxWorkers=1 --forceExit"
   },
   "jest": {
-    "collectCoverage": false,
+    "collectCoverage": true,
+    "verbose": true,
     "testPathIgnorePatterns": [
       "__tests__/utils.js"
     ]

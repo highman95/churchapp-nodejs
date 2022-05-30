@@ -24,7 +24,8 @@ exports.dailyAttendanceSummary = (station_id, month_year, cb) => {
       if (err) {
         return cb(
           new Error(`Unable to fetch schedules for ${month}/${year}`),
-          null
+          null,
+          500
         );
       }
 
@@ -272,14 +273,16 @@ function onFetchedMeetingDayRecords(
       return cb(
         new Error(
           `Unable to fetch meeting records for ${formatToDateOnly(date)}`
-        )
+        ),
+        null,
+        500
       );
     }
 
     records.push(data);
 
     if (index + 1 === meeting_days_count) {
-      return cb(null, records);
+      return cb(null, records, 200);
     }
   };
 }
