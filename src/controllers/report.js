@@ -16,7 +16,7 @@ exports.dailyAttendanceAnalysis = (req, res) => {
 };
 
 exports.dailyAttendanceAnalysisPage = (req, res) => {
-  stationService.get(req?.user0?.organization_id, (_err, stations) => {
+  stationService.get(req?.user?.organization_id, (_err, stations) => {
     executeDailyAttendanceAnalysis(req, res, { stations });
   });
 };
@@ -35,7 +35,7 @@ exports.dailyIncomeAnalysis = (req, res) => {
 };
 
 exports.dailyIncomeAnalysisPage = (req, res) => {
-  stationService.get(req?.user0?.organization_id, (_err, stations) => {
+  stationService.get(req?.user?.organization_id, (_err, stations) => {
     executeDailyIncomeAnalysis(req, res, { stations });
   });
 };
