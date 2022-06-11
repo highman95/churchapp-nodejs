@@ -13,6 +13,7 @@ const {
   selected,
   monthName,
   dayOfWeek,
+  showIcon,
 } = require("./utils/helpers");
 const routes = require("./routes");
 global.db = require("./utils/db");
@@ -27,6 +28,7 @@ app.use(
   require("helmet")(),
   require("compression")()
 );
+app.disable("x-powered-by");
 
 app.use(
   require("express-session")({
@@ -69,6 +71,7 @@ hbs.registerHelper("commafy", commafy);
 hbs.registerHelper("selected", selected);
 hbs.registerHelper("month-name", monthName);
 hbs.registerHelper("day-of-week", dayOfWeek);
+hbs.registerHelper("show-icon", showIcon);
 
 // Initialize Passport and restore authentication state, if any, from the session.
 app.use(passportService.initialize(), passportService.session());
