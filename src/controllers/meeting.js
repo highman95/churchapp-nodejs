@@ -41,23 +41,33 @@ module.exports = {
     } = req;
 
     try {
-      meetingService.get(
-        user0.organization_id,
-        page,
-        size,
-        (_err, meetings) => {
-          const { data = [], count = 0 } = meetings ?? {};
+      stationService.get(user0.organization_id, (_err0, stations) => {
+        meetingTypeService.get((_err1, meetingTypes) => {
+          meetingService.get(
+            user0.organization_id,
+            page,
+            size,
+            (_err, meetings) => {
+              const { data = [], count = 0 } = meetings ?? {};
 
-          res.render("meetings", {
-            title: "Meetings",
-            user0,
-            meetings: data,
-            count,
-            currentPage: page,
-            error,
-          });
-        }
-      );
+              var now = new Date();
+              now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // local-datetime
+
+              res.render("meetings", {
+                title: "Meetings",
+                user0,
+                meetings: data,
+                count,
+                currentPage: page,
+                stations,
+                meetingTypes,
+                currentDateTime: now.toISOString().slice(0, 16),
+                error,
+              });
+            }
+          );
+        });
+      });
     } catch (e) {}
   },
 
@@ -81,27 +91,6 @@ module.exports = {
     } catch (e) {
       next(e);
     }
-  },
-
-  createPage: (req, res) => {
-    try {
-      const { organization_id } = req.user || {};
-
-      stationService.get(organization_id, (_err0, stations) => {
-        meetingTypeService.get((_err1, meetingTypes) => {
-          var now = new Date();
-          now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // local-datetime
-
-          res.render("meetings/add", {
-            title: "Meetings",
-            user0: req.user,
-            stations,
-            meetingTypes,
-            currentDateTime: now.toISOString().slice(0, 16),
-          });
-        });
-      });
-    } catch (e) {}
   },
 
   find: (req, res, next) => {
@@ -159,11 +148,17 @@ module.exports = {
     } = req;
 
     try {
-      meetingService.find(user0.organization_id, id, (_err, meeting) => {
-        res.render("meetings/edit", {
-          title: "Meetings",
-          user0,
-          meeting: { ...meeting, id },
+      stationService.get(user0.organization_id, (_err0, stations) => {
+        meetingTypeService.get((_err1, meetingTypes) => {
+          meetingService.find(user0.organization_id, id, (_err, meeting) => {
+            res.render("meetings/edit", {
+              title: "Meetings",
+              user0,
+              stations,
+              meetingTypes,
+              meeting: { ...meeting, id },
+            });
+          });
         });
       });
     } catch (e) {}

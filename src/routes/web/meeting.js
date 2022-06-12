@@ -3,12 +3,10 @@ const meetingController = require("../../controllers/meeting");
 const statisticController = require("../../controllers/statistic");
 
 module.exports = (router) => {
-  router.get("/meetings", ensureLoggedIn(), meetingController.show);
-
   router
-    .route("/meetings/add")
-    .post(ensureLoggedIn(), meetingController.create)
-    .get(ensureLoggedIn(), meetingController.createPage);
+    .route("/meetings")
+    .get(ensureLoggedIn(), meetingController.show)
+    .post(ensureLoggedIn(), meetingController.create);
 
   router
     .route("/meetings/edit/:id")
@@ -21,4 +19,8 @@ module.exports = (router) => {
     .route("/meetings/:id/stats")
     .post(ensureLoggedIn(), statisticController.create)
     .get(ensureLoggedIn(), statisticController.get);
+
+  router
+    .route("/meetings/:id/stats/edit/:sid")
+    .post(ensureLoggedIn(), statisticController.update);
 };

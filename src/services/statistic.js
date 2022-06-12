@@ -141,8 +141,10 @@ function onCheckedNonExistenceAddStatistic(meeting_id, statistic, cb) {
 
     db.query(
       `INSERT INTO statistics (male, female, children, converts, first_timers,
-        testimonies, tithe, worship, project, shiloh_sac, vow, held_at, mno, meeting_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        testimonies, tithe, worship, project, shiloh_sac, vow, thanksgiving,
+        tithe_chq, worship_chq, project_chq, shiloh_sac_chq, vow_chq, thanksgiving_chq,
+        held_at, mno, meeting_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       composeCreateStat(),
       (err, result) => {
         if (err) {
@@ -171,21 +173,41 @@ function onCheckedNonExistenceAddStatistic(meeting_id, statistic, cb) {
       project,
       shiloh_sac,
       vow,
+      thanksgiving,
+      tithe_chq,
+      worship_chq,
+      project_chq,
+      shiloh_sac_chq,
+      vow_chq,
+      thanksgiving_chq,
       held_at = new Date().toISOString().slice(0, 19),
     } = statistic;
 
     return [
-      male || 0,
-      female || 0,
-      children || 0,
-      converts || 0,
-      first_timers || 0,
-      testimonies || 0,
-      tithe || 0,
-      worship || 0,
-      project || 0,
-      shiloh_sac || 0,
-      vow || 0,
+      ...composeAttendance(
+        male,
+        female,
+        children,
+        converts,
+        first_timers,
+        testimonies
+      ),
+      ...composeCashIncomes(
+        tithe,
+        worship,
+        project,
+        shiloh_sac,
+        vow,
+        thanksgiving
+      ),
+      ...composeChequeIncomes(
+        tithe_chq,
+        worship_chq,
+        project_chq,
+        shiloh_sac_chq,
+        vow_chq,
+        thanksgiving_chq
+      ),
       held_at,
       mno,
       meeting_id,
@@ -199,18 +221,23 @@ function onCheckedExistenceUpdateStatistic(meeting_id, id, statistic, cb) {
       return cb(err0, null, code);
     }
 
-    if (stat.mno !== mno) {
+    // just check value-similarity (not type)
+    if (stat.mno != statistic.mno) {
       return cb(new Error("Meeting-number must be similar"), null, 409);
     }
 
     db.query(
       `UPDATE statistics SET male = ?, female = ?, children = ?, converts = ?,
         first_timers = ?, testimonies = ?, tithe = ?, worship = ?, project = ?,
-        shiloh_sac = ?, vow = ? WHERE id = ? AND meeting_id = ?`,
+        shiloh_sac = ?, vow = ?, thanksgiving = ?, tithe_chq = ?, worship_chq = ?,
+        project_chq = ?, shiloh_sac_chq = ?, vow_chq = ?, thanksgiving_chq = ?
+       WHERE id = ? AND meeting_id = ?`,
       composeUpdateStat(),
       (err, result) => {
-        const code0 = result.changedRows ? 204 : 304;
-        return err ? cb(err, null, 500) : cb(null, statistic, code0);
+        const code0 = result?.changedRows ? 204 : 304;
+        return err
+          ? cb(new Error("Statistic cannot be updated"), null, 500)
+          : cb(null, { id, ...statistic }, code0);
       }
     );
   };
@@ -229,22 +256,96 @@ function onCheckedExistenceUpdateStatistic(meeting_id, id, statistic, cb) {
       project,
       shiloh_sac,
       vow,
+      thanksgiving,
+      tithe_chq,
+      worship_chq,
+      project_chq,
+      shiloh_sac_chq,
+      vow_chq,
+      thanksgiving_chq,
     } = statistic;
 
     return [
-      male || 0,
-      female || 0,
-      children || 0,
-      converts || 0,
-      first_timers || 0,
-      testimonies || 0,
-      tithe || 0,
-      worship || 0,
-      project || 0,
-      shiloh_sac || 0,
-      vow || 0,
+      ...composeAttendance(
+        male,
+        female,
+        children,
+        converts,
+        first_timers,
+        testimonies
+      ),
+      ...composeCashIncomes(
+        tithe,
+        worship,
+        project,
+        shiloh_sac,
+        vow,
+        thanksgiving
+      ),
+      ...composeChequeIncomes(
+        tithe_chq,
+        worship_chq,
+        project_chq,
+        shiloh_sac_chq,
+        vow_chq,
+        thanksgiving_chq
+      ),
       id,
       meeting_id,
     ];
   }
+}
+
+function composeAttendance(
+  male,
+  female,
+  children,
+  converts,
+  first_timers,
+  testimonies
+) {
+  return [
+    male || 0,
+    female || 0,
+    children || 0,
+    converts || 0,
+    first_timers || 0,
+    testimonies || 0,
+  ];
+}
+
+function composeCashIncomes(
+  tithe,
+  worship,
+  project,
+  shiloh_sac,
+  vow,
+  thanksgiving
+) {
+  return [
+    tithe || 0,
+    worship || 0,
+    project || 0,
+    shiloh_sac || 0,
+    vow || 0,
+    thanksgiving || 0,
+  ];
+}
+
+function composeChequeIncomes(
+  tithe_chq,
+  worship_chq,
+  project_chq,
+  shiloh_sac_chq,
+  vow_chq,
+  thanksgiving_chq
+) {
+  return [
+    tithe_chq || 0,
+    worship_chq || 0,
+    project_chq || 0,
+    shiloh_sac_chq || 0,
+    vow_chq || 0,
+    thanksgiving_chq || 0,
+  ];
 }

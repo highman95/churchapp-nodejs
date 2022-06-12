@@ -11,11 +11,7 @@
         enctype="application/x-www-form-urlencoded"
       >
         <div class="form-row">
-          <div class="form-group col-md-12">
-            <h6>Basic Information</h6>
-            <hr />
-          </div>
-          <div class="form-group col-md-4 col-6">
+          <div class="form-group col-md-2 col-6">
             <label for="held-on">Date/Time-Held:</label>
             <input
               type="datetime-local"
@@ -27,7 +23,7 @@
               required
             />
           </div>
-          <div class="form-group col-md-4 col-6">
+          <div class="form-group col-md-2 col-6">
             <label for="meeting-type">Meeting-Type:</label>
             <select
               id="meeting-type"
@@ -38,12 +34,17 @@
               <option selected>Choose...</option>
               {{#if meetingTypes}}
                 {{#each meetingTypes as |meetingType index|}}
-                  <option value={{meetingType.id}}>{{meetingType.name}}</option>
+                  <option
+                    value={{meetingType.id}}
+                    {{selected ../meeting.meeting_type meetingType.name}}
+                  >
+                    {{meetingType.name}}
+                  </option>
                 {{/each}}
               {{/if}}
             </select>
           </div>
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-2">
             <label for="station">Station:</label>
             <select
               id="station"
@@ -54,12 +55,17 @@
               <option selected>Choose...</option>
               {{#if stations}}
                 {{#each stations as |station index|}}
-                  <option value={{station.id}}>{{station.name}}</option>
+                  <option
+                    value={{station.id}}
+                    {{selected ../meeting.station station.name}}
+                  >
+                    {{station.name}}
+                  </option>
                 {{/each}}
               {{/if}}
             </select>
           </div>
-          <div class="form-group col-md-12">
+          <div class="form-group col-md-6">
             <label for="tag-name">Tag-Name:</label>
             <div class="input-group mb-3">
               <input
@@ -73,10 +79,9 @@
                 placeholder="Covenant day of..."
               />
               <div class="input-group-append">
-                <button
-                  type="submit"
-                  class="btn btn-danger font-weight-bold"
-                >Submit</button>
+                <button type="submit" class="btn btn-danger font-weight-bold">
+                  Submit
+                </button>
                 <button
                   type="button"
                   class="btn btn-dark font-weight-bold"
@@ -93,76 +98,80 @@
       {{#if meeting.statistics}}
         {{#each meeting.statistics as |stat index|}}
           <form
-            action="/meetings/edit/{{stat.meeting_id}}/stats/{{stat.id}}"
+            action="/meetings/{{stat.meeting_id}}/stats/edit/{{stat.id}}"
             method="post"
             enctype="application/x-www-form-urlencoded"
           >
             <!-- Attendance -->
             <div class="form-row">
-              <div class="form-group col-md-12">
-                <h6 class="pt-5">
-                  Session-{{stat.mno}}: Attendance / Finances (Offerings)
+              <div
+                class="form-group col-md-12 pt-2"
+                style="background-color: gray;"
+              >
+                <h6 class="font-weight-bold text-white">
+                  {{{addSuffix stat.mno}}}
+                  Service / Session: [Attendance + Finances]
                 </h6>
-                <hr />
+                {{! <hr /> }}
               </div>
-              <div class="form-group col-4 col-md-4">
+              <div class="form-group col-4 col-md-2">
                 <label for="male">Male:</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   id="male"
                   name="male"
                   value={{stat.male}}
                   required
                 />
               </div>
-              <div class="form-group col-4 col-md-4">
+              <div class="form-group col-4 col-md-2">
                 <label for="female">Female:</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   id="female"
                   name="female"
                   value={{stat.female}}
                   required
                 />
               </div>
-              <div class="form-group col-4 col-md-4">
+              <div class="form-group col-4 col-md-2">
                 <label for="children">Children:</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   id="children"
                   name="children"
                   value={{stat.children}}
                   required
                 />
               </div>
-              <div class="form-group col-4 col-md-4">
+              <div class="form-group col-4 col-md-2">
                 <label for="converts">N/Converts:</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   id="converts"
                   name="converts"
                   value={{stat.converts}}
                 />
               </div>
-              <div class="form-group col-4 col-md-4">
+              <div class="form-group col-4 col-md-2">
                 <label for="first-timers">F/Timers:</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   id="first-timers"
                   name="first_timers"
                   value={{stat.first_timers}}
                 />
               </div>
-              <div class="form-group col-4 col-md-4">
+              <div class="form-group col-4 col-md-2">
                 <label for="testimonies">Testimonies:</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   id="testimonies"
                   name="testimonies"
                   value={{stat.testimonies}}
@@ -174,9 +183,9 @@
 
             <!-- Finances -->
             <div class="form-row">
-              <div class="form-group col-6 col-md-4">
+              <div class="form-group col-6 col-md-2">
                 <label for="tithe">Tithe:</label>
-                <div class="input-group mb-3">
+                <div class="input-group input-group-sm mb-3">
                   <div class="input-group-prepend">
                     <span
                       class="input-group-text font-weight-bold"
@@ -190,10 +199,24 @@
                     value={{stat.tithe}}
                   />
                 </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span
+                      class="input-group-text font-weight-bold"
+                    >&#8358;</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="tithe-chq"
+                    name="tithe_chq"
+                    value={{stat.tithe_chq}}
+                  />
+                </div>
               </div>
-              <div class="form-group col-6 col-md-4">
+              <div class="form-group col-6 col-md-2">
                 <label for="worship">Worship Offering:</label>
-                <div class="input-group mb-3">
+                <div class="input-group input-group-sm mb-3">
                   <div class="input-group-prepend">
                     <span
                       class="input-group-text font-weight-bold"
@@ -207,10 +230,24 @@
                     value={{stat.worship}}
                   />
                 </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span
+                      class="input-group-text font-weight-bold"
+                    >&#8358;</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="worship-chq"
+                    name="worship_chq"
+                    value={{stat.worship_chq}}
+                  />
+                </div>
               </div>
-              <div class="form-group col-6 col-md-4">
+              <div class="form-group col-6 col-md-2">
                 <label for="project">Project Offering:</label>
-                <div class="input-group mb-3">
+                <div class="input-group input-group-sm mb-3">
                   <div class="input-group-prepend">
                     <span
                       class="input-group-text font-weight-bold"
@@ -224,10 +261,24 @@
                     value={{stat.project}}
                   />
                 </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span
+                      class="input-group-text font-weight-bold"
+                    >&#8358;</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="project-chq"
+                    name="project_chq"
+                    value={{stat.project_chq}}
+                  />
+                </div>
               </div>
-              <div class="form-group col-6 col-md-4">
+              <div class="form-group col-6 col-md-2">
                 <label for="shiloh_sac">Shiloh Sacrifice:</label>
-                <div class="input-group mb-3">
+                <div class="input-group input-group-sm mb-3">
                   <div class="input-group-prepend">
                     <span
                       class="input-group-text font-weight-bold"
@@ -241,10 +292,7 @@
                     value={{stat.shiloh_sac}}
                   />
                 </div>
-              </div>
-              <div class="form-group col-6 col-md-4">
-                <label for="vow">Vow:</label>
-                <div class="input-group mb-3">
+                <div class="input-group input-group-sm mb-3">
                   <div class="input-group-prepend">
                     <span
                       class="input-group-text font-weight-bold"
@@ -253,16 +301,47 @@
                   <input
                     type="text"
                     class="form-control"
-                    id="vow"
-                    name="vow"
-                    value={{stat.vow}}
+                    id="shiloh-sac-chq"
+                    name="shiloh_sac_chq"
+                    value={{stat.shiloh_sac_chq}}
                   />
                 </div>
               </div>
-              <div class="form-group col-6 col-md-4 text-right">
+              <div class="form-group col-6 col-md-2">
+                <label for="thanksgiving">Thanksgiving:</label>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span
+                      class="input-group-text font-weight-bold"
+                    >&#8358;</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="thanksgiving"
+                    name="thanksgiving"
+                    value={{stat.thanksgiving}}
+                  />
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span
+                      class="input-group-text font-weight-bold"
+                    >&#8358;</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="thanksgiving-chq"
+                    name="thanksgiving_chq"
+                    value={{stat.thanksgiving_chq}}
+                  />
+                </div>
+              </div>
+              <div class="form-group col-6 col-md-2 text-right">
                 <label for="submit-btn">&nbsp;</label>
                 <div
-                  class="btn-group"
+                  class="btn-group btn-group-sm"
                   role="group"
                   aria-label="submit-cancel-btn-group"
                 >
@@ -282,6 +361,8 @@
                 </div>
               </div>
             </div>
+
+            <input type="hidden" name="mno" value={{stat.mno}} />
           </form>
         {{/each}}
       {{/if}}

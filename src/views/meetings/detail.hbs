@@ -6,23 +6,23 @@
     <!-- Main meeting details -->
     {{#if meeting}}
       <div class="row">
-        <div class="col-md-4 mb-3 col-12">
+        <div class="col-md-3 col-12">
           <label for="held-at">Date/Time-Held:</label>
           {{meeting.held_on}}&nbsp;
         </div>
-        <div class="col-md-4 col-6">
+        <div class="col-md-2 col-6">
           <label for="meeting-type">Meeting-Type:</label>
           {{meeting.meeting_type}}&nbsp;
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
           <label for="station">Station:</label>
           {{meeting.station}}&nbsp;
         </div>
-        <div class="col-md-10 col-9">
+        <div class="col-md-4 col-9">
           <label for="tag-name">Tag-Name:</label>
           {{meeting.tag}}&nbsp;
         </div>
-        <div class="col-md-2 col-3 text-right">
+        <div class="col-md-1 col-3 text-right">
           <div
             class="btn-group"
             role="group"
@@ -120,27 +120,37 @@
             <div class="col-4 col-md-2 mb-1">
               <label for="tithe">Tithe:</label>
               <span class="font-weight-bold">&#8358;</span>
-              {{stat.tithe}}
+              {{commafy stat.tithe}}<br />
+              <span class="font-weight-bold">&#8358;</span>
+              {{commafy stat.tithe_chq}}
             </div>
             <div class="col-4 col-md-2 mb-1">
               <label for="worship">Worship Offering:</label>
               <span class="font-weight-bold">&#8358;</span>
-              {{stat.worship}}
+              {{commafy stat.worship}}<br />
+              <span class="font-weight-bold">&#8358;</span>
+              {{commafy stat.worship_chq}}
             </div>
             <div class="col-4 col-md-2 mb-1">
               <label for="project">Project Offering:</label>
               <span class="font-weight-bold">&#8358;</span>
-              {{stat.project}}
+              {{commafy stat.project}}<br />
+              <span class="font-weight-bold">&#8358;</span>
+              {{commafy stat.project_chq}}
             </div>
             <div class="col-4 col-md-2 mb-1">
               <label for="shiloh_sac">Shiloh Sacrifice:</label>
               <span class="font-weight-bold">&#8358;</span>
-              {{stat.shiloh_sac}}
+              {{commafy stat.shiloh_sac}}<br />
+              <span class="font-weight-bold">&#8358;</span>
+              {{commafy stat.shiloh_sac_chq}}
             </div>
             <div class="col-4 col-md-2 mb-1">
-              <label for="vow">Vow:</label>
+              <label for="thanksgiving">Thanksgiving:</label>
               <span class="font-weight-bold">&#8358;</span>
-              {{stat.vow}}
+              {{commafy stat.thanksgiving}}<br />
+              <span class="font-weight-bold">&#8358;</span>
+              {{commafy stat.thanksgiving_chq}}
             </div>
           </div>
         {{/each}}
@@ -157,59 +167,59 @@
             <h6 class="pt-5 font-weight-bold">Attendance / Finances (Offerings)</h6>
             <hr />
           </div>
-          <div class="form-group col-4 col-md-4">
+          <div class="form-group col-4 col-md-2">
             <label for="male">Male:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               id="male"
               name="male"
               required
             />
           </div>
-          <div class="form-group col-4 col-md-4">
+          <div class="form-group col-4 col-md-2">
             <label for="female">Female:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               id="female"
               name="female"
               required
             />
           </div>
-          <div class="form-group col-4 col-md-4">
+          <div class="form-group col-4 col-md-2">
             <label for="children">Children:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               id="children"
               name="children"
               required
             />
           </div>
-          <div class="form-group col-4 col-md-4">
-            <label for="converts">Converts:</label>
+          <div class="form-group col-4 col-md-2">
+            <label for="converts">N/Converts:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               id="converts"
               name="converts"
             />
           </div>
-          <div class="form-group col-4 col-md-4">
+          <div class="form-group col-4 col-md-2">
             <label for="first-timers">F/Timers:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               id="first-timers"
               name="first_timers"
             />
           </div>
-          <div class="form-group col-4 col-md-4">
+          <div class="form-group col-4 col-md-2">
             <label for="testimonies">Testimonies:</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               id="testimonies"
               name="testimonies"
             />
@@ -220,18 +230,36 @@
 
         <!-- Finances -->
         <div class="form-row">
-          <div class="form-group col-6 col-md-4">
+          <div class="form-group col-6 col-md-2">
             <label for="tithe">Tithe:</label>
-            <div class="input-group mb-3">
+            <div class="input-group input-group-sm mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text font-weight-bold">&#8358;</span>
               </div>
-              <input type="text" class="form-control" id="tithe" name="tithe" />
+              <input
+                type="text"
+                class="form-control"
+                id="tithe"
+                name="tithe"
+                placeholder="Cash"
+              />
+            </div>
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">&#8358;</span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="tithe-chq"
+                name="tithe_chq"
+                placeholder="Cheque"
+              />
             </div>
           </div>
-          <div class="form-group col-6 col-md-4">
+          <div class="form-group col-6 col-md-2">
             <label for="worship">Worship Offering:</label>
-            <div class="input-group mb-3">
+            <div class="input-group input-group-sm mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text font-weight-bold">&#8358;</span>
               </div>
@@ -240,12 +268,25 @@
                 class="form-control"
                 id="worship"
                 name="worship"
+                placeholder="Cash"
+              />
+            </div>
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">&#8358;</span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="worship-chq"
+                name="worship_chq"
+                placeholder="Cheque"
               />
             </div>
           </div>
-          <div class="form-group col-6 col-md-4">
+          <div class="form-group col-6 col-md-2">
             <label for="project">Project Offering:</label>
-            <div class="input-group mb-3">
+            <div class="input-group input-group-sm mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text font-weight-bold">&#8358;</span>
               </div>
@@ -254,12 +295,25 @@
                 class="form-control"
                 id="project"
                 name="project"
+                placeholder="Cash"
+              />
+            </div>
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">&#8358;</span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="project-chq"
+                name="project_chq"
+                placeholder="Cheque"
               />
             </div>
           </div>
-          <div class="form-group col-6 col-md-4">
+          <div class="form-group col-6 col-md-2">
             <label for="shiloh_sac">Shiloh Sacrifice:</label>
-            <div class="input-group mb-3">
+            <div class="input-group input-group-sm mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text font-weight-bold">&#8358;</span>
               </div>
@@ -268,22 +322,53 @@
                 class="form-control"
                 id="shiloh_sac"
                 name="shiloh_sac"
+                placeholder="Cash"
               />
             </div>
-          </div>
-          <div class="form-group col-6 col-md-4">
-            <label for="vow">Vow:</label>
-            <div class="input-group mb-3">
+            <div class="input-group input-group-sm mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text font-weight-bold">&#8358;</span>
               </div>
-              <input type="text" class="form-control" id="vow" name="vow" />
+              <input
+                type="text"
+                class="form-control"
+                id="shiloh_sac-chq"
+                name="shiloh_sac_chq"
+                placeholder="Cheque"
+              />
             </div>
           </div>
-          <div class="form-group col-6 col-md-4 text-right">
+          <div class="form-group col-6 col-md-2">
+            <label for="thanksgiving">Thanksgiving:</label>
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">&#8358;</span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="thanksgiving"
+                name="thanksgiving"
+                placeholder="Cash"
+              />
+            </div>
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">&#8358;</span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="thanksgiving-chq"
+                name="thanksgiving_chq"
+                placeholder="Cheque"
+              />
+            </div>
+          </div>
+          <div class="form-group col-6 col-md-2 text-right">
             <label for="submit-btn">&nbsp;</label>
             <div
-              class="btn-group"
+              class="btn-group btn-group-sm"
               role="group"
               aria-label="submit-cancel-btn-group"
             >

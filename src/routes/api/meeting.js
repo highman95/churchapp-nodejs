@@ -2,11 +2,17 @@ const meetingController = require("../../controllers/meeting");
 const statisticController = require("../../controllers/statistic");
 
 module.exports = (router) => {
-  router.get("/api/v1/meetings", meetingController.get);
-  router.post("/api/v1/meetings", meetingController.create);
+  router
+    .route("/api/v1/meetings")
+    .get(meetingController.get)
+    .post(meetingController.create);
 
-  router.get("/api/v1/meetings/:id", meetingController.find);
-  router.post("/api/v1/meetings/:id", statisticController.create);
+  router
+    .route("/api/v1/meetings/:id")
+    .get(meetingController.find)
+    .post(statisticController.create);
 
-  router.put("/api/v1/meetings/:id/stats/:sid", statisticController.update);
+  router
+    .route("/api/v1/meetings/:id/stats/:sid")
+    .put(statisticController.update);
 };

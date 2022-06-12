@@ -20,16 +20,17 @@ module.exports = {
       const {
         params: { id }, //meeting-id
         body: statistic,
+        isWR,
       } = req;
 
       statisticService.create(id, statistic, (err, stat, code = 400) => {
         if (err) {
-          return req.isWR
+          return isWR
             ? res.redirect(`/meetings?err=${err.message}`)
             : res.status(code).json({ status: false, message: err.message });
         }
 
-        return req.isWR
+        return isWR
           ? res.redirect(`/meetings/${id}`)
           : res.status(code).json({
               status: true,
@@ -47,14 +48,23 @@ module.exports = {
       const {
         params: { id, sid },
         body: statistic,
+        isWR,
       } = req;
 
       statisticService.update(id, sid, statistic, (err, stat, code = 400) => {
-        return res.status(code).json({
-          status: !err,
-          stat,
-          message: err ? err.message : "Statistics successfully updated",
-        });
+        if (err) {
+          return isWR
+            ? res.redirect(`/meetings?err=${err.message}`)
+            : res.status(code).json({ status: false, message: err.message });
+        }
+
+        return isWR
+          ? res.redirect(`/meetings/${id}`)
+          : res.status(code).json({
+              status: !err,
+              data: stat,
+              message: "Statistics successfully updated",
+            });
       });
     } catch (e) {
       next(e);
