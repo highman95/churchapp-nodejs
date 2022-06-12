@@ -34,7 +34,7 @@ module.exports = {
     }
   },
 
-  show: (req, res) => {
+  getPage: (req, res) => {
     const {
       query: { page = defaultPage, size = defaultSize, err: error },
       user: user0,
@@ -87,20 +87,6 @@ module.exports = {
               data: meeting,
               message: "Meeting successfully saved",
             });
-      });
-    } catch (e) {
-      next(e);
-    }
-  },
-
-  find: (req, res, next) => {
-    try {
-      meetingService.find(req.params.id, (err, meeting, code = 400) => {
-        res.status(code).json({
-          status: !err,
-          data: meeting,
-          message: err ? err.message : "Meeting successfully found",
-        });
       });
     } catch (e) {
       next(e);
@@ -162,6 +148,20 @@ module.exports = {
         });
       });
     } catch (e) {}
+  },
+
+  find: (req, res, next) => {
+    try {
+      meetingService.find(req.params.id, (err, meeting, code = 400) => {
+        res.status(code).json({
+          status: !err,
+          data: meeting,
+          message: err ? err.message : "Meeting successfully found",
+        });
+      });
+    } catch (e) {
+      next(e);
+    }
   },
 
   describe: (req, res) => {

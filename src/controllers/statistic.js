@@ -2,13 +2,20 @@ const statisticService = require("../services/statistic");
 
 module.exports = {
   get: (req, res, next) => {
+    const {
+      params: { id },
+      isWR,
+    } = req;
+
     try {
-      statisticService.get(req.params.id, (err, stats, code = 400) => {
-        res.status(code).json({
-          status: !err,
-          data: stats,
-          message: err ? err.message : "Statistics successfully fetched",
-        });
+      statisticService.get(id, (err, stats, code = 400) => {
+        return isWR
+          ? res.redirect(`/meetings/${id}`)
+          : res.status(code).json({
+              status: !err,
+              data: stats,
+              message: err ? err.message : "Statistics successfully fetched",
+            });
       });
     } catch (e) {
       next(e);

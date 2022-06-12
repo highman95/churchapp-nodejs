@@ -5,7 +5,7 @@ const statisticController = require("../../controllers/statistic");
 module.exports = (router) => {
   router
     .route("/meetings")
-    .get(ensureLoggedIn(), meetingController.show)
+    .get(ensureLoggedIn(), meetingController.getPage)
     .post(ensureLoggedIn(), meetingController.create);
 
   router
