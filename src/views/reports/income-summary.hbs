@@ -91,76 +91,84 @@
         </thead>
         <tbody style="font-size:smaller;line-height:normal;text-align:right;">
           {{#if records}}
-            {{#each records as |recordsPerDay index|}}
-              {{#each recordsPerDay as |record index0|}}
-                <tr>
-                  <td scope="row">{{computeSno index index0}}.</td>
-                  <td scope="row" style="text-align:left;">
-                    {{formatToDateOnly record.held_on true}}
-                    <small class="text-muted d-block">{{record.tag}}</small>
-                  </td>
-                  <td scope="row">
-                    {{commafy record.tithe}}
-                  </td>
-                  <td scope="row">
-                    {{commafy record.tithe_chq}}
-                  </td>
-                  <td scope="row" style="font-weight: bold;">
-                    {{commafy record.total_tithe}}
-                  </td>
-                  <td scope="row">
-                    {{commafy record.worship}}
-                  </td>
-                  <td scope="row">
-                    {{commafy record.worship_chq}}
-                  </td>
-                  <td scope="row" style="font-weight: bold;">
-                    {{commafy record.total_worship}}
-                  </td>
-                  <td scope="row">
-                    {{commafy record.project}}
-                  </td>
-                  <td scope="row">
-                    {{commafy record.project_chq}}
-                  </td>
-                  <td scope="row" style="font-weight: bold;">
-                    {{commafy record.total_project}}
-                  </td>
-                  <td scope="row" style="font-weight: bold;">
-                    {{commafy record.total_thanksgiving}}
-                  </td>
-                  <td scope="row" style="font-weight: bold;">
-                    {{commafy record.total_income}}
-                  </td>
-                  <td scope="row" style="font-weight: bold;">
-                    {{commafy record.total_shiloh_sac}}
-                  </td>
-                  <td scope="row" style="font-weight: bold;">
-                    {{commafy record.grand_total_income}}
-                  </td>
-                </tr>
+            {{#if records.data}}
+              {{#each records.data as |recordsPerDay index|}}
+                {{#each recordsPerDay as |record index0|}}
+                  <tr>
+                    <td scope="row">{{computeSno index index0}}.</td>
+                    <td scope="row" style="text-align:left;">
+                      {{formatToDateOnly record.held_on true}}
+                      <small class="text-muted d-block">{{record.tag}}</small>
+                    </td>
+                    <td scope="row">
+                      {{commafy record.tithe}}
+                    </td>
+                    <td scope="row">
+                      {{commafy record.tithe_chq}}
+                    </td>
+                    <td scope="row" style="font-weight: bold;">
+                      {{commafy record.total_tithe}}
+                    </td>
+                    <td scope="row">
+                      {{commafy record.worship}}
+                    </td>
+                    <td scope="row">
+                      {{commafy record.worship_chq}}
+                    </td>
+                    <td scope="row" style="font-weight: bold;">
+                      {{commafy record.total_worship}}
+                    </td>
+                    <td scope="row">
+                      {{commafy record.project}}
+                    </td>
+                    <td scope="row">
+                      {{commafy record.project_chq}}
+                    </td>
+                    <td scope="row" style="font-weight: bold;">
+                      {{commafy record.total_project}}
+                    </td>
+                    <td scope="row" style="font-weight: bold;">
+                      {{commafy record.total_thanksgiving}}
+                    </td>
+                    <td scope="row" style="font-weight: bold;">
+                      {{commafy record.total_income}}
+                    </td>
+                    <td scope="row" style="font-weight: bold;">
+                      {{commafy record.total_shiloh_sac}}
+                    </td>
+                    <td scope="row" style="font-weight: bold;">
+                      {{commafy record.grand_total_income}}
+                    </td>
+                  </tr>
+                {{/each}}
               {{/each}}
-            {{/each}}
 
-            {{! Column-based Totals }}
-            <tr
-              style="background-color:ivory;font-weight:bold;line-height:20px;"
-            >
-              <td colspan="2" align="right">Total: [&#8358;]</td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-              <td align="right"></td>
-            </tr>
+              {{! Column-based Totals }}
+              <tr
+                style="background-color:ivory;font-weight:bold;line-height:20px;"
+              >
+                <td colspan="2" align="right">Total: [&#8358;]</td>
+                <td align="right">{{commafy records.meta.tithe}}</td>
+                <td align="right">{{commafy records.meta.tithe_chq}}</td>
+                <td align="right">{{commafy records.meta.total_tithe}}</td>
+                <td align="right">{{commafy records.meta.worship}}</td>
+                <td align="right">{{commafy records.meta.worship_chq}}</td>
+                <td align="right">{{commafy records.meta.total_worship}}</td>
+                <td align="right">{{commafy records.meta.project}}</td>
+                <td align="right">{{commafy records.meta.project_chq}}</td>
+                <td align="right">{{commafy records.meta.total_project}}</td>
+                <td align="right">
+                  {{commafy records.meta.total_thanksgiving}}
+                </td>
+                <td align="right">{{commafy records.meta.total_income}}</td>
+                <td align="right">
+                  {{commafy records.meta.total_shiloh_sac}}
+                </td>
+                <td align="right">
+                  {{commafy records.meta.grand_total_income}}
+                </td>
+              </tr>
+            {{/if}}
 
           {{else}}
             {{#if queryRef.station}}

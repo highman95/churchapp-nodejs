@@ -69,7 +69,7 @@ function executeDailyAttendanceAnalysis(req, res, { stations } = {}) {
   reportService.dailyAttendanceSummary(
     station,
     monthYear,
-    (err, records, code = 400) => {
+    (err, records = { data: [], meta: {} }, code = 400) => {
       // if called from api
       if (!isWR) {
         return res.status(code).json({
@@ -108,7 +108,7 @@ function executeDailyIncomeAnalysis(req, res, { stations } = {}) {
   reportService.dailyIncomeSummary(
     station,
     monthYear,
-    (err, records, code = 400) => {
+    (err, records = { data: [], meta: {} }, code = 400) => {
       // if called from api
       if (!isWR) {
         return res.status(code).json({
@@ -148,7 +148,7 @@ function executeMissionStationAnalysis(req, res, { stations } = {}) {
     station,
     fromMonthYear,
     toMonthYear,
-    (err, records, code = 400) => {
+    (err, records = {}, code = 400) => {
       // if called from api
       if (!isWR) {
         delete (records ?? {}).periods;

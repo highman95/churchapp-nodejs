@@ -78,7 +78,8 @@
 
         <tbody style="font-size:smaller;line-height:normal;text-align:center;">
           {{#if records}}
-            {{#each records as |recordsPerDay index|}}
+            {{#if records.data}}
+            {{#each records.data as |recordsPerDay index|}}
               {{#each recordsPerDay as |record index0|}}
                 <tr>
                   <td scope="row" style="text-align: right;">
@@ -103,6 +104,7 @@
                 </tr>
               {{/each}}
             {{/each}}
+            {{/if}}
 
             {{! Column-based Totals }}
             <tr style="background-color:#ffffff;line-height:normal;">

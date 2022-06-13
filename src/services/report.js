@@ -4,16 +4,16 @@ const statisticService = require("./statistic");
 
 exports.dailyAttendanceSummary = (station_id, month_year, cb) => {
   if (!station_id || isNaN(station_id)) {
-    return cb(new Error("Station id is required"), null);
+    return cb(new Error("Station id is required"));
   }
 
   if (!month_year || !month_year.trim()) {
-    return cb(new Error("Month/Year is required"), null);
+    return cb(new Error("Month/Year is required"));
   }
 
   const [year, month] = month_year.split("-");
   if (!year || isNaN(year) || !month || isNaN(month)) {
-    return cb(new Error("Month/Year contains invalid data"), null);
+    return cb(new Error("Month/Year contains invalid data"));
   }
 
   meetingService.fetchSchedulesByMonthYear(
@@ -29,9 +29,9 @@ exports.dailyAttendanceSummary = (station_id, month_year, cb) => {
         );
       }
 
-      let records = [];
-      return !schedules || schedules.length === 0
-        ? cb(null, records)
+      let records = { data: [], meta: {} };
+      return (schedules?.length ?? 0) === 0
+        ? cb(null, records, 200)
         : schedules.forEach(
             getMeetingDayAttendanceRecords(
               station_id,
@@ -46,16 +46,16 @@ exports.dailyAttendanceSummary = (station_id, month_year, cb) => {
 
 exports.dailyIncomeSummary = (station_id, month_year, cb) => {
   if (!station_id || isNaN(station_id)) {
-    return cb(new Error("Station id is required"), null);
+    return cb(new Error("Station id is required"));
   }
 
   if (!month_year || !month_year.trim()) {
-    return cb(new Error("Month/Year is required"), null);
+    return cb(new Error("Month/Year is required"));
   }
 
   const [year, month] = month_year.split("-");
   if (!year || isNaN(year) || !month || isNaN(month)) {
-    return cb(new Error("Month/Year contains invalid data"), null);
+    return cb(new Error("Month/Year contains invalid data"));
   }
 
   meetingService.fetchSchedulesByMonthYear(
@@ -66,13 +66,14 @@ exports.dailyIncomeSummary = (station_id, month_year, cb) => {
       if (err) {
         return cb(
           new Error(`Unable to fetch schedules for ${month}/${year}`),
-          null
+          null,
+          500
         );
       }
 
-      let records = [];
-      return !schedules || schedules.length === 0
-        ? cb(null, records)
+      let records = { data: [], meta: {} };
+      return (schedules?.length ?? 0) === 0
+        ? cb(null, records, 200)
         : schedules.forEach(
             getMeetingDayIncomeRecords(
               station_id,
@@ -279,10 +280,85 @@ function onFetchedMeetingDayRecords(
       );
     }
 
-    records.push(data);
+    records.data.push(data);
+    data.forEach(computeMeta());
 
     if (index + 1 === meeting_days_count) {
       return cb(null, records, 200);
     }
   };
+
+  function computeMeta() {
+    return ({
+      tithe,
+      tithe_chq,
+      worship,
+      worship_chq,
+      project,
+      project_chq,
+      vow = 0,
+      vow_chq = 0,
+      shiloh_sac = 0,
+      shiloh_sac_chq = 0,
+      thanksgiving,
+      thanksgiving_chq,
+      total_tithe,
+      total_worship,
+      total_project,
+      total_shiloh_sac,
+      total_vow = 0,
+      total_thanksgiving,
+      total_income,
+      grand_total_income,
+    }) => {
+      if (tithe) {
+        if (!records.meta.tithe) {
+          records.meta = {
+            tithe: 0,
+            tithe_chq: 0,
+            worship: 0,
+            worship_chq: 0,
+            project: 0,
+            project_chq: 0,
+            shiloh_sac: 0,
+            shiloh_sac_chq: 0,
+            vow: 0,
+            vow_chq: 0,
+            thanksgiving: 0,
+            thanksgiving_chq: 0,
+            total_tithe: 0,
+            total_worship: 0,
+            total_project: 0,
+            total_shiloh_sac: 0,
+            total_vow: 0,
+            total_thanksgiving: 0,
+            total_income: 0,
+            grand_total_income: 0,
+          };
+        }
+
+        records.meta["tithe"] += tithe;
+        records.meta["tithe_chq"] += tithe_chq;
+        records.meta["worship"] += worship;
+        records.meta["worship_chq"] += worship_chq;
+        records.meta["project"] += project;
+        records.meta["project_chq"] += project_chq;
+        records.meta["shiloh_sac"] += shiloh_sac;
+        records.meta["shiloh_sac_chq"] += shiloh_sac_chq;
+        records.meta["vow"] += vow;
+        records.meta["vow_chq"] += vow_chq;
+        records.meta["thanksgiving"] += thanksgiving;
+        records.meta["thanksgiving_chq"] += thanksgiving_chq;
+
+        records.meta["total_tithe"] += total_tithe;
+        records.meta["total_worship"] += total_worship;
+        records.meta["total_project"] += total_project;
+        records.meta["total_shiloh_sac"] += total_shiloh_sac;
+        records.meta["total_vow"] += total_vow;
+        records.meta["total_thanksgiving"] += total_thanksgiving;
+        records.meta["total_income"] += total_income;
+        records.meta["grand_total_income"] += grand_total_income;
+      }
+    };
+  }
 }
