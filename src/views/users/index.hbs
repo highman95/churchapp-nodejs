@@ -101,8 +101,14 @@
               {{!-- <td scope="row">{{computeSno index}}.</td> --}}
               <td>
                 <span class="d-block mb-2">
-                  <strong>{{user.last_name}}</strong>
+                  {{user.title}}
                   {{user.first_name}}
+                  <span
+                    class="font-weight-bold"
+                    style="text-transform: uppercase;"
+                  >
+                    {{user.last_name}}
+                  </span>
                 </span>
 
                 <small class="text-info font-weight-bold">

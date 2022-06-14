@@ -36,7 +36,7 @@ exports.get = function (page, size, cb) {
       db.query(
         `${sql.replace(
           "{expectations}",
-          "lower(hex(id)) as id, first_name, last_name, phone, email, active"
+          "lower(hex(id)) as id, title, first_name, last_name, phone, email, active"
         )} LIMIT ${offset}, ${limit}`,
         (err, usersInPage) => {
           return err
@@ -319,7 +319,7 @@ function findByEmail(email, isAuth, cb) {
   }
 
   db.query(
-    `SELECT first_name, last_name, phone, email, active, 1 as organization_id ${
+    `SELECT title, first_name, last_name, phone, email, active, 1 as organization_id ${
       isAuth ? ", password, fresh, attempts, locked, lower(hex(id)) as id" : ""
     } FROM users WHERE email = ? LIMIT 1`,
     [email.trim().toLowerCase()],
@@ -338,7 +338,8 @@ exports.find = function (id, cb) {
   }
 
   db.query(
-    "SELECT first_name, last_name, phone, email, active, 1 as organization_id FROM users WHERE hex(id) = ?",
+    `SELECT title, first_name, last_name, phone, email, active, 1 as organization_id
+     FROM users WHERE hex(id) = ?`,
     [id],
     findResultHandler(modelName, cb)
   );
