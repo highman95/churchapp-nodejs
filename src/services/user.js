@@ -57,7 +57,6 @@ exports.create = function (user, cb) {
     return cb(new Error("Password is required"), null);
   }
 
-  delete user.password;
   findByEmail(email, false, onCheckedNonExistenceComputePasswordHash(user, cb));
 };
 
@@ -135,7 +134,7 @@ function onCheckedNonExistenceComputePasswordHash(user, cb) {
       return cb(new Error("E-mail already used"), null, 409);
     }
 
-    bcrypt.hash(password, 10, onHashedPasswordCreateUser());
+    bcrypt.hash(user.password, 10, onHashedPasswordCreateUser());
   };
 
   function onHashedPasswordCreateUser() {
@@ -153,9 +152,11 @@ function onCheckedNonExistenceComputePasswordHash(user, cb) {
 
       db.query(
         `INSERT INTO users (id, title, first_name, last_name, phone, email, password)
-           VALUES (UNHEX(REPLACE(?,'-','')), ?, ?, ?, ?, ?, ?)`,
+         VALUES (UNHEX(REPLACE(?,'-','')), ?, ?, ?, ?, ?, ?)`,
         [id, title, first_name, last_name, phone, email_lc, passwordHash],
         (err2, _) => {
+          delete user.password;
+
           return err2
             ? cb(err2, null, 500)
             : cb(null, { id: id.replace("-", ""), ...user }, 201);
@@ -164,6 +165,7 @@ function onCheckedNonExistenceComputePasswordHash(user, cb) {
     };
   }
 }
+
 function onCheckedExistenceValidateOldPassword(
   email,
   oldPassword,
