@@ -1,4 +1,7 @@
-const { isInTheFuture } = require("../utils/helpers");
+const {
+  isInTheFuture,
+  computePaginationParameters,
+} = require("../utils/helpers");
 const { findResultHandler } = require("./common");
 const statisticService = require("./statistic");
 const modelName = "Meeting";
@@ -12,8 +15,7 @@ exports.get = function (organization_id, page, size, cb) {
     return cb(new Error("Organization-id is required"), null);
   }
 
-  const pageIndex = (!page ? 1 : Math.abs(parseInt(page) || 1)) - 1;
-  const limit = !size ? 10 : Math.abs(parseInt(size) || 10);
+  const { limit, offset } = computePaginationParameters(page, size);
 
   const sql = `SELECT {expectations} FROM meetings m
                LEFT JOIN meeting_types mt ON mt.id = m.meeting_type_id
@@ -37,11 +39,11 @@ exports.get = function (organization_id, page, size, cb) {
         `${sql.replace(
           "{expectations}",
           "m.id, tag, held_on, mt.name meeting_type, s.name station"
-        )} LIMIT ${pageIndex * size}, ${limit}`,
+        )} LIMIT ${offset}, ${limit}`,
         [organization_id],
         (err1, meetingsInPage) => {
           return err1
-            ? cb("Meetings could not fetched", null, 500)
+            ? cb(new Error("Meetings could not fetched"), null, 500)
             : cb(null, { data: meetingsInPage, count }, 200);
         }
       );

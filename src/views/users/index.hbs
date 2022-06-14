@@ -1,41 +1,151 @@
 <h3>Users</h3>
 <hr />
 
-<table class="table table-sm table-striped">
-  <thead style="font-variant: small-caps;">
-    <tr>
-      <th scope="col">s-no</th>
-      <th scope="col">full-name</th>
-      <th scope="col">contact-info</th>
-      <th scope="col">status</th>
-      <th scope="col">action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#if users}}
-      {{#each users as |user index|}}
+<div class="row">
+  <div class="col-4">
+    <form method="post" action="" enctype="application/x-www-form-urlencoded">
+      <fieldset>
+        <div class="form-row">
+          <div class="col-md-6 mb-3">
+            <label for="first-name">First name:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="first-name"
+              name="first_name"
+              required
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="last-name">Last name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="last-name"
+              name="last_name"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-6 mb-3">
+            <label for="phone-no">Phone no.:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="phone-no"
+              name="phone"
+              required
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="title">Title:</label>
+            <select class="custom-select" id="title" name="title" required>
+              <option selected value="">Choose...</option>
+              <option value="Pst.">Pastor</option>
+              <option value="Eldr.">Elder</option>
+              <option value="Dcn.">Deacon</option>
+              <option value="Dcns.">Deaconness</option>
+              <option value="Bro.">Brother</option>
+              <option value="Sis.">Sister</option>
+            </select>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="password">Password:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="password"
+              name="password"
+              value="p9ssw3rd"
+              readonly
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-12 mb-3">
+            <label for="">E-mail Address:</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+              />
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-danger font-weight-bold">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="col-8">
+    <table class="table table-sm table-hover">
+      <thead style="font-variant: small-caps;">
         <tr>
-          <td scope="row">{{computeSno index}}.</td>
-          <td>
-            <strong>{{user.last_name}}</strong>
-            {{user.first_name}}
-          </td>
-          <td>
-            <small class="text-danger font-weight-bold d-block-x">
-              {{user.email}}
-            </small>
-            <small class="text-muted d-block-x"> | {{user.phone}}</small>
-          </td>
-          <td>
-            {{#if user.active}}
-              <span class="badge badge-info">ACTIVE</span>
-            {{else}}
-              <span class="badge badge-danger">INACTIVE</span>
-            {{/if}}
-          </td>
-          <td>---</td>
+          {{! <th scope="col">s-no</th> }}
+          <th scope="col">full-name / contact-info</th>
+          <th scope="col" width="10%">&nbsp;</th>
         </tr>
-      {{/each}}
-    {{/if}}
-  </tbody>
-</table>
+      </thead>
+      <tbody>
+        {{#if users}}
+          {{#each users as |user index|}}
+            <tr>
+              {{!-- <td scope="row">{{computeSno index}}.</td> --}}
+              <td>
+                <span class="d-block mb-2">
+                  <strong>{{user.last_name}}</strong>
+                  {{user.first_name}}
+                </span>
+
+                <small class="text-info font-weight-bold">
+                  {{user.email}}
+                </small><br />
+                <small class="text-muted">{{user.phone}}</small>
+              </td>
+              <td>
+                <form method="post" action="/users/toggle">
+                  <div class="custom-control custom-switch">
+                    <input
+                      type="checkbox"
+                      role="switch"
+                      class="custom-control-input"
+                      id={{user.email}}
+                      {{selected user.active true "checked"}}
+                      onclick="this.form.submit()"
+                    />
+
+                    <label class="custom-control-label" for={{user.email}}>
+                      {{#if user.active}}
+                        <span class="font-weight-bold text-success">
+                          active
+                        </span>
+                      {{else}}
+                        <span class="font-weight-bold text-danger">
+                          inactive
+                        </span>
+                      {{/if}}
+                    </label>
+                  </div>
+
+                  <input type="hidden" name="username" value={{user.email}} />
+                </form>
+              </td>
+            </tr>
+          {{/each}}
+        {{/if}}
+      </tbody>
+    </table>
+
+    <div class="col-12">
+      {{{showPaginationLinks count currentPage}}}
+    </div>
+  </div>
+</div>

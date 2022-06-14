@@ -55,6 +55,14 @@ exports.showPaginationLinks = (totalCount, page) => {
           </nav>`;
 };
 
+exports.computePaginationParameters = (page, size) => {
+  const pageIndex = (!page ? 1 : Math.abs(parseInt(page) || 1)) - 1;
+  const limit = !size ? 10 : Math.abs(parseInt(size) || 10);
+  const offset = pageIndex * size;
+
+  return { limit, offset };
+};
+
 exports.isInTheFuture = (date) => {
   if (!date || !date.trim() || isNaN(Date.parse(date))) {
     throw new Error("Valid date is required");
@@ -84,10 +92,11 @@ exports.commafy = (number) => {
   }`;
 };
 
-exports.selected = (chosen_option, reference_option) => {
+exports.selected = (chosen_option, reference_option, answer = "selected") => {
   // don't do strict comparison
   // because of possible data-type mismatch
-  return chosen_option == reference_option ? "selected" : "";
+  const attribute = typeof answer === "string" ? answer : answer.name;
+  return chosen_option == reference_option ? attribute : "";
 };
 
 exports.formatToDateOnly = (rawdate, is_readable = false) => {

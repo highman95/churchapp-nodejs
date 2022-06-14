@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
+const { computePaginationParameters } = require("../utils/helpers");
 const { findResultHandler } = require("./common");
 const modelName = "User";
 
@@ -12,15 +13,37 @@ const isEmail = (email) => {
   );
 };
 
-exports.get = function (cb) {
+exports.get = function (page, size, cb) {
   if (typeof cb !== "function") {
     throw new Error("Callback is not defined");
   }
 
+  const { limit, offset } = computePaginationParameters(page, size);
+
+  const sql = "SELECT {expectations} FROM users ORDER BY last_name";
   db.query(
-    "SELECT lower(hex(id)) as id, first_name, last_name, phone, email, active FROM users ORDER BY last_name",
-    (err, result) => {
-      return err ? cb(err, null, 500) : cb(null, result, 200);
+    `${sql.replace("{expectations}", "COUNT(id) as count")}`,
+    (err0, users) => {
+      if (err0) {
+        return cb(new Error("All users could not fetched"), null, 500);
+      }
+
+      const count = users[0]?.count ?? 0;
+      if (count === 0) {
+        return cb(null, { data: [], count }, 200);
+      }
+
+      db.query(
+        `${sql.replace(
+          "{expectations}",
+          "lower(hex(id)) as id, first_name, last_name, phone, email, active"
+        )} LIMIT ${offset}, ${limit}`,
+        (err, usersInPage) => {
+          return err
+            ? cb(new Error("Users cannot be fetched"), null, 500)
+            : cb(null, { data: usersInPage, count }, 200);
+        }
+      );
     }
   );
 };
@@ -80,7 +103,7 @@ exports.verify = function (email, cb) {
   });
 };
 
-exports.toggle = function (email, isOn, cb) {
+exports.toggle = function (email, cb) {
   if (typeof cb !== "function") {
     throw new Error("Callback is not defined");
   }
@@ -90,9 +113,10 @@ exports.toggle = function (email, isOn, cb) {
       return cb(err0, null, code);
     }
 
+    user.active = !user.active; // flip the value
     db.query(
       `UPDATE users SET active = ? WHERE email = ?`,
-      [isOn ? "1" : "0", email],
+      [user.active ? "1" : "0", email],
       (err1, _) => {
         return err1 ? cb(err1, null, 500) : cb(null, user, 204);
       }
