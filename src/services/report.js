@@ -4,16 +4,16 @@ const statisticService = require("./statistic");
 
 exports.dailyAttendanceSummary = (station_id, month_year, cb) => {
   if (!station_id || isNaN(station_id)) {
-    return cb(new Error("Station id is required"));
+    return cb(new Error("Station id is required"), null);
   }
 
   if (!month_year || !month_year.trim()) {
-    return cb(new Error("Month/Year is required"));
+    return cb(new Error("Month/Year is required"), null);
   }
 
   const [year, month] = month_year.split("-");
   if (!year || isNaN(year) || !month || isNaN(month)) {
-    return cb(new Error("Month/Year contains invalid data"));
+    return cb(new Error("Month/Year contains invalid data"), null);
   }
 
   meetingService.fetchSchedulesByMonthYear(
@@ -46,16 +46,16 @@ exports.dailyAttendanceSummary = (station_id, month_year, cb) => {
 
 exports.dailyIncomeSummary = (station_id, month_year, cb) => {
   if (!station_id || isNaN(station_id)) {
-    return cb(new Error("Station id is required"));
+    return cb(new Error("Station id is required"), null);
   }
 
   if (!month_year || !month_year.trim()) {
-    return cb(new Error("Month/Year is required"));
+    return cb(new Error("Month/Year is required"), null);
   }
 
   const [year, month] = month_year.split("-");
   if (!year || isNaN(year) || !month || isNaN(month)) {
-    return cb(new Error("Month/Year contains invalid data"));
+    return cb(new Error("Month/Year contains invalid data"), null);
   }
 
   meetingService.fetchSchedulesByMonthYear(
