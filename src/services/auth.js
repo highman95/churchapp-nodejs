@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const { generateToken } = require("../utils/security");
 const userService = require("./user");
 
 exports.find = userService.find; // alias for user-service logic
@@ -56,14 +56,7 @@ function onCheckedExistenceValidatePassword(password, cb) {
       }
 
       // generate JWT-token
-      const token = jwt.sign(
-        { username: user0.email },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: process.env.JWT_EXPIRY,
-          issuer: process.env.JWT_ISSUER,
-        }
-      );
+      const token = generateToken(user0);
 
       // make account stale (i.e. not fresh/first-time login user)
       if (user0.fresh) {

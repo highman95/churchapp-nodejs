@@ -1,5 +1,5 @@
 const multer = require("multer");
-const jwt = require("jsonwebtoken");
+const { verifyToken, TokenExpiredError } = require("./security");
 const userService = require("../services/user");
 
 // #region multer middleware
@@ -17,16 +17,11 @@ exports.authenticate = (req, _, next) => {
 
   let payload;
   try {
-    payload = jwt.verify(token, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRY,
-      issuer: process.env.JWT_ISSUER,
-    });
+    payload = verifyToken(token);
   } catch (e) {
     next(
       new Error(
-        `Token is ${
-          e.name === jwt.TokenExpiredError.name ? "expired" : "invalid"
-        }`
+        `Token is ${e.name === TokenExpiredError.name ? "expired" : "invalid"}`
       )
     );
     return;
