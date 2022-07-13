@@ -28,20 +28,16 @@
             role="group"
             aria-label="edit-return-btn-group"
           >
-            <button
-              type="button"
+            <a
               class="btn btn-danger btn-sm font-weight-bold"
-              onclick="location.href='/meetings/edit/{{meeting.id}}'"
-            >
-              <span title="Edit">&#9998;</span>
-            </button>
-            <button
-              type="button"
+              href="/meetings/edit/{{meeting.id}}"
+              title="Edit"
+            >&#9998;</a>
+            <a
               class="btn btn-dark btn-sm font-weight-bold"
-              onclick="location.href='/meetings'"
-            >
-              <span title="Return">&#10558;</span>
-            </button>
+              href="/meetings"
+              title="Return"
+            >&#10558;</a>
           </div>
         </div>
       </div>
@@ -379,14 +375,12 @@
               >
                 Submit
               </button>
-              <button
-                type="button"
+              <a
                 id="cancel-btn"
                 class="btn btn-dark font-weight-bold"
-                onclick="location.href='/meetings'"
-              >
-                <span title="Cancel">&#10558;</span>
-              </button>
+                href="/meetings"
+                title="Cancel"
+              >&#10558;</a>
             </div>
           </div>
         </div>

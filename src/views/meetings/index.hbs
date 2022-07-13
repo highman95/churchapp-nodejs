@@ -10,7 +10,7 @@
           <label for="held-on">Date/Time-Held:</label>
           <input
             type="datetime-local"
-            class="form-control"
+            class="form-control form-control-sm"
             value={{{currentDateTime}}}
             id="held-on"
             name="held_on"
@@ -23,7 +23,7 @@
           <select
             id="meeting-type"
             name="meeting_type_id"
-            class="custom-select form-control"
+            class="custom-select custom-select-sm form-control"
             required
           >
             <option selected>Choose...</option>
@@ -39,7 +39,7 @@
           <select
             id="station"
             name="station_id"
-            class="custom-select form-control"
+            class="custom-select custom-select-sm form-control"
             required
           >
             <option selected>Choose...</option>
@@ -52,7 +52,7 @@
         </div>
         <div class="form-group col-md-6 col-8">
           <label for="tag-name">Tag-Name:</label>
-          <div class="input-group">
+          <div class="input-group input-group-sm">
             <input
               type="text"
               class="form-control"
@@ -97,14 +97,22 @@
             </h6>
             <p class="card-text">{{meeting.tag}}</p>
             <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-            <a
-              href="meetings/edit/{{meeting.id}}"
-              class="card-link text-danger font-weight-bold"
-            >Edit</a>
-            <a
-              href="meetings/{{meeting.id}}"
-              class="card-link text-info font-weight-bold"
-            >View</a>
+            <div
+              class="btn-group"
+              role="group"
+              aria-label="edit-return-btn-group"
+            >
+              <a
+                href="/meetings/edit/{{meeting.id}}"
+                class="x-card-link x-text-danger btn btn-danger btn-sm font-weight-bold"
+                title="Edit"
+              >&#9998;</a>
+              <a
+                href="/meetings/{{meeting.id}}"
+                class="x-card-link x-text-info btn btn-info btn-sm font-weight-bold"
+                title="View"
+              >&#8801;</a>
+            </div>
           </div>
         </div>
       </div>

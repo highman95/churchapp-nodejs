@@ -15,7 +15,7 @@
             <label for="held-on">Date/Time-Held:</label>
             <input
               type="datetime-local"
-              class="form-control"
+              class="form-control form-control-sm"
               id="held-on"
               value="{{formatDateToISO meeting.held_on}}"
               name="held_on"
@@ -28,7 +28,7 @@
             <select
               id="meeting-type"
               name="meeting_type_id"
-              class="custom-select form-control"
+              class="custom-select custom-select-sm form-control"
               required
             >
               <option selected>Choose...</option>
@@ -49,7 +49,7 @@
             <select
               id="station"
               name="station_id"
-              class="custom-select form-control"
+              class="custom-select custom-select-sm form-control"
               required
             >
               <option selected>Choose...</option>
@@ -67,10 +67,10 @@
           </div>
           <div class="form-group col-md-6">
             <label for="tag-name">Tag-Name:</label>
-            <div class="input-group mb-3">
+            <div class="input-group input-group-sm mb-3">
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 id="tag-name"
                 name="tag"
                 value="{{{meeting.tag}}}"
@@ -82,13 +82,11 @@
                 <button type="submit" class="btn btn-danger font-weight-bold">
                   Submit
                 </button>
-                <button
-                  type="button"
+                <a
                   class="btn btn-dark font-weight-bold"
-                  onclick="location.href='/meetings'"
-                >
-                  <span title="Cancel">&#10558;</span>
-                </button>
+                  href="/meetings"
+                  title="Cancel"
+                >&#10558;</a>
               </div>
             </div>
           </div>
@@ -350,14 +348,12 @@
                     id="submit-btn"
                     class="btn btn-danger btn-block font-weight-bold"
                   >Submit</button>
-                  <button
-                    type="button"
+                  <a
                     id="cancel-btn"
                     class="btn btn-dark font-weight-bold"
-                    onclick="location.href='/meetings'"
-                  >
-                    <span title="Cancel">&#10558;</span>
-                  </button>
+                    href="/meetings"
+                    title="Cancel"
+                  >&#10558;</a>
                 </div>
               </div>
             </div>
