@@ -1,13 +1,12 @@
 "use strict";
 
+const { ensureCallBackIsDefined } = require("../utils/validation");
 const { findResultHandler } = require("./common");
 const modelName = "Station";
 
 module.exports = {
   get(organization_id, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!organization_id || isNaN(organization_id)) {
       return cb(new Error("Organization-Id is required"), null);
@@ -23,9 +22,7 @@ module.exports = {
   },
 
   create(station, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!station || typeof station !== "object") {
       return cb(new Error("Station-profile is required"), null, 406);
@@ -56,9 +53,7 @@ module.exports = {
   },
 
   findByName(organization_id, name, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!organization_id || isNaN(organization_id)) {
       return cb(new Error("Organization-Id is required"), null);
@@ -76,9 +71,7 @@ module.exports = {
   },
 
   find(id, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!id) {
       return cb(new Error("Id is required"), null);

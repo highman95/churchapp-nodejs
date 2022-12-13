@@ -2,14 +2,13 @@
 
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../utils/security");
+const { ensureCallBackIsDefined } = require("../utils/validation");
 const userService = require("./user");
 
 exports.find = userService.find; // alias for user-service logic
 
 exports.login = function (username, password, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!password || !password.trim()) {
     return cb(new Error("Password is required"), null);
@@ -75,9 +74,7 @@ function onCheckedExistenceValidatePassword(password, cb) {
 }
 
 exports.resetPassword = function (username, oldPassword, newPassword, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   userService.changePassword(
     username,

@@ -3,22 +3,12 @@
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 const { computePaginationParameters } = require("../utils/helpers");
+const { isEmail, ensureCallBackIsDefined } = require("../utils/validation");
 const { findResultHandler } = require("./common");
 const modelName = "User";
 
-const isEmail = (email) => {
-  return (
-    email &&
-    /^([a-zA-Z0-9_\-]+)(\.)?([a-zA-Z0-9_\-]+)@([a-zA-Z]+)\.([a-zA-Z]{2,})$/.test(
-      email
-    )
-  );
-};
-
 exports.get = function (page, size, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   const { limit, offset } = computePaginationParameters(page, size);
 
@@ -51,9 +41,7 @@ exports.get = function (page, size, cb) {
 };
 
 exports.create = function (user, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!user || typeof user !== "object") {
     return cb(new Error("User-profile is required"), null, 406);
@@ -86,9 +74,7 @@ exports.create = function (user, cb) {
 };
 
 exports.verify = function (email, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   findByEmail(email, false, (err, user) => {
     if (err) {
@@ -106,9 +92,7 @@ exports.verify = function (email, cb) {
 };
 
 exports.toggle = function (email, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   findByEmail(email, false, (err0, user, code = 400) => {
     if (err0) {
@@ -127,9 +111,7 @@ exports.toggle = function (email, cb) {
 };
 
 exports.changePassword = function (email, oldPassword, newPassword, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!oldPassword || !oldPassword.trim()) {
     return cb(new Error("Your previous password is required"));
@@ -238,9 +220,7 @@ function onCheckedExistenceValidateOldPassword(
 }
 
 exports.incrementTries = function (email, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   db.query(
     "UPDATE users SET attempts = attempts + 1 WHERE email = ?",
@@ -252,9 +232,7 @@ exports.incrementTries = function (email, cb) {
 };
 
 exports.resetTries = function (email, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   db.query(
     "UPDATE users SET attempts = 0 WHERE email = ?",
@@ -266,9 +244,7 @@ exports.resetTries = function (email, cb) {
 };
 
 exports.lock = function (email, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   db.query(
     "UPDATE users SET locked = '1' WHERE email = ?",
@@ -280,9 +256,7 @@ exports.lock = function (email, cb) {
 };
 
 exports.unlock = function (email, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   db.query(
     "UPDATE users SET locked = '0' WHERE email = ?",
@@ -294,9 +268,7 @@ exports.unlock = function (email, cb) {
 };
 
 exports.makeStale = function (email, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   db.query(
     "UPDATE users SET fresh = '0' WHERE email = ?",
@@ -308,9 +280,7 @@ exports.makeStale = function (email, cb) {
 };
 
 function findByEmail(email, isAuth, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!email || !email.trim()) {
     return cb(new Error("E-mail is required"), null);
@@ -331,9 +301,7 @@ function findByEmail(email, isAuth, cb) {
 exports.findByEmail = findByEmail;
 
 exports.find = function (id, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!id || !id.trim()) {
     return cb(new Error("Id is required"), null);

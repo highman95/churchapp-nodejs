@@ -4,14 +4,13 @@ const {
   isInTheFuture,
   computePaginationParameters,
 } = require("../utils/helpers");
+const { ensureCallBackIsDefined } = require("../utils/validation");
 const { findResultHandler } = require("./common");
 const statisticService = require("./statistic");
 const modelName = "Meeting";
 
 exports.get = function (organization_id, page, size, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!organization_id || isNaN(organization_id)) {
     return cb(new Error("Organization-id is required"), null);
@@ -54,9 +53,7 @@ exports.get = function (organization_id, page, size, cb) {
 };
 
 exports.create = function (meeting, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!meeting || typeof meeting !== "object") {
     return cb(new Error("Meeting-profile is required"), null);
@@ -78,9 +75,7 @@ exports.create = function (meeting, cb) {
 };
 
 exports.edit = function (organization_id, id, meeting, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!meeting || typeof meeting !== "object") {
     return cb(new Error("Meeting-profile is required"), null);
@@ -105,9 +100,7 @@ exports.edit = function (organization_id, id, meeting, cb) {
 };
 
 function find(organization_id, id, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!organization_id || isNaN(organization_id)) {
     return cb(new Error("Organization-id is required"), null);
@@ -128,9 +121,7 @@ function find(organization_id, id, cb) {
 exports.find = find;
 
 exports.fetchSchedulesByMonthYear = (station_id, month, year, cb) => {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   const sql = `SELECT DISTINCT held_on FROM meetings
                WHERE station_id = ? AND MONTH(held_on) = ? AND YEAR(held_on) = ? ORDER BY held_on`;
@@ -148,9 +139,7 @@ exports.fetchDailyAttendanceRecords = (
   do_aggregate,
   cb
 ) => {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   const sql = `SELECT m.id, m.held_on, m.tag, mt.name meeting_type, SUM(male) male, SUM(female) female,
                 SUM(children) children, SUM(converts) converts, SUM(first_timers) first_timers,
@@ -170,9 +159,7 @@ exports.fetchDailyAttendanceRecords = (
 };
 
 exports.fetchDailyIncomeRecords = (station_id, held_on, do_aggregate, cb) => {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   const sql = `SELECT m.id, m.held_on, m.tag, mt.name meeting_type, SUM(tithe) tithe, SUM(tithe_chq) tithe_chq, SUM(worship) worship, SUM(worship_chq) worship_chq,
                 SUM(project) project, SUM(project_chq) as project_chq, SUM(thanksgiving) thanksgiving, SUM(thanksgiving_chq) thanksgiving_chq,
@@ -200,9 +187,7 @@ function findByStationAndMeetingTypeAndDate(
   held_on,
   cb
 ) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!station_id || isNaN(station_id)) {
     return cb(new Error("Station-id is required"), null);

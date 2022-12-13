@@ -1,10 +1,13 @@
 "use strict";
 
 const { formatToDateOnly } = require("../utils/helpers");
+const { ensureCallBackIsDefined } = require("../utils/validation");
 const meetingService = require("./meeting");
 const statisticService = require("./statistic");
 
 exports.dailyAttendanceSummary = (station_id, month_year, cb) => {
+  ensureCallBackIsDefined(cb);
+
   if (!station_id || isNaN(station_id)) {
     return cb(new Error("Station id is required"), null);
   }
@@ -47,6 +50,8 @@ exports.dailyAttendanceSummary = (station_id, month_year, cb) => {
 };
 
 exports.dailyIncomeSummary = (station_id, month_year, cb) => {
+  ensureCallBackIsDefined(cb);
+
   if (!station_id || isNaN(station_id)) {
     return cb(new Error("Station id is required"), null);
   }
@@ -94,6 +99,8 @@ exports.missionStationPeriodicSummary = (
   to_month_year,
   cb
 ) => {
+  ensureCallBackIsDefined(cb);
+
   if (!station_id || isNaN(station_id)) {
     return cb(new Error("Station id is required"), null);
   }

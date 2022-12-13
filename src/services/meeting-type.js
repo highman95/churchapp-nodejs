@@ -1,10 +1,10 @@
 "use strict";
 
+const { ensureCallBackIsDefined } = require("../utils/validation");
+
 module.exports = {
   get: (cb) => {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     db.query(
       "SELECT id, name FROM meeting_types ORDER BY name",

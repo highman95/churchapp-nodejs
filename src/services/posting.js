@@ -1,13 +1,12 @@
 "use strict";
 
+const { ensureCallBackIsDefined } = require("../utils/validation");
 const { findResultHandler } = require("./common");
 const modelName = "Posting";
 
 module.exports = {
   create(posting, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!posting || typeof posting !== "object") {
       return cb(new Error("Posting-data is required"), null);
@@ -36,9 +35,7 @@ module.exports = {
   },
 
   get(user_id, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!user_id) {
       return cb(new Error("User-id is required"), null);
@@ -54,9 +51,7 @@ module.exports = {
   },
 
   find(user_id, station_id, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!user_id) {
       return cb(new Error("User-id is required"), null);

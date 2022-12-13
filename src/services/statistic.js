@@ -1,14 +1,13 @@
 "use strict";
 
+const { ensureCallBackIsDefined } = require("../utils/validation");
 const { findResultHandler } = require("./common");
 const modelName = "Statistic";
 const defaultMeetingNo = 1;
 
 module.exports = {
   get(meeting_id, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!meeting_id || isNaN(meeting_id)) {
       return cb(new Error("Meeting-id is required"), null);
@@ -24,9 +23,7 @@ module.exports = {
   },
 
   create(meeting_id, statistic, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!statistic || typeof statistic !== "object") {
       return cb(new Error("Statistics are required"), null);
@@ -40,9 +37,7 @@ module.exports = {
   },
 
   update(meeting_id, id, statistic, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!statistic || typeof statistic !== "object") {
       return cb(new Error("Statistics are required"), null);
@@ -56,9 +51,7 @@ module.exports = {
   },
 
   find(meeting_id, id, cb) {
-    if (typeof cb !== "function") {
-      throw new Error("Callback is not defined");
-    }
+    ensureCallBackIsDefined(cb);
 
     if (!meeting_id || isNaN(meeting_id)) {
       return cb(new Error("Meeting-id is required"), null);
@@ -111,9 +104,7 @@ module.exports = {
 };
 
 function findByMno(meeting_id, mno, cb) {
-  if (typeof cb !== "function") {
-    throw new Error("Callback is not defined");
-  }
+  ensureCallBackIsDefined(cb);
 
   if (!meeting_id || isNaN(meeting_id)) {
     return cb(new Error("Meeting-id is required"), null);
