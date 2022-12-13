@@ -34,7 +34,7 @@ connection.connect((err) => {
     return;
   }
 
-  console.log(`Database connected @ thread-${connection.threadId}`);
+  console.log(`DB-connected @ thread-${connection.threadId}`);
 });
 
 module.exports = connection;

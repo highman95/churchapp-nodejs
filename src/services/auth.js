@@ -23,6 +23,7 @@ exports.login = function (username, password, cb) {
 function onCheckedExistenceValidatePassword(password, cb) {
   return (err0, user0, code = 400) => {
     if (err0) {
+      if (code === 404) err0.message = "Invalid username / password"; //instead of User-not-found
       return cb(err0, null, code);
     }
 

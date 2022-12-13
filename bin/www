@@ -61,7 +61,7 @@ function onError(error) {
 function onListening() {
   var addr = server.address();
   console.log(
-    `Listening on...${
+    `Listening @ ${
       typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`
     }`
   );
