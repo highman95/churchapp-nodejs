@@ -22,11 +22,8 @@ exports.dailyAttendanceAnalysisPage = (req, res) => {
 };
 
 exports.dailyExpenditureAnalysisPage = (req, res) => {
-  const { user: user0 } = req;
-
-  res.render("reports/expenditure-summary", {
-    title: "Daily Expenditure Analysis",
-    user0,
+  stationService.get(req?.user?.organization_id, (_err, stations) => {
+    executeDailyExpenditureAnalysis(req, res, { stations });
   });
 };
 
@@ -51,11 +48,8 @@ exports.missionStationAnalysisPage = (req, res) => {
 };
 
 exports.rofControlAnalysisPage = (req, res) => {
-  const { user: user0 } = req;
-
-  res.render("reports/rof-control-summary", {
-    title: "ROF Control Analysis",
-    user0,
+  stationService.get(req?.user?.organization_id, (_err, stations) => {
+    executeROFControlAnalysis(req, res, { stations });
   });
 };
 
@@ -137,6 +131,43 @@ function executeDailyIncomeAnalysis(req, res, { stations } = {}) {
   );
 }
 
+function executeDailyExpenditureAnalysis(req, res, { stations } = {}) {
+  const {
+    query: { station, monthYear },
+    user: user0,
+    isWR,
+  } = req;
+
+  reportService.dailyExpenditureSummary(
+    station,
+    monthYear,
+    (err, records = { data: [], meta: {} }, code = 400) => {
+      if (!isWR) {
+        return res.status(code).json({
+          status: !err,
+          data: records,
+          message: err?.message ?? "Daily expenditure successfully fetched",
+        });
+      }
+
+      const [year, month] = new Date().toISOString().split("T")[0].split("-");
+      const maxMonthYear = `${year}-${month}`;
+
+      res.render("reports/expenditure-summary", {
+        title: "Daily Expenditure Analysis",
+        user0,
+        stations,
+        queryRef: {
+          current: monthYear ?? maxMonthYear,
+          station,
+          max: maxMonthYear,
+        },
+        records,
+      });
+    }
+  );
+}
+
 function executeMissionStationAnalysis(req, res, { stations } = {}) {
   const {
     query: { station, fromMonthYear, toMonthYear },
@@ -177,6 +208,43 @@ function executeMissionStationAnalysis(req, res, { stations } = {}) {
         },
         records,
         periodLength: records?.periods?.length ?? 0,
+      });
+    }
+  );
+}
+
+function executeROFControlAnalysis(req, res, { stations } = {}) {
+  const {
+    query: { station, monthYear },
+    user: user0,
+    isWR,
+  } = req;
+
+  reportService.ROFControlSummary(
+    station,
+    monthYear,
+    (err, records = { data: [], meta: {} }, code = 400) => {
+      if (!isWR) {
+        return res.status(code).json({
+          status: !err,
+          data: records,
+          message: err?.message ?? "ROF control summary successfully fetched",
+        });
+      }
+
+      const [year, month] = new Date().toISOString().split("T")[0].split("-");
+      const maxMonthYear = `${year}-${month}`;
+
+      res.render("reports/rof-control-summary", {
+        title: "ROF Control Analysis",
+        user0,
+        stations,
+        queryRef: {
+          current: monthYear ?? maxMonthYear,
+          station,
+          max: maxMonthYear,
+        },
+        records,
       });
     }
   );
