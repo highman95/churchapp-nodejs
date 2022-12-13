@@ -1,3 +1,5 @@
+"use strict";
+
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../utils/security");
 const userService = require("./user");

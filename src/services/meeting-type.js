@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
   get: (cb) => {
     if (typeof cb !== "function") {

@@ -1,3 +1,5 @@
+"use strict";
+
 exports.findResultHandler = function (modelName, cb, extraTask = undefined) {
   return (err, result) => {
     if (err) {

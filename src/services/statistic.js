@@ -1,3 +1,5 @@
+"use strict";
+
 const { findResultHandler } = require("./common");
 const modelName = "Statistic";
 const defaultMeetingNo = 1;

@@ -86,7 +86,7 @@ exports.addSuffix = (number) => {
 exports.commafy = (number) => {
   if (!number || isNaN(number)) return "---";
 
-  var parts = number.toString().replace(/,/, "").split("."); //remove any commas in number first, then split on decimal pt.
+  const parts = number.toString().replace(/,/, "").split("."); //remove any commas in number first, then split on decimal pt.
   return `${parts[0].replace(/\B(?=(\d{3})+(?=$))/g, ",")}${
     parts[1] ? `.${parts[1]}` : ""
   }`;
