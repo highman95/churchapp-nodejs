@@ -7,12 +7,14 @@
     "start": "node --trace-warnings ./bin/www",
     "dev": "nodemon ./bin/www -e js,hbs",
     "test": "jest",
+    "test-o": "jest --maxWorkers=1 --forceExit",
     "test-w": "jest --watchAll --detectOpenHandles --maxWorkers=1 --forceExit"
   },
   "jest": {
     "collectCoverage": true,
     "verbose": true,
     "testPathIgnorePatterns": [
+      "bin/www",
       "__tests__/utils.js"
     ]
   },
