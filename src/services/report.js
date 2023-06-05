@@ -355,7 +355,7 @@ function onFetchedMeetingDayRecords(
     grand_total_income,
   }) {
     if (tithe) {
-      if (!records.meta || !records.meta.tithe) {
+      if (!records.meta?.tithe) {
         records.meta = {
           tithe: 0,
           tithe_chq: 0,

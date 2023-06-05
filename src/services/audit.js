@@ -26,15 +26,15 @@ module.exports = {
     // extract parameters
     const { action, actor, url, data, organization_id } = audit;
 
-    if (!action || !action.trim()) {
+    if (!action?.trim()) {
       return cb(new Error("Action-Name is required"), null);
     }
 
-    if (!actor || !actor.trim()) {
+    if (!actor?.trim()) {
       return cb(new Error("Actor-Name is required"), null);
     }
 
-    if (!url || !url.trim()) {
+    if (!url?.trim()) {
       return cb(new Error("Url is required"), null);
     }
 

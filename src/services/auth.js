@@ -10,7 +10,7 @@ exports.find = userService.find; // alias for user-service logic
 exports.login = function (username, password, cb) {
   ensureCallBackIsDefined(cb);
 
-  if (!password || !password.trim()) {
+  if (!password?.trim()) {
     return cb(new Error("Password is required"), null);
   }
 

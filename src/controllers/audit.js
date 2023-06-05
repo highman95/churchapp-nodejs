@@ -45,7 +45,7 @@ module.exports = {
   describe: (req, res) => {
     try {
       auditService.find(req.params.id, (_err, audit) => {
-        return !!audit
+        return audit
           ? res.render("audits/detail", {
               title: "Audits",
               user0: req.user,

@@ -7,7 +7,7 @@ const ensureCallBackIsDefined = (cb) => {
 const isEmail = (email) => {
   return (
     email &&
-    /^([a-zA-Z0-9_\-]+)(\.)?([a-zA-Z0-9_\-]+)@([a-zA-Z]+)\.([a-zA-Z]{2,})$/.test(
+    /^([a-zA-Z0-9_-]+)(\.)?([a-zA-Z0-9_-]+)@([a-zA-Z]+)\.([a-zA-Z]{2,})$/.test(
       email
     )
   );

@@ -14,7 +14,7 @@ const authService = require("./auth");
 // that the password is correct and then invoke `cb` with a user object, which
 // will be set at `req.user` in route handlers after authentication.
 passport.use(
-  new LocalStrategy((username, password, cb) => {
+  new LocalStrategy({ usernameField: "username" }, (username, password, cb) => {
     authService.login(username, password, (err, user) => {
       return err
         ? cb(null, false, { message: err.message })

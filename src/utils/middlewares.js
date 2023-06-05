@@ -3,14 +3,17 @@ const { verifyToken, TokenExpiredError } = require("./security");
 const userService = require("../services/user");
 
 // #region multer middleware
-exports.upload = multer({ dest: "uploads/" });
+exports.upload = multer({
+  dest: "uploads/",
+  limits: { fileSize: 4 * 1024 * 1024 }, //4mb
+});
 
 // #region authentication middleware
 exports.authenticate = (req, _, next) => {
   const { authorization = "" } = req.headers;
   const [, token] = authorization.split(" ");
 
-  if (!token || !token.trim()) {
+  if (!token?.trim()) {
     next(new Error("Token is required"));
     return;
   }

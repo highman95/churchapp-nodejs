@@ -62,7 +62,7 @@ exports.create = function (meeting, cb) {
   // extract parameters
   const { station_id, meeting_type_id, tag, held_on } = meeting;
 
-  if (!tag || !tag.trim()) {
+  if (!tag?.trim()) {
     return cb(new Error("Tag is required"), null);
   }
 
@@ -92,7 +92,7 @@ exports.edit = function (organization_id, id, meeting, cb) {
     return cb(new Error("Meeting-type is required"), null);
   }
 
-  if (!tag || !tag.trim()) {
+  if (!tag?.trim()) {
     return cb(new Error("Tag is required"), null);
   }
 
@@ -197,7 +197,7 @@ function findByStationAndMeetingTypeAndDate(
     return cb(new Error("Meeting-Type-id is required"), null);
   }
 
-  if (!held_on || !held_on.trim()) {
+  if (!held_on?.trim()) {
     return cb(new Error("Meeting-date is required"), null);
   }
 
@@ -221,7 +221,7 @@ function onCheckedNonExistenceCreateMeeting(meeting, cb) {
       return cb(err0, null, code);
     }
 
-    if (!!lastMeeting) {
+    if (lastMeeting) {
       return cb(new Error("Meeting already saved"), null, 409);
     }
 

@@ -33,7 +33,7 @@ app.disable("x-powered-by");
 app.use(
   require("express-session")({
     secret: process.env.SESSION_SECRET,
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     // cookie: { secure: true, maxAge: 60000 },
   }),

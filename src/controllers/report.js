@@ -182,7 +182,7 @@ function executeMissionStationAnalysis(req, res, { stations } = {}) {
     (err, records = {}, code = 400) => {
       // if called from api
       if (!isWR) {
-        delete (records ?? {}).periods;
+        delete records?.periods;
 
         return res.status(code).json({
           status: !err,

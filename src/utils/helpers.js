@@ -64,7 +64,7 @@ exports.computePaginationParameters = (page, size) => {
 };
 
 exports.isInTheFuture = (date) => {
-  if (!date || !date.trim() || isNaN(Date.parse(date))) {
+  if (!date?.trim() || isNaN(Date.parse(date))) {
     throw new Error("Valid date is required");
   }
 

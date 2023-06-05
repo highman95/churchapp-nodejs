@@ -50,23 +50,23 @@ exports.create = function (user, cb) {
   // extract parameters
   const { title, first_name, last_name, phone, email, password } = user;
 
-  if (!title || !title.trim()) {
+  if (!title?.trim()) {
     return cb(new Error("Title is required"), null);
   }
 
-  if (!first_name || !first_name.trim()) {
+  if (!first_name?.trim()) {
     return cb(new Error("First-name is required"), null);
   }
 
-  if (!last_name || !last_name.trim()) {
+  if (!last_name?.trim()) {
     return cb(new Error("Last-name is required"), null);
   }
 
-  if (!phone || !phone.trim()) {
+  if (!phone?.trim()) {
     return cb(new Error("Phone is required"), null);
   }
 
-  if (!password || !password.trim()) {
+  if (!password?.trim()) {
     return cb(new Error("Password is required"), null);
   }
 
@@ -113,11 +113,11 @@ exports.toggle = function (email, cb) {
 exports.changePassword = function (email, oldPassword, newPassword, cb) {
   ensureCallBackIsDefined(cb);
 
-  if (!oldPassword || !oldPassword.trim()) {
+  if (!oldPassword?.trim()) {
     return cb(new Error("Your previous password is required"));
   }
 
-  if (!newPassword || !newPassword.trim()) {
+  if (!newPassword?.trim()) {
     return cb(new Error("Your current password is required"));
   }
 
@@ -282,7 +282,7 @@ exports.makeStale = function (email, cb) {
 function findByEmail(email, isAuth, cb) {
   ensureCallBackIsDefined(cb);
 
-  if (!email || !email.trim()) {
+  if (!email?.trim()) {
     return cb(new Error("E-mail is required"), null);
   }
 
@@ -303,7 +303,7 @@ exports.findByEmail = findByEmail;
 exports.find = function (id, cb) {
   ensureCallBackIsDefined(cb);
 
-  if (!id || !id.trim()) {
+  if (!id?.trim()) {
     return cb(new Error("Id is required"), null);
   }
 

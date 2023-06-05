@@ -59,7 +59,7 @@ module.exports = {
       return cb(new Error("Organization-Id is required"), null);
     }
 
-    if (!name || !name.trim()) {
+    if (!name?.trim()) {
       return cb(new Error("Name is required"), null);
     }
 

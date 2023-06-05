@@ -50,7 +50,7 @@ module.exports = {
             (_err, meetings) => {
               const { data = [], count = 0 } = meetings ?? {};
 
-              var now = new Date();
+              let now = new Date();
               now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // local-datetime
 
               res.render("meetings", {
@@ -173,7 +173,7 @@ module.exports = {
     try {
       meetingService.find(user0.organization_id, id, (_err, meeting) => {
         if (meeting) {
-          var held_on = new Date(meeting.held_on);
+          let held_on = new Date(meeting.held_on);
           held_on.setMinutes(
             held_on.getMinutes() - held_on.getTimezoneOffset()
           ); // local-datetime
@@ -182,7 +182,7 @@ module.exports = {
           meeting = { ...meeting, held_on, id, s_cnt };
         }
 
-        return !!meeting
+        return meeting
           ? res.render("meetings/detail", {
               title: "Meetings",
               user0,

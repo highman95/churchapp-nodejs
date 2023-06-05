@@ -26,7 +26,7 @@ module.exports = {
     // extract parameters
     const { name, founded_on } = organization;
 
-    if (!founded_on || !founded_on.trim()) {
+    if (!founded_on?.trim()) {
       return cb(new Error("Founded-on is required"), null);
     }
 
@@ -61,7 +61,7 @@ module.exports = {
   findByName(name, cb) {
     ensureCallBackIsDefined(cb);
 
-    if (!name || !name.trim()) {
+    if (!name?.trim()) {
       return cb(new Error("Name is required"), null);
     }
 
