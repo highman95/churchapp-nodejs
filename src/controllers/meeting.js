@@ -151,8 +151,13 @@ module.exports = {
   },
 
   find: (req, res, next) => {
+    const {
+      params: { id },
+      user: { organization_id },
+    } = req;
+
     try {
-      meetingService.find(req.params.id, (err, meeting, code = 400) => {
+      meetingService.find(organization_id, id, (err, meeting, code = 400) => {
         res.status(code).json({
           status: !err,
           data: meeting,
