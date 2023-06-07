@@ -56,7 +56,10 @@ exports.authenticate = (req, _, next) => {
 };
 
 exports.routeType = (req, _, next) => {
-  req.isWR = req.path && !req.path.startsWith("/api"); // is web-route
+  req.isWR =
+    req.path &&
+    !req.path.startsWith("/api") &&
+    !req.path.startsWith("/graphql"); // is web-route
   next();
 };
 

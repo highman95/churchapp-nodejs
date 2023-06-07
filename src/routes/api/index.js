@@ -6,6 +6,8 @@ const usersRoutes = require("./user");
 const organizationsRoutes = require("./organization");
 const reportRoutes = require("./report");
 
+const graphqlRoute = require("./graphql");
+
 module.exports = (router) => {
   auditsRoutes(router);
   authRoutes(router);
@@ -14,6 +16,8 @@ module.exports = (router) => {
   usersRoutes(router);
   organizationsRoutes(router);
   reportRoutes(router);
+
+  graphqlRoute(router);
 
   router.get("/api/v1/ping", (_req, res) => {
     res.json({ status: true, message: "It's all good..." });
