@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("path");
 const hbs = require("hbs");
+const session = require("express-session");
+const MySQLStore = require("express-mysql-session")(session);
 const passportService = require("./services/passport");
 
 const { routeType, errorHandler } = require("./utils/middlewares");
@@ -31,10 +33,11 @@ app.use(
 app.disable("x-powered-by");
 
 app.use(
-  require("express-session")({
+  session({
     secret: process.env.SESSION_SECRET,
-    resave: true,
+    resave: false,
     saveUninitialized: false,
+    store: new MySQLStore({}, db),
     // cookie: { secure: true, maxAge: 60000 },
   }),
   (req, res, next) => {
