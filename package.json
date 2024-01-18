@@ -4,8 +4,8 @@
   "description": "churchapp built on nodejs",
   "main": "src/index.js",
   "scripts": {
-    "start": "node --trace-warnings ./bin/www",
-    "dev": "nodemon ./bin/www -e js,hbs",
+    "start": "node --trace-warnings -r dotenv/config ./bin/www",
+    "dev": "nodemon -r dotenv/config ./bin/www -e js,hbs",
     "test": "jest",
     "test-o": "jest --maxWorkers=1 --forceExit",
     "test-w": "jest --watchAll --detectOpenHandles --maxWorkers=1 --forceExit"

@@ -22,14 +22,9 @@ global.db = require("./utils/db");
 
 const app = express();
 
-// enable cors, compression, helmet on api-routes
-app.use(routeType);
-app.use(
-  "/api/v1",
-  require("cors")(),
-  require("helmet")(),
-  require("compression")()
-);
+// enable cors, compression on all routes and helmet on api-routes
+app.use(routeType, require("cors")(), require("compression")());
+app.use("/api/v1", require("helmet")());
 app.disable("x-powered-by");
 
 app.use(

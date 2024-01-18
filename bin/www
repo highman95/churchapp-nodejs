@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 
 // Module dependencies.
-require("dotenv").config();
-var app = require("../src");
-var http = require("http");
-var cluster = require("cluster");
-var numOfCPUs = require("os").cpus().length;
+const app = require("../src");
+const http = require("http");
+const cluster = require("cluster");
+const numOfCPUs = require("os").cpus().length;
 
 // Get port from environment and store in Express.
-var port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 // Create HTTP server.
-var server = http.createServer(app);
+const server = http.createServer(app);
 
 if (cluster.isMaster) {
   console.log(`Master process --> ${process.pid} running...`);
@@ -33,7 +32,7 @@ if (cluster.isMaster) {
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {
-  var portNumber = parseInt(val, 10);
+  const portNumber = parseInt(val, 10);
 
   if (isNaN(portNumber)) {
     // named pipe
@@ -54,7 +53,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+  const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -73,12 +72,9 @@ function onError(error) {
 
 // Event listener for HTTP server "listening" event
 function onListening() {
-  var addr = server.address();
-  console.log(
-    `Listening @ ${
-      typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`
-    }`
-  );
+  const addr = server.address();
+  const gist = typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`;
+  console.log(`Listening @ ${gist}`);
 }
 
 module.exports = server;
