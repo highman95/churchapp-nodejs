@@ -1,32 +1,49 @@
 const authService = require("../services/auth");
+const passportService = require("../services/passport");
 
 exports.login = (req, res, next) => {
-  try {
-    const { username, password } = req.body;
+  passportService.authenticate(
+    "local",
+    { session: req.isWR },
+    (err, user, info, _status) => {
+      if (err) return next(err);
 
-    authService.login(username, password, (err, payload, code = 400) => {
-      res.status(code).json({
-        status: !err,
-        data: payload?.data
-          ? { token: payload.token, ...payload.data }
-          : payload,
-        message: err ? err.message : null,
+      if (req.isWR) {
+        if (!user) {
+          if (info.message) {
+            req.session.messages = [info.message];
+          }
+
+          return res.redirect("/login");
+        }
+
+        return req.login(user, (e) => {
+          return e ? next(e) : res.redirect("/");
+        });
+      }
+
+      res.status(info?.code).json({
+        status: !info?.message,
+        data: user ? { token: info.token, ...user } : null,
+        message: info?.message,
       });
-    });
-  } catch (e) {
-    next(e);
-  }
+    }
+  )(req, res, next);
 };
 
 exports.loginView = (_req, res) => {
   res.render("users/signin", { title: "Login" });
 };
 
-exports.logout = (req, res) => {
+exports.logout = (req, res, next) => {
   if (req.isWR) {
-    req.logout();
-    res.redirect("/");
+    return req.logout((err) => {
+      if (err) return next(err);
+      res.redirect("/");
+    });
   }
+
+  if (!req.user) return res.sendStatus(401);
 };
 
 exports.resetPassword = (req, res, next) => {

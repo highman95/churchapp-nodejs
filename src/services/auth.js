@@ -33,7 +33,7 @@ function onCheckedExistenceValidatePassword(password, cb) {
     }
 
     if (user0.attempts >= parseInt(process.env.LOGIN_TRIES)) {
-      return userService.lock(username, (_err0, _) => {
+      return userService.lock(user0.email, (_err0, _) => {
         return cb(new Error("Your account has been locked"), null);
       });
     }

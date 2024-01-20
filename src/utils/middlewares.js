@@ -13,8 +13,11 @@ exports.authenticate = (req, _, next) => {
   const { authorization = "" } = req.headers;
   const [, token] = authorization.split(" ");
 
+  let error = new Error("Token is required");
+  error.status = 401;
+
   if (!token?.trim()) {
-    next(new Error("Token is required"));
+    next(error);
     return;
   }
 
@@ -22,18 +25,17 @@ exports.authenticate = (req, _, next) => {
   try {
     payload = verifyToken(token);
   } catch (e) {
-    next(
-      new Error(
-        `Token is ${e.name === TokenExpiredError.name ? "expired" : "invalid"}`
-      )
-    );
+    const gist = e.name === TokenExpiredError.name ? "expired" : "invalid";
+    error.message = `Token is ${gist}`;
+    next(error);
     return;
   }
 
   userService.findByEmail(payload.username, true, (err, user) => {
     // error-occurred || user === null
     if (err) {
-      next(new Error("Token-user verification failed"));
+      error.message = "User verification failed";
+      next(error);
       return;
     }
 
@@ -46,7 +48,8 @@ exports.authenticate = (req, _, next) => {
     } = user;
 
     if (active === "0") {
-      next(new Error("Token-user account inactive"));
+      error.message = "User account is inactive";
+      next(error);
       return;
     }
 
@@ -64,23 +67,17 @@ exports.routeType = (req, _, next) => {
 };
 
 exports.errorHandler = (err, _req, res, _next) => {
-  let message = err.message || err.error.message;
-  const messageLC = message?.toLowerCase() ?? "";
-
+  const message = err.message || err.error.message;
   const isBRE = err.name === ReferenceError.name; // bad-reference error
-  const isTAE =
-    messageLC.indexOf("token") >= 0 &&
-    ["required", "invalid", "expired"].some((v) => messageLC.indexOf(v) >= 0);
 
   // client-side (input) error
   const isCSE = [EvalError.name, Error.name, RangeError.name].includes(
     err.name
   );
 
-  let statusCode = isCSE ? 400 : 500;
-  statusCode = isTAE ? 401 : statusCode;
+  const statusCode = (err.code || err.status) ?? (isCSE ? 400 : 500);
 
-  return res.status(err.code || (isBRE ? 404 : statusCode)).send({
+  return res.status(isBRE ? 404 : statusCode).send({
     status: false,
     data: null,
     message,

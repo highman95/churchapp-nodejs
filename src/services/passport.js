@@ -14,13 +14,17 @@ const authService = require("./auth");
 // that the password is correct and then invoke `cb` with a user object, which
 // will be set at `req.user` in route handlers after authentication.
 passport.use(
-  new LocalStrategy({ usernameField: "username" }, (username, password, cb) => {
-    authService.login(username, password, (err, user) => {
-      return err
-        ? cb(null, false, { message: err.message })
-        : cb(null, { ...user.data });
-    });
-  })
+  new LocalStrategy(
+    { usernameField: "username", passReqToCallback: true },
+    (req, username, password, cb) => {
+      authService.login(username, password, (err, user, code = 400) => {
+        const tokenObj = req.isWR ? {} : { token: user?.token };
+        return err || !user
+          ? cb(null, false, { message: err.message, code })
+          : cb(null, user.data, { code, ...tokenObj });
+      });
+    }
+  )
 );
 
 // Configure Passport authenticated session persistence.
