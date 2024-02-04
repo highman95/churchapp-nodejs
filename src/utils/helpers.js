@@ -1,4 +1,4 @@
-exports.showPaginationLinks = (totalCount, page) => {
+const showPaginationLinks = (totalCount, page) => {
   if (totalCount <= 0) return;
 
   const currentPage = Math.abs(parseInt(page));
@@ -72,7 +72,7 @@ exports.isInTheFuture = (date) => {
   return new Date(date).setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0);
 };
 
-exports.addSuffix = (number) => {
+const addSuffix = (number) => {
   const remainder = number % 10;
 
   let suffix = remainder === 1 ? "st" : undefined;
@@ -83,7 +83,7 @@ exports.addSuffix = (number) => {
   return `${number}<sup>${suffix}</sup>`;
 };
 
-exports.commafy = (number) => {
+const commafy = (number) => {
   if (!number || isNaN(number)) return "---";
 
   const parts = number.toString().replace(/,/, "").split("."); //remove any commas in number first, then split on decimal pt.
@@ -92,14 +92,14 @@ exports.commafy = (number) => {
   }`;
 };
 
-exports.selected = (chosen_option, reference_option, answer = "selected") => {
+const selected = (chosen_option, reference_option, answer = "selected") => {
   // don't do strict comparison
   // because of possible data-type mismatch
   const attribute = typeof answer === "string" ? answer : answer.name;
   return chosen_option == reference_option ? attribute : "";
 };
 
-exports.formatToDateOnly = (rawdate, is_readable = false) => {
+const formatToDateOnly = (rawdate, is_readable = false) => {
   if (!rawdate) return;
 
   const date = typeof rawdate === "string" ? new Date(rawdate) : rawdate;
@@ -108,7 +108,7 @@ exports.formatToDateOnly = (rawdate, is_readable = false) => {
     : rawdate.toISOString().split("T")[0];
 };
 
-exports.formatDateToISO = (date) => {
+const formatDateToISO = (date) => {
   if (!date) return;
 
   const isoString = (
@@ -132,7 +132,7 @@ exports.monthNoOfDays = (month, year) => {
   return $number_of_days_in_month;
 };
 
-exports.monthName = (month_value, as_short) => {
+const monthName = (month_value, as_short) => {
   const monthNames =
     typeof as_short === "boolean" && as_short
       ? [
@@ -167,7 +167,7 @@ exports.monthName = (month_value, as_short) => {
   return monthNames[month_value - 1];
 };
 
-exports.dayOfWeek = (day_no, as_short) => {
+const dayOfWeek = (day_no, as_short) => {
   const dayOfWeekNames =
     typeof as_short === "boolean" && as_short
       ? ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"]
@@ -184,7 +184,7 @@ exports.dayOfWeek = (day_no, as_short) => {
   return dayOfWeekNames[day_no];
 };
 
-exports.showIcon = (iconType) => {
+const showIcon = (iconType) => {
   let iconSVG;
 
   switch (iconType) {
@@ -240,4 +240,21 @@ exports.showIcon = (iconType) => {
   }
 
   return iconSVG;
+};
+
+exports.registerViewHelpers = (hbs) => {
+  hbs.registerHelper(
+    "computeSno",
+    (index, index0) => index + 1 + (typeof index0 === "number" ? index0 : 0)
+  );
+  hbs.registerHelper("isTrue", (p0, p1) => p0 === p1);
+  hbs.registerHelper("addSuffix", addSuffix);
+  hbs.registerHelper("showPaginationLinks", showPaginationLinks);
+  hbs.registerHelper("formatDateToISO", formatDateToISO);
+  hbs.registerHelper("formatToDateOnly", formatToDateOnly);
+  hbs.registerHelper("commafy", commafy);
+  hbs.registerHelper("selected", selected);
+  hbs.registerHelper("month-name", monthName);
+  hbs.registerHelper("day-of-week", dayOfWeek);
+  hbs.registerHelper("show-icon", showIcon);
 };

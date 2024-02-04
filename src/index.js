@@ -6,19 +6,9 @@ const MySQLStore = require("express-mysql-session")(session);
 const passportService = require("./services/passport");
 
 const { routeType, errorHandler } = require("./utils/middlewares");
-const {
-  showPaginationLinks,
-  formatDateToISO,
-  formatToDateOnly,
-  commafy,
-  addSuffix,
-  selected,
-  monthName,
-  dayOfWeek,
-  showIcon,
-} = require("./utils/helpers");
+const { registerViewHelpers } = require("./utils/helpers");
 const routes = require("./routes");
-global.db = require("./utils/db");
+global.db = require("./utils/db")();
 
 const app = express();
 
@@ -56,20 +46,7 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
 hbs.registerPartials(path.join(__dirname, "views/partials"), (_) => _);
-hbs.registerHelper(
-  "computeSno",
-  (index, index0) => index + 1 + (typeof index0 === "number" ? index0 : 0)
-);
-hbs.registerHelper("isTrue", (p0, p1) => p0 === p1);
-hbs.registerHelper("addSuffix", addSuffix);
-hbs.registerHelper("showPaginationLinks", showPaginationLinks);
-hbs.registerHelper("formatDateToISO", formatDateToISO);
-hbs.registerHelper("formatToDateOnly", formatToDateOnly);
-hbs.registerHelper("commafy", commafy);
-hbs.registerHelper("selected", selected);
-hbs.registerHelper("month-name", monthName);
-hbs.registerHelper("day-of-week", dayOfWeek);
-hbs.registerHelper("show-icon", showIcon);
+registerViewHelpers(hbs);
 
 // Initialize Passport and restore authentication state, if any, from the session.
 app.use(passportService.initialize(), passportService.session());

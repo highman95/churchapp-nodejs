@@ -118,7 +118,7 @@
           {{#if records.periods}}
             {{#each records.periods as |period|}}
               <th width="6.5%">
-                {{month-name period.month}}
+                {{month-name period.month true}}
                 {{period.year}}
               </th>
             {{/each}}
