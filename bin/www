@@ -73,7 +73,10 @@ function onError(error) {
 // Event listener for HTTP server "listening" event
 function onListening() {
   const addr = server.address();
-  const gist = typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`;
+  let gist = typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`;
+  if (gist.startsWith("port")) {
+    gist += ` [http://localhost:${addr.port}]`;
+  }
   console.log(`Listening @ ${gist}`);
 }
 

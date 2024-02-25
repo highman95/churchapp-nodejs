@@ -1,12 +1,26 @@
 const multer = require("multer");
 const { verifyToken, TokenExpiredError } = require("./security");
 const userService = require("../services/user");
+const { validationResult } = require("express-validator");
 
 // #region multer middleware
 exports.upload = multer({
   dest: "uploads/",
   limits: { fileSize: 4 * 1024 * 1024 }, //4mb
 });
+
+exports.validateInput = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: false,
+      data: null,
+      message: errors.array()[0].msg,
+    });
+  }
+
+  next();
+};
 
 // #region authentication middleware
 exports.authenticate = (req, _, next) => {
@@ -66,7 +80,7 @@ exports.routeType = (req, _, next) => {
   next();
 };
 
-exports.errorHandler = (err, _req, res, _next) => {
+exports.errorHandler = (err, req, res, _next) => {
   const message = err.message || err.error.message;
   const isBRE = err.name === ReferenceError.name; // bad-reference error
 
@@ -76,6 +90,10 @@ exports.errorHandler = (err, _req, res, _next) => {
   );
 
   const statusCode = (err.code || err.status) ?? (isCSE ? 400 : 500);
+
+  if (req.isWR) {
+    return res.render("error", { title: "Error", error: err });
+  }
 
   return res.status(isBRE ? 404 : statusCode).send({
     status: false,
