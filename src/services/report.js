@@ -185,7 +185,7 @@ function computePeriods(from_month_year, to_month_year) {
   const [to_year, to_month] = to_month_year.split("-");
 
   const from_month_0 = parseInt(from_month);
-  const from_year_0 = parseInt(from_year);
+  let from_year_0 = parseInt(from_year);
   const to_month_0 = parseInt(to_month);
   const to_year_0 = parseInt(to_year);
 
@@ -196,8 +196,12 @@ function computePeriods(from_month_year, to_month_year) {
       periods.push({ month: i, year: from_year_0 });
     }
   } else {
-    for (let i = from_month_0; i <= 12; i++) {
+    for (let i = from_month_0; i <= 12; ) {
       periods.push({ month: i, year: from_year_0 });
+      if (i % 12 === 0 && ++from_year_0 < to_year_0) {
+        i = 0;
+      }
+      i++;
     }
 
     for (let j = 1; j <= to_month_0; j++) {

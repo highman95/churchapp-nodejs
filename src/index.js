@@ -59,4 +59,9 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
+process.on("SIGTERM", () => {
+  console.log("App Shutting down");
+  global.db.close(); // Other closing of database connection
+});
+
 module.exports = app;
