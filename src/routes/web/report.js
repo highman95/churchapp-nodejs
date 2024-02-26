@@ -1,6 +1,9 @@
 const { ensureLoggedIn } = require("connect-ensure-login");
 const reportController = require("../../controllers/report");
 
+/**
+ * @param {import("express").Router} router
+ */
 module.exports = (router) => {
   router.get("/reports", ensureLoggedIn(), reportController.homePage);
 

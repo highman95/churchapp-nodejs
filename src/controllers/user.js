@@ -3,7 +3,7 @@ const userService = require("../services/user");
 const defaultPage = 1;
 const defaultSize = process.env.PAGINATION_CHUNK_SIZE;
 
-exports.get = (_req, res, next) => {
+exports.get = (req, res, next) => {
   const {
     query: { page = defaultPage, size = defaultSize },
   } = req;
