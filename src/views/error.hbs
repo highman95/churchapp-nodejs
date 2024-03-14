@@ -1,5 +1,17 @@
 {{!> header }}
-<h2>{{(error.status || error.code)}}</h2>
+<h2>
+  {{#if error.status}}
+    {{error.status}}
+  {{else}}
+    {{error.code}}
+  {{/if}}
+</h2>
 <hr />
-<h3>{{error.message || error.error.message;}}</h3>
+<h3>
+  {{#if error.message}}
+    {{error.message}}
+  {{else}}
+    {{error.error.message}}
+  {{/if}}
+</h3>
 <pre>{{error.stack}}</pre>
