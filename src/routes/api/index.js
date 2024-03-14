@@ -7,6 +7,7 @@ const organizationsRoutes = require("./organization");
 const reportRoutes = require("./report");
 
 const graphqlRoute = require("./graphql");
+const fallbackRoutes = require("./fallback");
 
 module.exports = (router) => {
   auditsRoutes(router);
@@ -18,10 +19,7 @@ module.exports = (router) => {
   reportRoutes(router);
 
   graphqlRoute(router);
-
-  router.get("/api/v1/ping", (_req, res) => {
-    res.json({ status: true, message: "It's all good..." });
-  });
+  fallbackRoutes(router);
 
   return router;
 };

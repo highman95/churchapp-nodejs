@@ -1,5 +1,3 @@
-const { ensureLoggedIn } = require("connect-ensure-login");
-
 const auditsRoutes = require("./audit");
 const authRoutes = require("./auth");
 const stationsRoutes = require("./station");
@@ -7,6 +5,7 @@ const meetingsRoutes = require("./meeting");
 const usersRoutes = require("./user");
 const organizationsRoutes = require("./organization");
 const reportsRoutes = require("./report");
+const fallbackRoutes = require("./fallback");
 
 module.exports = (router) => {
   auditsRoutes(router);
@@ -17,9 +16,7 @@ module.exports = (router) => {
   organizationsRoutes(router);
   reportsRoutes(router);
 
-  router.get("*", ensureLoggedIn(), (req, res) => {
-    res.render("index", { title: "Home", user0: req.user });
-  });
+  fallbackRoutes(router);
 
   return router;
 };
