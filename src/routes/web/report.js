@@ -26,6 +26,24 @@ module.exports = (router) => {
   );
 
   router.get(
+    "/reports/ministers-analysis",
+    ensureLoggedIn(),
+    reportController.dailyMinistersAnalysisPage
+  );
+
+  router.get(
+    "/reports/wsf-meeting-analysis",
+    ensureLoggedIn(),
+    reportController.wsfMeetingAnalysisPage
+  );
+
+  router.get(
+    "/reports/weekly-service-analysis",
+    ensureLoggedIn(),
+    reportController.weeklyServiceAnalysisPage
+  );
+
+  router.get(
     "/reports/mission-station-analysis",
     ensureLoggedIn(),
     reportController.missionStationAnalysisPage

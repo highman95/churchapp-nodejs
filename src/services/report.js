@@ -113,6 +113,26 @@ exports.dailyExpenditureSummary = (station_id, month_year, cb) => {
   return cb(null, records, 200);
 };
 
+exports.dailyMinistersSummary = (station_id, month_year, cb) => {
+  ensureCallBackIsDefined(cb);
+
+  if (!station_id || isNaN(station_id)) {
+    return cb(new Error("Station id is required"), null);
+  }
+
+  if (!month_year?.trim()) {
+    return cb(new Error("Month/Year is required"), null);
+  }
+
+  const [year, month] = month_year.split("-");
+  if (!year || isNaN(year) || !month || isNaN(month)) {
+    return cb(new Error("Month/Year contains invalid data"), null);
+  }
+
+  let records = { data: [], meta: {} };
+  return cb(null, records, 200);
+};
+
 exports.missionStationPeriodicSummary = (
   station_id,
   from_month_year,
@@ -161,6 +181,46 @@ exports.missionStationPeriodicSummary = (
 };
 
 exports.ROFControlSummary = (_station_id, _month_year, cb) => {
+  ensureCallBackIsDefined(cb);
+
+  if (!station_id || isNaN(station_id)) {
+    return cb(new Error("Station id is required"), null);
+  }
+
+  if (!month_year?.trim()) {
+    return cb(new Error("Month/Year is required"), null);
+  }
+
+  const [year, month] = month_year.split("-");
+  if (!year || isNaN(year) || !month || isNaN(month)) {
+    return cb(new Error("Month/Year contains invalid data"), null);
+  }
+
+  let records = { data: [], meta: {} };
+  return cb(null, records, 200);
+};
+
+exports.wsfMeetingSummary = (station_id, month_year, cb) => {
+  ensureCallBackIsDefined(cb);
+
+  if (!station_id || isNaN(station_id)) {
+    return cb(new Error("Station id is required"), null);
+  }
+
+  if (!month_year?.trim()) {
+    return cb(new Error("Month/Year is required"), null);
+  }
+
+  const [year, month] = month_year.split("-");
+  if (!year || isNaN(year) || !month || isNaN(month)) {
+    return cb(new Error("Month/Year contains invalid data"), null);
+  }
+
+  let records = { data: [], meta: {} };
+  return cb(null, records, 200);
+};
+
+exports.weeklyServiceSummary = (station_id, month_year, cb) => {
   ensureCallBackIsDefined(cb);
 
   if (!station_id || isNaN(station_id)) {

@@ -18,7 +18,9 @@
       content="mskrWcH6Y4ILIkWsaxNvvrZ00XlRxARmLdZQZIIP"
     />
 
-    <title>Churchapp | {{title}}</title>
+    <title>Churchapp |
+      {{title}}
+      {{#if subTitle}}&mdash; {{subTitle}}{{/if}}</title>
 
     <!-- Scripts -->
     <script src="/assets/js/app.js" defer></script>
@@ -80,6 +82,7 @@
             Churchapp |
             <span class="small font-weight-bold text-uppercasex text-danger">
               {{title}}
+              {{#if subTitle}}&mdash; {{subTitle}}{{/if}}
             </span>
           </a>
           <button

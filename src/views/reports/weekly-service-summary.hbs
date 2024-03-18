@@ -1,0 +1,90 @@
+<h3>Weekly Service Analysis</h3>
+<hr />
+
+<div class="row d-print-none">
+  <div class="col-md-12">
+    <form method="get" action="">
+      <div class="form-row align-items-center">
+        <div class="col-auto">
+          <label class="mb-2" for="station-box">Station:</label>
+          <select
+            class="custom-select custom-select-sm mb-2"
+            name="station"
+            id="station-box"
+            required
+          >
+            <option value="">Choose Station...</option>
+            {{#if stations}}
+              {{#each stations}}
+                <option value={{id}} {{selected ../queryRef.station id}}>
+                  {{name}}
+                </option>
+              {{/each}}
+            {{/if}}
+          </select>
+        </div>
+
+        <div class="col-auto">
+          <label class="mb-2" for="month-box">Month:</label>
+          <input
+            type="month"
+            name="monthYear"
+            id="month-box"
+            class="form-control form-control-sm mb-2"
+            min="1930-01"
+            max="{{queryRef.max}}"
+            value="{{queryRef.current}}"
+            required
+          />
+        </div>
+
+        <div class="col-auto">
+          <label>&nbsp;</label>
+          <button type="submit" class="btn btn-danger btn-sm mb-2">Show</button>
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm mb-2"
+            onclick="window.print()"
+            title="Print"
+          >
+            {{{show-icon "print"}}}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<hr class="mb-0 d-print-none" />
+
+<div class="row">
+  <div class="col-12">
+    <div class="table-responsive-md">
+      <table class="table table-striped table-bordered table-sm">
+        <thead style="background-color:#aaaaaa;font-size:11px;">
+          <tr style="text-transform:uppercase;line-height:normal;">
+            <th width="5%" rowspan="2">Week</th>
+            <th colspan="5">Total from all programmes</th>
+            <th colspan="2">Mid-Week Attendance</th>
+            <th colspan="2">Sunday Attendance</th>
+          </tr>
+          <tr style="text-transform:uppercase;">
+            <th>FT</th>
+            <th>NC</th>
+            <th>BFC</th>
+            <th>HGB</th>
+            <th>WB</th>
+            <th>Service A</th>
+            <th>Service B</th>
+            <th>Curr. Month</th>
+            <th>Prev. Month</th>
+          </tr>
+        </thead>
+        <tbody style="font-size: smaller;">
+          <tr>
+            <td colspan="10">No data found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

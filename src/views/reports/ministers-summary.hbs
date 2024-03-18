@@ -1,0 +1,149 @@
+<h3>Daily Ministers Analysis</h3>
+<hr />
+
+<div class="row d-print-none">
+  <div class="col-md-12">
+    <form method="get" action="">
+      <div class="form-row align-items-center">
+        <div class="col-auto">
+          <label class="mb-2" for="station-box">Station:</label>
+          <select
+            class="custom-select custom-select-sm mb-2"
+            name="station"
+            id="station-box"
+            required
+          >
+            <option value="">Choose Station...</option>
+            {{#if stations}}
+              {{#each stations}}
+                <option value={{id}} {{selected ../queryRef.station id}}>
+                  {{name}}
+                </option>
+              {{/each}}
+            {{/if}}
+          </select>
+        </div>
+
+        <div class="col-auto">
+          <label class="mb-2" for="month-box">Month:</label>
+          <input
+            type="month"
+            name="monthYear"
+            id="month-box"
+            class="form-control form-control-sm mb-2"
+            min="1930-01"
+            max="{{queryRef.max}}"
+            value="{{queryRef.current}}"
+            required
+          />
+        </div>
+
+        <div class="col-auto">
+          <label>&nbsp;</label>
+          <button type="submit" class="btn btn-danger btn-sm mb-2">Show</button>
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm mb-2"
+            onclick="window.print()"
+            title="Print"
+          >
+            {{{show-icon "print"}}}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<hr class="mb-0 d-print-none" />
+
+<div class="row">
+  <div class="col-12">
+    <div class="table-responsive-md">
+      <table class="table table-striped table-bordered table-sm">
+        <thead style="background-color:#aaaaaa;font-size:11px;">
+          <tr
+            bgcolor="#cccccc"
+            style="line-height:normal;text-transform:uppercase;"
+          >
+            <th width="3%">S/N</th>
+            <th align="left">Date</th>
+            <th align="left">Programme</th>
+            <th align="left">Minister</th>
+            <th align="left">Message</th>
+            <th width="7%">Period</th>
+            <th>M</th>
+            <th>F</th>
+            <th>Ch</th>
+            <th>FT</th>
+            <th>NC</th>
+            <th width="5%">T<sub>Attd.</sub></th>
+            <th width="5%">T<sub>Inc.</sub></th>
+          </tr>
+        </thead>
+        <tbody style="font-size: smaller;">
+          <tr>
+            <td colspan="13">No data found</td>
+          </tr>
+
+          <tr bgcolor="#ffffff" style="line-height:normal;">
+            <td colspan="13">&nbsp;</td>
+          </tr>
+          <tr bgcolor="#eaeaea" style="line-height:normal; font-weight:bold;font-size:11px;">
+            <td colspan="13">Keys to Abbreviations</td>
+          </tr>
+
+          <tr bgcolor="ivory">
+            <td colspan="13" style="line-height:normal;padding:0;">
+              <table width="100%" cellpadding="5" id="summ-stats" style="font-size:11px;">
+                <tr>
+                  <td><strong>M</strong> &ndash; Males</td>
+                  <td><strong>CH</strong> &ndash; Children</td>
+                  <td><strong>FT</strong> &ndash; First Timers</td>
+                  <td><strong>T<sub>ATTD.</sub></strong>
+                    &ndash; Total Attendance</td>
+                  <td width="25%">
+                    <strong>Total Income:</strong>&emsp;&emsp;&emsp;&#8358;
+                    {{! <?php echo number_format($totaloftotalincome, 2); ?> }}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>F</strong> &ndash; Females</td>
+                  <td>&nbsp;</td>
+                  <td><strong>NC</strong> &ndash; New Converts</td>
+                  <td><strong>T<sub>INC.</sub></strong>
+                    &ensp;&ndash; Total Income</td>
+                  <td>
+                    <strong>Avg. Sunday Attd.:</strong>&emsp;&emsp;&ensp;
+                    {{! <?php
+                        $noofsundayservices    = Church::get_total_sunday_services($churchId, $servicemonth, $serviceyear);
+                        $totalsundayattendance = Church::get_total_sunday_attendance($churchId, $servicemonth, $serviceyear);
+                        echo ($noofsundayservices > 0) ? ceil(($totalsundayattendance / $noofsundayservices)) : 0;
+                        ?> }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <strong>Believers' Foundation School:</strong>&emsp;
+                    {{! <?php echo Church::get_total_bfs_candidates($churchId, $servicemonth, $serviceyear); ?> }}
+                  </td>
+                  <td>
+                    <strong>Water Baptism:</strong>&emsp;
+                    {{! <?php echo Church::get_total_water_baptism($churchId, $servicemonth, $serviceyear); ?> }}
+                  </td>
+                  <td>
+                    <strong>Holy Ghost Baptism:</strong>&emsp;
+                    {{! <?php echo Church::get_total_holyspirit_baptism($churchId, $servicemonth, $serviceyear); ?> }}
+                  </td>
+                  <td>
+                    <strong>Highest Sunday Attd.:</strong>&emsp;
+                    {{! <?php echo Church::get_highest_sunday_attendance($churchId, $servicemonth, $serviceyear); ?> }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
